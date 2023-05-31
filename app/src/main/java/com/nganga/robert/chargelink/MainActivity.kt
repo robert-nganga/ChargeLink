@@ -9,6 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.nganga.robert.chargelink.ui.homeScreen.HomeScreen
 import com.nganga.robert.chargelink.ui.theme.ChargeLinkTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,10 +19,9 @@ class MainActivity : ComponentActivity() {
             ChargeLinkTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    modifier = Modifier.fillMaxSize()
                 ) {
-
+                    HomeScreen()
                 }
             }
         }
@@ -34,6 +34,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     ChargeLinkTheme {
-
+        HomeScreen()
     }
 }

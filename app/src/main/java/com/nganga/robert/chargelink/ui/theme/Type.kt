@@ -14,10 +14,16 @@ val typography = Typography(
         letterSpacing = 0.sp
     ),
     titleLarge = TextStyle(
+        fontWeight = FontWeight.Bold,
+        fontSize = 24.sp,
+        lineHeight = 32.sp,
+        letterSpacing = 0.25.sp
+    ),
+    titleMedium = TextStyle(
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,
         lineHeight = 32.sp,
-        letterSpacing = 0.0.sp
+        letterSpacing = 0.20.sp
     ),
     bodyLarge = TextStyle(
         fontWeight = FontWeight.Normal,
