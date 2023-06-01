@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -21,14 +23,17 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.ui.components.GarageItem
+import com.nganga.robert.chargelink.ui.components.NearbyListItem
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier){
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.Start
     ) {
         TopAppBar(
             name = "Davido Mnodu",
@@ -49,6 +54,33 @@ fun HomeScreen(modifier: Modifier = Modifier){
                 .fillMaxWidth()
                 .height(150.dp)
         )
+        Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = "NearBy Stations",
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+        NearbySection(stations = listOf(
+            ChargingStation(
+                name = "EvGo Charger",
+                location = "Waiyaki way, Westlands",
+                rating = "4.8",
+                imageUrl = painterResource(id = R.drawable.station1)
+            ),
+            ChargingStation(
+                name = "Charge Point",
+                location = "Garden City, Nairobi",
+                rating = "4.3",
+                imageUrl = painterResource(id = R.drawable.station2)
+            ),
+            ChargingStation(
+                name = "Electric Charger",
+                location = "Langata rd, Langata",
+                rating = "4.5",
+                imageUrl = painterResource(id = R.drawable.station3)
+            )
+        ))
+
 
     }
 }
@@ -166,6 +198,23 @@ fun SearchSection(
                     .size(24.dp),
                 tint = MaterialTheme.colorScheme.onPrimary
 
+            )
+        }
+    }
+}
+
+@Composable
+fun NearbySection(
+    modifier: Modifier = Modifier,
+    stations: List<ChargingStation>
+){
+    LazyColumn(modifier = modifier){
+        items(stations){ station->
+            NearbyListItem(
+                chargingStation = station,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)
             )
         }
     }

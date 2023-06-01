@@ -6,7 +6,7 @@ data class ChargingStation(
     val name: String,
     val location: String,
     val rating: String,
-    val description: String,
+    //val description: String,
     val imageUrl: Painter,
-    val isAvailable: Boolean
+    //val isAvailable: Boolean
 )

@@ -3,13 +3,16 @@ package com.nganga.robert.chargelink.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.models.ChargingStation
 
@@ -18,41 +21,42 @@ fun NearbyListItem(
     chargingStation: ChargingStation,
     modifier: Modifier = Modifier
 ){
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(5.dp)
-    ) {
-        Row {
+    Card(modifier = modifier.padding(bottom = 10.dp)) {
+        Row(modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Image(
                 painter = chargingStation.imageUrl,
+                contentDescription = null,
                 modifier = Modifier
-                    .size(100.dp)
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(10.dp)),
-                contentDescription = null
-            ) 
-            Spacer(modifier = Modifier.width(5.dp))
+                    .fillMaxHeight(0.8f)
+                    .weight(3f)
+                    .clip(RoundedCornerShape(20.dp)),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.width(10.dp))
             Column(
+                horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
+                modifier = Modifier.weight(7f)
             ) {
                 Text(
                     text = chargingStation.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+                    style = MaterialTheme.typography.titleMedium
                 )
+                Spacer(modifier = Modifier.height(3.dp))
                 Text(
                     text = chargingStation.location,
-                    style = MaterialTheme.typography.bodyLarge.copy(
+                    style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.outline
-                    ),
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+                    )
                 )
+                Spacer(modifier = Modifier.height(6.dp))
+                CarProperties(icon = Icons.Filled.Star, property = chargingStation.rating)
+
             }
         }
     }
