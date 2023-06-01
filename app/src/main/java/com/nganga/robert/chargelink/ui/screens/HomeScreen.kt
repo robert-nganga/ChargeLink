@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.ui.homeScreen
+package com.nganga.robert.chargelink.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
