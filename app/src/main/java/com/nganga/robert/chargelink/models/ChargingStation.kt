@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink
+package com.nganga.robert.chargelink.models
 
 import androidx.compose.ui.graphics.painter.Painter
 

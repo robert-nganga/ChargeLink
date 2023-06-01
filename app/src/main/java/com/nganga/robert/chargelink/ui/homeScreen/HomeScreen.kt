@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.components.GarageItem
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier){
@@ -36,12 +37,18 @@ fun HomeScreen(modifier: Modifier = Modifier){
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(15.dp))
-        Text(
-            text = "Find the nearest EV charging point",
-            style = MaterialTheme.typography.titleLarge
-        )
-        Spacer(modifier = Modifier.height(20.dp))
         SearchSection()
+        Spacer(modifier = Modifier.height(10.dp))
+        GarageItem(
+            model = "2022 M4 Competition",
+            manufacturer = "BMW M4",
+            capacity = "100kMh",
+            range = "300km",
+            connectors = listOf("AC Type 1", "Type 2"),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        )
 
     }
 }
@@ -124,7 +131,11 @@ fun SearchSection(
             modifier = Modifier
                 .padding(5.dp)
                 .weight(8.5f)
-                .clip(RoundedCornerShape(5.dp))
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = RoundedCornerShape(20.dp)
+                )
         ) {
             Row(
                 modifier = modifier.padding(10.dp),
