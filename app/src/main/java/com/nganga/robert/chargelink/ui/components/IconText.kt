@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.dp
 fun IconText(
     modifier: Modifier = Modifier,
     iconSize: Dp = 28.dp,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     iconTint: Color = MaterialTheme.colorScheme.primary,
     icon: ImageVector,
     text: String
@@ -34,7 +36,7 @@ fun IconText(
         Spacer(modifier = Modifier.width(5.dp))
         Text(
             text = text,
-            style = MaterialTheme.typography.labelMedium
+            style = textStyle
         )
     }
 }

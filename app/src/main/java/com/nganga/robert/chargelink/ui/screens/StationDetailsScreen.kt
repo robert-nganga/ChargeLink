@@ -262,7 +262,7 @@ fun TabView(
 
     TabRow(
         selectedTabIndex = selectedTabIndex,
-        contentColor = Color.Black,
+        contentColor = MaterialTheme.colorScheme.primary,
         backgroundColor = Color.Transparent,
         modifier = modifier
 
