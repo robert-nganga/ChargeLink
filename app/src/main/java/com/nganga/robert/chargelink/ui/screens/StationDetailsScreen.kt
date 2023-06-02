@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,14 +28,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.models.Amenities
 import com.nganga.robert.chargelink.ui.components.IconText
+import com.nganga.robert.chargelink.ui.components.OverviewSection
 import com.nganga.robert.chargelink.ui.components.Ratings
 
 @Composable
 fun StationDetailsScreen(){
+    var selectedTabIndex by rememberSaveable {
+        mutableStateOf(0)
+    }
     Box(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.TopCenter
     ) {
         ImageHeaderSection(
@@ -59,10 +66,29 @@ fun StationDetailsScreen(){
                 location = "Waiyaki way, Westlands",
                 rating = "4.8"
             )
+            Spacer(modifier = Modifier.height(15.dp))
             TabView(
                 tabTitles = listOf("Overview", "Chargers", "Reviews", "Photos"),
-                onTabSelected = {}
+                onTabSelected = {selectedTabIndex = it},
+                modifier = Modifier.background(MaterialTheme.colorScheme.background),
             )
+            when (selectedTabIndex){
+                0 -> OverviewSection(
+                    description = "We offer charging services for various types of vehicles and manufactures, our chargers are fas.",
+                    phone = "012345345",
+                    openHours = "Open 24 Hours",
+                    openDays = listOf("Monday", "Tuesday"),
+                    amenities = Amenities(
+                        wifi = true,
+                        restaurants = true,
+                        restrooms = false,
+                        tyrePressure = true,
+                        loungeArea = false,
+                        maintenance = true,
+                        shops = false
+                    )
+                )
+            }
         }
     }
 }
@@ -233,7 +259,6 @@ fun TabView(
     var selectedTabIndex by remember{
         mutableStateOf(0)
     }
-    val inactiveColor = Color(0xFF777777)
 
     TabRow(
         selectedTabIndex = selectedTabIndex,
@@ -245,8 +270,8 @@ fun TabView(
         tabTitles.forEachIndexed { index, title ->
             Tab(
                 selected = selectedTabIndex == index,
-                selectedContentColor = Color.Black,
-                unselectedContentColor = inactiveColor,
+                selectedContentColor = MaterialTheme.colorScheme.primary ,
+                unselectedContentColor = MaterialTheme.colorScheme.outline,
                 onClick = {
                     selectedTabIndex = index
                     onTabSelected(index)
@@ -254,7 +279,7 @@ fun TabView(
             ) {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.labelMedium.copy(
+                    style = MaterialTheme.typography.labelLarge.copy(
                         color = if (selectedTabIndex == index) 
                                     MaterialTheme.colorScheme.primary 
                                 else 
