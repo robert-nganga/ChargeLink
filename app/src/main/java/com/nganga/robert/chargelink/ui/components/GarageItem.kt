@@ -11,14 +11,11 @@ import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.outlined.BatteryChargingFull
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -98,13 +95,13 @@ fun GarageItem(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    CarProperties(icon = Icons.Outlined.BatteryChargingFull, property = capacity)
+                    IconText(icon = Icons.Outlined.BatteryChargingFull, text = capacity)
                     Spacer(modifier = Modifier.width(15.dp))
-                    CarProperties(icon = Icons.Default.Speed, property = range)
+                    IconText(icon = Icons.Default.Speed, text = range)
                     Spacer(modifier = Modifier.width(15.dp))
-                    CarProperties(
+                    IconText(
                         icon = Icons.Default.SettingsInputSvideo,
-                        property = connectors.first()
+                        text = connectors.first()
                     )
                 }
             }
@@ -112,29 +109,4 @@ fun GarageItem(
         }
     }
 
-}
-
-@Composable
-fun CarProperties(
-    modifier: Modifier = Modifier,
-    icon: ImageVector,
-    property: String
-){
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = property,
-            modifier = Modifier.size(28.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.width(5.dp))
-        Text(
-            text = property,
-            style = MaterialTheme.typography.labelMedium
-        )
-    }
 }

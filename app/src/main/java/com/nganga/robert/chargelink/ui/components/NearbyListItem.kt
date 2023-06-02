@@ -55,7 +55,7 @@ fun NearbyListItem(
                     )
                 )
                 Spacer(modifier = Modifier.height(6.dp))
-                CarProperties(icon = Icons.Filled.Star, property = chargingStation.rating)
+                IconText(icon = Icons.Filled.Star, text = chargingStation.rating)
 
             }
         }

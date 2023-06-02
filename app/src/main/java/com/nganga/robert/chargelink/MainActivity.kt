@@ -18,9 +18,9 @@ class MainActivity : ComponentActivity() {
             ChargeLinkTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    tonalElevation = 5.dp
+                    tonalElevation = 5.dp,
                 ) {
-                    HomeScreen()
+                    StationDetailsScreen()
                 }
             }
         }
