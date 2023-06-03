@@ -4,22 +4,18 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.outlined.Timer
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.models.Amenities
 import com.nganga.robert.chargelink.models.OpenDay
@@ -30,7 +26,7 @@ fun OverviewSection(
     description: String,
     phone: String,
     openHours: String,
-    openDays: List<String>,
+    openDays: List<OpenDay>,
     amenities: Amenities
 ){
     Column(
@@ -59,17 +55,11 @@ fun OverviewSection(
         ParkingSection(modifier = Modifier.fillMaxWidth())
         Spacer(modifier = Modifier.height(10.dp))
         OpenHoursCard(
-            openHours = "12 Hours",
-            openDays = listOf(
-                OpenDay(day = "Monday", hours = "08:00 AM - 10:00 PM"),
-                OpenDay(day = "Tuesday", hours = "08:00 AM - 10:00 PM"),
-                OpenDay(day = "Wednesday", hours = "08:00 AM - 10:00 PM"),
-                OpenDay(day = "Thursday", hours = "08:00 AM - 10:00 PM"),
-                OpenDay(day = "Friday", hours = "08:00 AM - 10:00 PM"),
-                OpenDay(day = "Saturday", hours = "10:00 AM - 6:00 PM"),
-            ),
+            openHours = openHours,
+            openDays = openDays,
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 
@@ -77,9 +67,11 @@ fun OverviewSection(
 fun ParkingSection(
     modifier: Modifier = Modifier
 ){
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = modifier.fillMaxWidth()) {
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
@@ -150,30 +142,30 @@ fun OpenHoursCardContent(
         modifier = modifier
             .padding(horizontal = 10.dp)
             .animateContentSize(
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
-            )
-        ),
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            ),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {
             IconText(
-                icon = Icons.Outlined.Timer,
+                icon = Icons.Outlined.Schedule,
                 text = " Open",
                 textStyle = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.primary
                 )
             )
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(18.dp))
             Text(
                 text = openHours,
-                style = MaterialTheme.typography.titleMedium.copy(
+                style = MaterialTheme.typography.bodyLarge.copy(
                     color = MaterialTheme.colorScheme.outline
                 )
             )
@@ -198,16 +190,19 @@ fun OpenHoursCardContent(
                 ) {
                     Text(
                         text = openDay.day,
-                        style = MaterialTheme.typography.titleMedium.copy(
+                        style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.outline
                         )
                     )
                     Text(
-                        text = openDay.day,
-                        style = MaterialTheme.typography.titleMedium
+                        text = openDay.hours,
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        )
                     )
                 }
             }
         }
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }

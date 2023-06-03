@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Amenities
+import com.nganga.robert.chargelink.models.OpenDay
 import com.nganga.robert.chargelink.ui.components.IconText
 import com.nganga.robert.chargelink.ui.components.OverviewSection
 import com.nganga.robert.chargelink.ui.components.Ratings
@@ -66,7 +67,7 @@ fun StationDetailsScreen(){
                 location = "Waiyaki way, Westlands",
                 rating = "4.8"
             )
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             TabView(
                 tabTitles = listOf("Overview", "Chargers", "Reviews", "Photos"),
                 onTabSelected = {selectedTabIndex = it},
@@ -76,8 +77,15 @@ fun StationDetailsScreen(){
                 0 -> OverviewSection(
                     description = "We offer charging services for various types of vehicles and manufactures, our chargers are fas.",
                     phone = "012345345",
-                    openHours = "Open 24 Hours",
-                    openDays = listOf("Monday", "Tuesday"),
+                    openHours = "12 Hours",
+                    openDays = listOf(
+                        OpenDay(day = "Monday", hours = "08:00 AM - 10:00 PM"),
+                        OpenDay(day = "Tuesday", hours = "08:00 AM - 10:00 PM"),
+                        OpenDay(day = "Wednesday", hours = "08:00 AM - 10:00 PM"),
+                        OpenDay(day = "Thursday", hours = "08:00 AM - 10:00 PM"),
+                        OpenDay(day = "Friday", hours = "08:00 AM - 10:00 PM"),
+                        OpenDay(day = "Saturday", hours = "10:00 AM - 6:00 PM"),
+                    ),
                     amenities = Amenities(
                         wifi = true,
                         restaurants = true,
@@ -222,7 +230,7 @@ fun DescriptionSection(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(end = 10.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -236,7 +244,7 @@ fun DescriptionSection(
                     icon = Icons.Outlined.NearMe,
                     text = "2 min"
                 )
-                Spacer(modifier = Modifier.width(20.dp))
+                Box(modifier = Modifier.weight(1f))
                 Button(
                     onClick = { /*TODO*/ }
                 ) {
@@ -275,7 +283,8 @@ fun TabView(
                 onClick = {
                     selectedTabIndex = index
                     onTabSelected(index)
-                }
+                },
+                modifier = Modifier.padding(vertical = 10.dp)
             ) {
                 Text(
                     text = title,
