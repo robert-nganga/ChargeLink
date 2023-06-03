@@ -2,6 +2,7 @@ package com.nganga.robert.chargelink.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -13,16 +14,17 @@ import com.nganga.robert.chargelink.models.Charger
 
 @Composable
 fun ChargersItem(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     charger: Charger
 ){
    Card(
-       shape = RoundedCornerShape(20.dp),
        border = null,
        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
        modifier = modifier
+           .fillMaxWidth()
+           .clip(RoundedCornerShape(25.dp))
            .background(MaterialTheme.colorScheme.primary)
-           .padding(start = 20.dp)
+           .padding(start = 10.dp)
            .clip(RoundedCornerShape(20.dp))
            .background(MaterialTheme.colorScheme.surface),
    ) {
@@ -34,9 +36,9 @@ fun ChargersItem(
            verticalArrangement = Arrangement.Top
        ) {
            Row(
-               modifier = Modifier.fillMaxWidth(),
+               modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
                verticalAlignment = Alignment.CenterVertically,
-               horizontalArrangement = Arrangement.SpaceBetween
+               horizontalArrangement = Arrangement.Start
            ) {
                Text(
                    text = "24 Hours",
@@ -44,11 +46,19 @@ fun ChargersItem(
                        color = MaterialTheme.colorScheme.outline
                    )
                )
+               Box(modifier = Modifier.weight(1f))
                Text(
                    text = "Available",
                    style = MaterialTheme.typography.bodyLarge.copy(
                        color = MaterialTheme.colorScheme.primary
                    )
+               )
+               Spacer(modifier = Modifier.width(10.dp))
+               Box(
+                   modifier = Modifier
+                       .clip(CircleShape)
+                       .background(MaterialTheme.colorScheme.primary)
+                       .size(5.dp)
                )
            }
            Spacer(modifier = Modifier.height(15.dp))
@@ -67,7 +77,7 @@ fun ChargersItem(
                    Spacer(modifier = Modifier.height(10.dp))
                    Icon(
                        painter = charger.image,
-                       modifier = Modifier.size(30.dp),
+                       modifier = Modifier.size(40.dp),
                        contentDescription = null,
                    )
 
@@ -84,14 +94,12 @@ fun ChargersItem(
                        text = charger.power,
                        style = MaterialTheme.typography.titleLarge
                    )
-
                }
-
            }
            Spacer(modifier = Modifier.height(15.dp))
            Button(
                onClick = { /*TODO*/ },
-               modifier = Modifier.fillMaxWidth(0.7f)
+               modifier = Modifier.fillMaxWidth(0.8f)
            ) {
                Text(text = "Book")
            }

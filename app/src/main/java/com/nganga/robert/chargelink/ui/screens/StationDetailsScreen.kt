@@ -3,6 +3,8 @@ package com.nganga.robert.chargelink.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TabRow
 import androidx.compose.material.icons.Icons
@@ -29,7 +31,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Amenities
+import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.OpenDay
+import com.nganga.robert.chargelink.ui.components.ChargersItem
 import com.nganga.robert.chargelink.ui.components.IconText
 import com.nganga.robert.chargelink.ui.components.OverviewSection
 import com.nganga.robert.chargelink.ui.components.Ratings
@@ -95,6 +99,25 @@ fun StationDetailsScreen(){
                         maintenance = true,
                         shops = false
                     )
+                )
+                1 -> ChargerSection(chargers = listOf(
+                    Charger(plug = "CCS 1 DC", power = "360kW", image = painterResource(
+                        id = R.drawable.ic_ev_plug_ccs2), isAvailable = true
+                    ),
+                    Charger(plug = "CCS 2 DC", power = "360kW", image = painterResource(
+                        id = R.drawable.ic_ev_plug_ccs2_combo), isAvailable = true
+                    ),
+                    Charger(plug = "Mennekes (Type 2) AC", power = "22kW", image = painterResource(
+                        id = R.drawable.ic_ev_plug_iec_mennekes_t2), isAvailable = true
+                    ),
+                    Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = painterResource(
+                        id = R.drawable.ic_ev_plug_j1772_t1), isAvailable = true
+                    ),
+                    Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = painterResource(
+                        id = R.drawable.ic_ev_plug_tesla), isAvailable = true
+                    )
+                ),
+                    modifier = Modifier.fillMaxSize()
                 )
             }
         }
@@ -230,7 +253,9 @@ fun DescriptionSection(
                 )
             }
             Row(
-                modifier = Modifier.fillMaxWidth().padding(end = 10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 10.dp),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ){
@@ -296,6 +321,18 @@ fun TabView(
                     )
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun ChargerSection(
+    modifier: Modifier = Modifier,
+    chargers: List<Charger>
+){
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp)){
+        items(chargers){ charger->
+            ChargersItem(charger = charger, modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp))
         }
     }
 }
