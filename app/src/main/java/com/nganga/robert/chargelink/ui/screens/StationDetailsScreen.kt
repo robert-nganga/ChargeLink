@@ -288,7 +288,7 @@ fun TabView(
     tabTitles: List<String>,
     onTabSelected: (selectedIndex: Int) -> Unit
 ){
-    var selectedTabIndex by remember{
+    var selectedTabIndex by rememberSaveable{
         mutableStateOf(0)
     }
 
@@ -369,7 +369,9 @@ fun ReviewHeaderSection(
             )
         }
         Column(
-            modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 10.dp),
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
