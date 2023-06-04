@@ -29,14 +29,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Amenities
 import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.OpenDay
-import com.nganga.robert.chargelink.ui.components.ChargersItem
-import com.nganga.robert.chargelink.ui.components.IconText
-import com.nganga.robert.chargelink.ui.components.OverviewSection
-import com.nganga.robert.chargelink.ui.components.Ratings
+import com.nganga.robert.chargelink.ui.components.*
 
 @Composable
 fun StationDetailsScreen(){
@@ -50,7 +48,7 @@ fun StationDetailsScreen(){
         contentAlignment = Alignment.TopCenter
     ) {
         ImageHeaderSection(
-            image = painterResource(id = R.drawable.station1),
+            image = painterResource(id = R.drawable.station3),
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.35f)
@@ -119,6 +117,7 @@ fun StationDetailsScreen(){
                 ),
                     modifier = Modifier.fillMaxSize()
                 )
+                2 -> ReviewHeaderSection(totalReviews = 120, averageRating = 4.8f, modifier = Modifier.fillMaxWidth())
             }
         }
     }
@@ -332,7 +331,57 @@ fun ChargerSection(
 ){
     LazyColumn(modifier = modifier, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp)){
         items(chargers){ charger->
-            ChargersItem(charger = charger, modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp))
+            ChargersItem(charger = charger, modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp))
+        }
+    }
+}
+
+@Composable
+fun ReviewHeaderSection(
+    modifier: Modifier = Modifier,
+    totalReviews: Int,
+    averageRating: Float
+){
+    Row(modifier = modifier.padding(horizontal = 10.dp)) {
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
+            Text(
+                text = averageRating.toString(),
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontSize = 30.sp
+                )
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Ratings(
+                rating = 4.5f,
+                starSize = 27.dp,
+                starColor = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "(${totalReviews}) reviews",
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        Column(
+            modifier = Modifier.weight(1f).padding(horizontal = 10.dp),
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top
+        ) {
+            RatingBar(value = 0.8f, modifier = Modifier.fillMaxWidth(), number = 5)
+            Spacer(modifier = Modifier.height(10.dp))
+            RatingBar(value = 0.7f, modifier = Modifier.fillMaxWidth(), number = 4)
+            Spacer(modifier = Modifier.height(10.dp))
+            RatingBar(value = 0.5f, modifier = Modifier.fillMaxWidth(), number = 3)
+            Spacer(modifier = Modifier.height(10.dp))
+            RatingBar(value = 0.35f, modifier = Modifier.fillMaxWidth(), number = 2)
+            Spacer(modifier = Modifier.height(10.dp))
+            RatingBar(value = 0.2f, modifier = Modifier.fillMaxWidth(), number = 1)
         }
     }
 }
