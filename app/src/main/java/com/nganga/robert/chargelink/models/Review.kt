@@ -8,5 +8,5 @@ data class Review(
     val date: String,
     val time: String,
     val message: String,
-    val rating: Float
+    val rating: Int
 )

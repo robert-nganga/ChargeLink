@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.TabRow
 import androidx.compose.material.icons.Icons
@@ -14,11 +15,10 @@ import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.NearMe
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +34,13 @@ import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Amenities
 import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.OpenDay
+import com.nganga.robert.chargelink.models.Review
 import com.nganga.robert.chargelink.ui.components.*
 
 @Composable
 fun StationDetailsScreen(){
     var selectedTabIndex by rememberSaveable {
-        mutableStateOf(0)
+        mutableStateOf(2)
     }
     Box(
         modifier = Modifier
@@ -67,7 +68,7 @@ fun StationDetailsScreen(){
                     .background(MaterialTheme.colorScheme.background),
                 name = "EvGo Charger",
                 location = "Waiyaki way, Westlands",
-                rating = "4.8"
+                rating = 4
             )
             Spacer(modifier = Modifier.height(10.dp))
             TabView(
@@ -117,7 +118,53 @@ fun StationDetailsScreen(){
                 ),
                     modifier = Modifier.fillMaxSize()
                 )
-                2 -> ReviewHeaderSection(totalReviews = 120, averageRating = 4.8f, modifier = Modifier.fillMaxWidth())
+                2 -> ReviewSection(
+                    totalReviews = 120,
+                    averageRating = 4.0f,
+                    reviews = listOf(
+                        Review(
+                            userName = "John Doe",
+                            userImage = painterResource(id = R.drawable.user1),
+                            date = "2023-06-04",
+                            time = "11:02 AM",
+                            message = "This was a great product! I would definitely recommend it to others.",
+                            rating = 5
+                        ),
+                        Review(
+                            userName = "Jane Doe",
+                            userImage = painterResource(id = R.drawable.user5),
+                            date = "2023-06-03",
+                            time = "10:00 AM",
+                            message = "This product was not as good as I expected. I would not recommend it to others.",
+                            rating = 2
+                        ),
+                        Review(
+                            userName = "Bill Smith",
+                            userImage = painterResource(id = R.drawable.user2),
+                            date = "2023-06-02",
+                            time = "9:00 AM",
+                            message = "This product was okay. I wouldn't say it was great, but it wasn't bad either.",
+                            rating = 3
+                        ),
+                        Review(
+                            userName = "Susan Jones",
+                            userImage = painterResource(id = R.drawable.user4),
+                            date = "2023-06-01",
+                            time = "8:00 AM",
+                            message = "I loved this product! It was everything I was looking for and more.",
+                            rating = 4
+                        ),
+                        Review(
+                            userName = "David Brown",
+                            userImage = painterResource(id = R.drawable.user3),
+                            date = "2023-05-31",
+                            time = "7:00 AM",
+                            message = "This product was a lifesaver! I don't know what I would have done without it.",
+                            rating = 5
+                        )
+                    ),
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
     }
@@ -195,7 +242,7 @@ fun DescriptionSection(
     modifier: Modifier = Modifier,
     name: String,
     location: String,
-    rating: String
+    rating: Int
 ){
     Box(modifier = modifier) {
         Box(
@@ -236,12 +283,12 @@ fun DescriptionSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = rating,
+                    text = rating.toString(),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Spacer(modifier = Modifier.width(3.dp))
                 Ratings(
-                    rating = rating.toFloat(),
+                    rating = rating,
                     starSize = 25.dp,
                     starColor = MaterialTheme.colorScheme.primary
                 )
@@ -344,7 +391,7 @@ fun ReviewHeaderSection(
     totalReviews: Int,
     averageRating: Float
 ){
-    Row(modifier = modifier.padding(horizontal = 10.dp)) {
+    Row(modifier = modifier.padding(vertical = 10.dp)) {
         Column(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -356,13 +403,13 @@ fun ReviewHeaderSection(
                     fontSize = 30.sp
                 )
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             Ratings(
-                rating = 4.5f,
+                rating = averageRating.toInt(),
                 starSize = 27.dp,
                 starColor = MaterialTheme.colorScheme.primary
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = "(${totalReviews}) reviews",
                 style = MaterialTheme.typography.bodyMedium
@@ -376,14 +423,146 @@ fun ReviewHeaderSection(
             verticalArrangement = Arrangement.Top
         ) {
             RatingBar(value = 0.8f, modifier = Modifier.fillMaxWidth(), number = 5)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             RatingBar(value = 0.7f, modifier = Modifier.fillMaxWidth(), number = 4)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             RatingBar(value = 0.5f, modifier = Modifier.fillMaxWidth(), number = 3)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             RatingBar(value = 0.35f, modifier = Modifier.fillMaxWidth(), number = 2)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             RatingBar(value = 0.2f, modifier = Modifier.fillMaxWidth(), number = 1)
         }
     }
+}
+
+@Composable
+fun ReviewSection(
+    modifier: Modifier = Modifier,
+    totalReviews: Int,
+    averageRating: Float,
+    reviews: List<Review>
+){
+    var selectedSortItem by rememberSaveable {
+        mutableStateOf("Most relevant")
+    }
+
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(horizontal = 10.dp)){
+        item {
+            ReviewHeaderSection(totalReviews = totalReviews, averageRating = averageRating)
+        }
+        item {
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 0.8.dp)
+        }
+        item {
+            WriteReviewSection(
+                currentUserImage = painterResource(id = R.drawable.profile),
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+        item {
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 0.8.dp)
+        }
+        item {
+            SortReviewsSection(
+                names = listOf("Most relevant", "Newest", "Highest", "Lowest"),
+                selectedItem = selectedSortItem,
+                onSelectionChange = { selectedSortItem = it}
+            )
+        }
+        item {
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 0.8.dp)
+        }
+        items(reviews){ review ->
+            ReviewItem(review = review, modifier = Modifier.fillMaxWidth())
+        }
+    }
+
+}
+
+@Composable
+fun WriteReviewSection(
+    currentUserImage: Painter,
+    modifier: Modifier = Modifier
+){
+    Column(
+        modifier = modifier.padding(10.dp),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Top
+    ) {
+        Spacer(modifier = Modifier.height(3.dp))
+        Text(
+            text = "Write a review",
+            style = MaterialTheme.typography.titleMedium
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = "Share your experience to help others",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Image(
+                painter = currentUserImage,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(40.dp)
+                    .aspectRatio(
+                        1f,
+                        matchHeightConstraintsFirst = true
+                    )
+                    .clip(CircleShape)
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Ratings(
+                rating = 0,
+                starSize = 35.dp,
+                starColor = MaterialTheme.colorScheme.primary,
+                onRatingChanged = {rating->
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(15.dp))
+    }
+}
+
+@Composable
+fun SortReviewsSection(
+    names: List<String>,
+    selectedItem: String,
+    modifier: Modifier = Modifier,
+    onSelectionChange: (String)->Unit
+){
+    Column(
+        modifier = modifier.padding(horizontal = 10.dp, vertical = 10.dp),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
+    ) {
+        Text(
+            text = "Sort by",
+            style = MaterialTheme.typography.titleSmall
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+        ChipGroup(
+            names = names,
+            selectedItem = selectedItem,
+            onSelectionChange = { onSelectionChange(it) },
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun HorizontalDivider(
+    modifier: Modifier = Modifier,
+    thickness: Dp = 1.dp,
+    color: Color = MaterialTheme.colorScheme.outline
+){
+    Box(modifier = modifier
+        .fillMaxWidth()
+        .height(thickness)
+        .background(color))
 }

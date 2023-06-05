@@ -18,7 +18,7 @@ fun ReviewItem(
     review: Review
 ){
     Column(
-        modifier = modifier.padding(horizontal = 10.dp),
+        modifier = modifier.padding(bottom = 20.dp, top = 10.dp),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
@@ -41,7 +41,6 @@ fun ReviewItem(
                     text = review.userName,
                     style = MaterialTheme.typography.titleMedium
                 )
-                Spacer(modifier = Modifier.height(10.dp))
                 Ratings(
                     rating = review.rating,
                     starSize = 24.dp,
@@ -64,7 +63,7 @@ fun ReviewItem(
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = review.message,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
