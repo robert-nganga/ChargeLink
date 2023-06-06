@@ -2,12 +2,10 @@ package com.nganga.robert.chargelink.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +24,7 @@ fun ReviewBottomSheetContent(
     var message by rememberSaveable{
         mutableStateOf("")
     }
-    var newRating by rememberSaveable{
+    var newRating by remember{
         mutableStateOf(rating)
     }
 
@@ -46,11 +44,14 @@ fun ReviewBottomSheetContent(
                 text = stringResource(id = R.string.write_a_review),
                 style = MaterialTheme.typography.titleMedium
             )
+            Spacer(modifier = Modifier.height(15.dp))
             HorizontalDivider()
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = stringResource(id = R.string.give_it_a_star),
                 style = MaterialTheme.typography.titleMedium
             )
+            Spacer(modifier = Modifier.height(20.dp))
             Ratings(
                 rating = newRating,
                 starSize = 40.dp,
@@ -59,12 +60,15 @@ fun ReviewBottomSheetContent(
                     newRating = it
                 }
             )
+            Spacer(modifier = Modifier.height(10.dp))
             HorizontalDivider()
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = stringResource(id = R.string.comment),
                 modifier = Modifier.align(Alignment.Start),
                 style = MaterialTheme.typography.titleSmall
             )
+            Spacer(modifier = Modifier.height(10.dp))
             TextField(
                 value = message,
                 onValueChange = { comment-> 
@@ -73,9 +77,10 @@ fun ReviewBottomSheetContent(
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent
                 ),
-                singleLine = false
+                singleLine = false,
+                modifier = Modifier.fillMaxWidth()
             )
-            HorizontalDivider()
+            Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
                     onRatingChanged(newRating, message)

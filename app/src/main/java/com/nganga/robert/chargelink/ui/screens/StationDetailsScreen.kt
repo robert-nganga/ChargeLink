@@ -7,18 +7,20 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.TabRow
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.NearMe
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Tab
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,139 +38,170 @@ import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.OpenDay
 import com.nganga.robert.chargelink.models.Review
 import com.nganga.robert.chargelink.ui.components.*
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun StationDetailsScreen(){
     var selectedTabIndex by rememberSaveable {
-        mutableStateOf(2)
+        mutableStateOf(0)
     }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background),
-        contentAlignment = Alignment.TopCenter
+    var rating by rememberSaveable {
+        mutableStateOf(0)
+    }
+    val bottomState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+    val scope = rememberCoroutineScope()
+
+    ModalBottomSheetLayout(
+        sheetState = bottomState,
+        sheetBackgroundColor = MaterialTheme.colorScheme.background,
+        sheetContentColor = MaterialTheme.colorScheme.onBackground,
+        sheetShape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
+        sheetContent = {
+            ReviewBottomSheetContent(
+                onRatingChanged = { _, _ ->
+                    scope.launch { bottomState.hide() }
+                },
+                rating = rating,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     ) {
-        ImageHeaderSection(
-            image = painterResource(id = R.drawable.station3),
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.35f)
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.Start
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.TopCenter
         ) {
-            Spacer(modifier = Modifier.fillMaxHeight(0.25f))
-            DescriptionSection(
+            ImageHeaderSection(
+                image = painterResource(id = R.drawable.station3),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
-                    .background(MaterialTheme.colorScheme.background),
-                name = "EvGo Charger",
-                location = "Waiyaki way, Westlands",
-                rating = 4
+                    .fillMaxHeight(0.35f)
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            TabView(
-                tabTitles = listOf("Overview", "Chargers", "Reviews", "Photos"),
-                onTabSelected = {selectedTabIndex = it},
-                modifier = Modifier.background(MaterialTheme.colorScheme.background),
-            )
-            when (selectedTabIndex){
-                0 -> OverviewSection(
-                    description = "We offer charging services for various types of vehicles and manufactures, our chargers are fas.",
-                    phone = "012345345",
-                    openHours = "12 Hours",
-                    openDays = listOf(
-                        OpenDay(day = "Monday", hours = "08:00 AM - 10:00 PM"),
-                        OpenDay(day = "Tuesday", hours = "08:00 AM - 10:00 PM"),
-                        OpenDay(day = "Wednesday", hours = "08:00 AM - 10:00 PM"),
-                        OpenDay(day = "Thursday", hours = "08:00 AM - 10:00 PM"),
-                        OpenDay(day = "Friday", hours = "08:00 AM - 10:00 PM"),
-                        OpenDay(day = "Saturday", hours = "10:00 AM - 6:00 PM"),
-                    ),
-                    amenities = Amenities(
-                        wifi = true,
-                        restaurants = true,
-                        restrooms = false,
-                        tyrePressure = true,
-                        loungeArea = false,
-                        maintenance = true,
-                        shops = false
-                    )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.Start
+            ) {
+                Spacer(modifier = Modifier.fillMaxHeight(0.25f))
+                DescriptionSection(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
+                        .background(MaterialTheme.colorScheme.background),
+                    name = "EvGo Charger",
+                    location = "Waiyaki way, Westlands",
+                    rating = 4,
+                    onBookClicked = {scope.launch { bottomState.show() }}
                 )
-                1 -> ChargerSection(chargers = listOf(
-                    Charger(plug = "CCS 1 DC", power = "360kW", image = painterResource(
-                        id = R.drawable.ic_ev_plug_ccs2), isAvailable = true
-                    ),
-                    Charger(plug = "CCS 2 DC", power = "360kW", image = painterResource(
-                        id = R.drawable.ic_ev_plug_ccs2_combo), isAvailable = true
-                    ),
-                    Charger(plug = "Mennekes (Type 2) AC", power = "22kW", image = painterResource(
-                        id = R.drawable.ic_ev_plug_iec_mennekes_t2), isAvailable = true
-                    ),
-                    Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = painterResource(
-                        id = R.drawable.ic_ev_plug_j1772_t1), isAvailable = true
-                    ),
-                    Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = painterResource(
-                        id = R.drawable.ic_ev_plug_tesla), isAvailable = true
-                    )
-                ),
-                    modifier = Modifier.fillMaxSize()
+                Spacer(modifier = Modifier.height(10.dp))
+                TabView(
+                    tabTitles = listOf("Overview", "Chargers", "Reviews", "Photos"),
+                    onTabSelected = {selectedTabIndex = it},
+                    modifier = Modifier.background(MaterialTheme.colorScheme.background),
                 )
-                2 -> ReviewSection(
-                    totalReviews = 120,
-                    averageRating = 4.0f,
-                    reviews = listOf(
-                        Review(
-                            userName = "John Doe",
-                            userImage = painterResource(id = R.drawable.user1),
-                            date = "2023-06-04",
-                            time = "11:02 AM",
-                            message = "This was a great product! I would definitely recommend it to others.",
-                            rating = 5
+                when (selectedTabIndex){
+                    0 -> OverviewSection(
+                        description = "We offer charging services for various types of vehicles and manufactures, our chargers are fas.",
+                        phone = "012345345",
+                        openHours = "12 Hours",
+                        openDays = listOf(
+                            OpenDay(day = "Monday", hours = "08:00 AM - 10:00 PM"),
+                            OpenDay(day = "Tuesday", hours = "08:00 AM - 10:00 PM"),
+                            OpenDay(day = "Wednesday", hours = "08:00 AM - 10:00 PM"),
+                            OpenDay(day = "Thursday", hours = "08:00 AM - 10:00 PM"),
+                            OpenDay(day = "Friday", hours = "08:00 AM - 10:00 PM"),
+                            OpenDay(day = "Saturday", hours = "10:00 AM - 6:00 PM"),
                         ),
-                        Review(
-                            userName = "Jane Doe",
-                            userImage = painterResource(id = R.drawable.user5),
-                            date = "2023-06-03",
-                            time = "10:00 AM",
-                            message = "This product was not as good as I expected. I would not recommend it to others.",
-                            rating = 2
+                        amenities = Amenities(
+                            wifi = true,
+                            restaurants = true,
+                            restrooms = false,
+                            tyrePressure = true,
+                            loungeArea = false,
+                            maintenance = true,
+                            shops = false
+                        )
+                    )
+                    1 -> ChargerSection(chargers = listOf(
+                        Charger(plug = "CCS 1 DC", power = "360kW", image = painterResource(
+                            id = R.drawable.ic_ev_plug_ccs2), isAvailable = true
                         ),
-                        Review(
-                            userName = "Bill Smith",
-                            userImage = painterResource(id = R.drawable.user2),
-                            date = "2023-06-02",
-                            time = "9:00 AM",
-                            message = "This product was okay. I wouldn't say it was great, but it wasn't bad either.",
-                            rating = 3
+                        Charger(plug = "CCS 2 DC", power = "360kW", image = painterResource(
+                            id = R.drawable.ic_ev_plug_ccs2_combo), isAvailable = true
                         ),
-                        Review(
-                            userName = "Susan Jones",
-                            userImage = painterResource(id = R.drawable.user4),
-                            date = "2023-06-01",
-                            time = "8:00 AM",
-                            message = "I loved this product! It was everything I was looking for and more.",
-                            rating = 4
+                        Charger(plug = "Mennekes (Type 2) AC", power = "22kW", image = painterResource(
+                            id = R.drawable.ic_ev_plug_iec_mennekes_t2), isAvailable = true
                         ),
-                        Review(
-                            userName = "David Brown",
-                            userImage = painterResource(id = R.drawable.user3),
-                            date = "2023-05-31",
-                            time = "7:00 AM",
-                            message = "This product was a lifesaver! I don't know what I would have done without it.",
-                            rating = 5
+                        Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = painterResource(
+                            id = R.drawable.ic_ev_plug_j1772_t1), isAvailable = true
+                        ),
+                        Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = painterResource(
+                            id = R.drawable.ic_ev_plug_tesla), isAvailable = true
                         )
                     ),
-                    modifier = Modifier.fillMaxSize()
-                )
-                3 -> ReviewBottomSheetContent(onRatingChanged = { _, _ ->}, rating = 4)
+                        modifier = Modifier.fillMaxSize()
+                    )
+                    2 -> ReviewSection(
+                        totalReviews = 120,
+                        averageRating = 4.0f,
+                        reviews = listOf(
+                            Review(
+                                userName = "John Doe",
+                                userImage = painterResource(id = R.drawable.user1),
+                                date = "2023-06-04",
+                                time = "11:02 AM",
+                                message = "This was a great product! I would definitely recommend it to others.",
+                                rating = 5
+                            ),
+                            Review(
+                                userName = "Jane Doe",
+                                userImage = painterResource(id = R.drawable.user5),
+                                date = "2023-06-03",
+                                time = "10:00 AM",
+                                message = "This product was not as good as I expected. I would not recommend it to others.",
+                                rating = 2
+                            ),
+                            Review(
+                                userName = "Bill Smith",
+                                userImage = painterResource(id = R.drawable.user2),
+                                date = "2023-06-02",
+                                time = "9:00 AM",
+                                message = "This product was okay. I wouldn't say it was great, but it wasn't bad either.",
+                                rating = 3
+                            ),
+                            Review(
+                                userName = "Susan Jones",
+                                userImage = painterResource(id = R.drawable.user4),
+                                date = "2023-06-01",
+                                time = "8:00 AM",
+                                message = "I loved this product! It was everything I was looking for and more.",
+                                rating = 4
+                            ),
+                            Review(
+                                userName = "David Brown",
+                                userImage = painterResource(id = R.drawable.user3),
+                                date = "2023-05-31",
+                                time = "7:00 AM",
+                                message = "This product was a lifesaver! I don't know what I would have done without it.",
+                                rating = 5
+                            )
+                        ),
+                        modifier = Modifier.fillMaxSize(),
+                        onRatingChange = {
+                            rating = it
+                            scope.launch { bottomState.show() }
+                            println("ModalBottomSheet visibility ${bottomState.isVisible} and rating:: $rating")
+                        }
+                    )
+                    3 -> ReviewBottomSheetContent(onRatingChanged = { _, _ ->}, rating = 4)
+                }
             }
         }
     }
+
 }
 
 @Composable
@@ -243,7 +276,8 @@ fun DescriptionSection(
     modifier: Modifier = Modifier,
     name: String,
     location: String,
-    rating: Int
+    rating: Int,
+    onBookClicked: ()->Unit
 ){
     Box(modifier = modifier) {
         Box(
@@ -318,7 +352,7 @@ fun DescriptionSection(
                 )
                 Box(modifier = Modifier.weight(1f))
                 Button(
-                    onClick = { /*TODO*/ }
+                    onClick = onBookClicked
                 ) {
                     Text(
                         text = "Book"
@@ -441,7 +475,8 @@ fun ReviewSection(
     modifier: Modifier = Modifier,
     totalReviews: Int,
     averageRating: Float,
-    reviews: List<Review>
+    reviews: List<Review>,
+    onRatingChange: (Int) -> Unit
 ){
     var selectedSortItem by rememberSaveable {
         mutableStateOf("Most relevant")
@@ -457,7 +492,8 @@ fun ReviewSection(
         item {
             WriteReviewSection(
                 currentUserImage = painterResource(id = R.drawable.profile),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                onRatingChange = {onRatingChange(it)}
             )
         }
         item {
@@ -470,9 +506,6 @@ fun ReviewSection(
                 onSelectionChange = { selectedSortItem = it}
             )
         }
-        item {
-            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 0.8.dp)
-        }
         items(reviews){ review ->
             ReviewItem(review = review, modifier = Modifier.fillMaxWidth())
         }
@@ -483,7 +516,8 @@ fun ReviewSection(
 @Composable
 fun WriteReviewSection(
     currentUserImage: Painter,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onRatingChange: (Int)->Unit
 ){
     Column(
         modifier = modifier.padding(10.dp),
@@ -522,7 +556,7 @@ fun WriteReviewSection(
                 rating = 0,
                 starSize = 35.dp,
                 starColor = MaterialTheme.colorScheme.primary,
-                onRatingChanged = {}
+                onRatingChanged = {onRatingChange(it)}
             )
         }
         Spacer(modifier = Modifier.height(15.dp))

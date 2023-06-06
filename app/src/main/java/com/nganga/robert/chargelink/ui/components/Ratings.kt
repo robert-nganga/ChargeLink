@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarHalf
 import androidx.compose.material.icons.filled.StarRate
@@ -15,8 +13,7 @@ import androidx.compose.material.icons.rounded.StarOutline
 import androidx.compose.material.icons.rounded.StarRate
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +29,7 @@ fun Ratings(
     starColor: Color,
     onRatingChanged: ((rating: Int) -> Unit)? = null
 ){
-    var selectedRating by rememberSaveable {
+    var selectedRating by remember {
         mutableStateOf(rating)
     }
     Row(
@@ -49,6 +46,7 @@ fun Ratings(
                     .clickable {
                            if (onRatingChanged != null){
                                selectedRating = x
+                               onRatingChanged(x)
                            }
                     },
                 tint = starColor
