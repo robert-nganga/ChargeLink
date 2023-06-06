@@ -165,6 +165,7 @@ fun StationDetailsScreen(){
                     ),
                     modifier = Modifier.fillMaxSize()
                 )
+                3 -> ReviewBottomSheetContent(onRatingChanged = { _, _ ->}, rating = 4)
             }
         }
     }
@@ -521,8 +522,7 @@ fun WriteReviewSection(
                 rating = 0,
                 starSize = 35.dp,
                 starColor = MaterialTheme.colorScheme.primary,
-                onRatingChanged = {rating->
-                }
+                onRatingChanged = {}
             )
         }
         Spacer(modifier = Modifier.height(15.dp))
@@ -553,16 +553,4 @@ fun SortReviewsSection(
             modifier = Modifier.fillMaxWidth()
         )
     }
-}
-
-@Composable
-fun HorizontalDivider(
-    modifier: Modifier = Modifier,
-    thickness: Dp = 1.dp,
-    color: Color = MaterialTheme.colorScheme.outline
-){
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .height(thickness)
-        .background(color))
 }

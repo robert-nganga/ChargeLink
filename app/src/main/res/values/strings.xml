@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ChargeLink</string>
+    <string name="write_a_review">Write a review</string>
+    <string name="give_it_a_star">Give it a star</string>
+    <string name="comment">Comment</string>
+    <string name="submit">Submit</string>
 </resources>
