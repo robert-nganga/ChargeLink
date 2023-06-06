@@ -4,4 +4,8 @@
     <string name="give_it_a_star">Give it a star</string>
     <string name="comment">Comment</string>
     <string name="submit">Submit</string>
+    <string name="chargers">Chargers</string>
+    <string name="price">Price</string>
+    <string name="parking">Parking</string>
+    <string name="book">Book</string>
 </resources>

@@ -47,7 +47,7 @@ fun StationDetailsScreen(){
         mutableStateOf(0)
     }
     var rating by rememberSaveable {
-        mutableStateOf(0)
+        mutableStateOf(3)
     }
     val bottomState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
