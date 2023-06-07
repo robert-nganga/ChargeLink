@@ -93,8 +93,7 @@ fun StationDetailsScreen(){
                         .background(MaterialTheme.colorScheme.background),
                     name = "EvGo Charger",
                     location = "Waiyaki way, Westlands",
-                    rating = 4,
-                    onBookClicked = {scope.launch { bottomState.show() }}
+                    rating = 4
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TabView(
@@ -276,8 +275,7 @@ fun DescriptionSection(
     modifier: Modifier = Modifier,
     name: String,
     location: String,
-    rating: Int,
-    onBookClicked: ()->Unit
+    rating: Int
 ){
     Box(modifier = modifier) {
         Box(
@@ -352,7 +350,7 @@ fun DescriptionSection(
                 )
                 Box(modifier = Modifier.weight(1f))
                 Button(
-                    onClick = onBookClicked
+                    onClick = {  }
                 ) {
                     Text(
                         text = "Book"
