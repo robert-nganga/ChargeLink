@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
@@ -36,7 +37,6 @@ fun ChargingStationItem(
             verticalArrangement = Arrangement.Top
         ) {
             Row(modifier = Modifier
-                .fillMaxWidth()
                 .padding(10.dp),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -58,14 +58,18 @@ fun ChargingStationItem(
                 ) {
                     Text(
                         text = station.name,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
                     )
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
                         text = station.location,
                         style = MaterialTheme.typography.bodyMedium.copy(
                             color = MaterialTheme.colorScheme.outline
-                        )
+                        ),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Ratings(
@@ -79,64 +83,6 @@ fun ChargingStationItem(
                         text = "2.5km/10 min",
                         iconSize = 30.dp
                     )
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.outline,
-                        shape = RoundedCornerShape(20.dp)
-                    )
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.chargers),
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(
-                            text = "10 chargers",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.price),
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(
-                            text = "Ksh 100/kW",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.parking),
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        )
-                        Spacer(modifier = Modifier.height(5.dp))
-                        Text(
-                            text = "Free for clients",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                    }
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
