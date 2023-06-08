@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.ui.screens.MapScreen
 import com.nganga.robert.chargelink.ui.screens.ProfileScreen
+import com.nganga.robert.chargelink.ui.screens.SettingsScreen
 import com.nganga.robert.chargelink.ui.theme.ChargeLinkTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,6 +34,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     ChargeLinkTheme {
-        ProfileScreen()
+        SettingsScreen()
     }
 }

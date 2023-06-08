@@ -13,4 +13,15 @@
     <string name="payment_methods">Payment Methods</string>
     <string name="about_charge_link">About ChargeLink</string>
     <string name="profile">Profile</string>
+    <string name="general_settings">General Settings</string>
+    <string name="theme">Theme</string>
+    <string name="nearby_radius">Nearby Radius</string>
+    <string name="other_settings">Other Settings</string>
+    <string name="share_us">Share us</string>
+    <string name="invite_friends">Invite your friends to join us</string>
+    <string name="report_issue">Report an issue</string>
+    <string name="improve_charge_link">Help us improve ChargeLink</string>
+    <string name="rate_us">Rate Us</string>
+    <string name="share_feedback">Share your feedback with us</string>
+    <string name="language">Language</string>
 </resources>
