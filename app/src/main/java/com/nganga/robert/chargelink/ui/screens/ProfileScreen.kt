@@ -2,10 +2,13 @@ package com.nganga.robert.chargelink.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -13,7 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
@@ -25,7 +30,9 @@ fun ProfileScreen(){
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {},
+                title = {
+                        Text(text = stringResource(id = R.string.profile))
+                },
                 navigationIcon = {
                     IconButton(
                         onClick = {  }
@@ -51,7 +58,9 @@ fun ProfileScreen(){
 
     ) { contentPadding->
         Column(
-            modifier = Modifier.padding(contentPadding)
+            modifier = Modifier
+                .padding(contentPadding)
+                .verticalScroll(rememberScrollState())
         ) {
             Spacer(modifier = Modifier.height(10.dp))
             ProfileSection(
@@ -63,6 +72,27 @@ fun ProfileScreen(){
                     id = R.drawable.user5
                 )
             )
+            Spacer(modifier = Modifier.height(20.dp))
+            ProfileCategoryItem(
+                leadingIcon = Icons.Outlined.DirectionsCar,
+                text = stringResource(id = R.string.my_vehicles)
+            )
+            ProfileCategoryItem(
+                leadingIcon = Icons.Outlined.Settings,
+                text = stringResource(id = R.string.settings)
+            )
+            ProfileCategoryItem(
+                leadingIcon = Icons.Outlined.CreditCard,
+                text = stringResource(id = R.string.payment_methods)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(20.dp))
+            ProfileCategoryItem(
+                leadingIcon = Icons.Outlined.Info,
+                text = stringResource(id = R.string.about_charge_link)
+            )
+            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }
@@ -140,5 +170,39 @@ fun RoundProfileImage(
             .padding(2.dp)
             .clip(CircleShape)
     )
+}
+
+@Composable
+fun ProfileCategoryItem(
+    leadingIcon: ImageVector,
+    text: String,
+    modifier: Modifier = Modifier
+){
+    Box(
+        modifier = modifier.padding(horizontal = 10.dp),
+    ) {
+        Row(
+            modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconText(
+                icon = leadingIcon,
+                text = "   $text",
+                textStyle = MaterialTheme.typography.titleMedium,
+                iconTint = MaterialTheme.colorScheme.onBackground
+            )
+            Box(modifier = Modifier.weight(1f))
+            IconButton(
+                onClick = { /*TODO*/ }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = text
+                )
+            }
+
+        }
+    }
 }
 

@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun HorizontalDivider(
     modifier: Modifier = Modifier,
-    thickness: Dp = 0.8.dp,
+    thickness: Dp = 0.7.dp,
     color: Color = MaterialTheme.colorScheme.outline
 ){
     Box(modifier = modifier
