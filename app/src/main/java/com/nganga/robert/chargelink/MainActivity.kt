@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     tonalElevation = 5.dp,
                 ) {
-                    MapScreen()
+                    MainScreen()
                 }
             }
         }
@@ -34,6 +34,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     ChargeLinkTheme {
-        SettingsScreen()
+        MainScreen()
     }
 }
