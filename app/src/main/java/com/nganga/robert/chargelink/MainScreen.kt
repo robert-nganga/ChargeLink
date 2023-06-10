@@ -1,18 +1,21 @@
 package com.nganga.robert.chargelink
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Text
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.navigation.NavController
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -25,8 +28,11 @@ fun MainScreen(){
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
-    ) {
-        BottomNavGraph(navController = navController)
+    ) { contentPadding ->
+        BottomNavGraph(
+            navController = navController,
+            contentPadding = contentPadding
+        )
     }
 }
 
@@ -43,7 +49,10 @@ fun BottomBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    BottomNavigation {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp).clip(RoundedCornerShape(20.dp))
+    ){
         screens.forEach { screen ->
             AddItem(
                 screen = screen,
@@ -74,7 +83,13 @@ fun RowScope.AddItem(
             it.route == screen.route
         } == true,
         onClick = {
-            navController.navigate(screen.route)
-        }
+            navController.navigate(screen.route){
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        },
+        alwaysShowLabel = false,
+        selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+        unselectedContentColor = MaterialTheme.colorScheme.outline
     )
 }
