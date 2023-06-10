@@ -33,7 +33,9 @@ fun BottomNavGraph(
            ProfileScreen()
        }
        composable(route = BottomBarScreen.Bookings.route){
-           BookingsScreen()
+           BookingsScreen(
+               onBackPressed = { navController.popBackStack() }
+           )
        }
 
    }
