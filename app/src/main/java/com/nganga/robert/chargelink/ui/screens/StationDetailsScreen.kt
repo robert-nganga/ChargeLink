@@ -7,17 +7,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.NearMe
-import androidx.compose.material3.*
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -362,47 +363,6 @@ fun DescriptionSection(
     }
 }
 
-@Composable
-fun TabView(
-    modifier: Modifier = Modifier,
-    tabTitles: List<String>,
-    onTabSelected: (selectedIndex: Int) -> Unit
-){
-    var selectedTabIndex by rememberSaveable{
-        mutableStateOf(0)
-    }
-
-    TabRow(
-        selectedTabIndex = selectedTabIndex,
-        contentColor = MaterialTheme.colorScheme.primary,
-        backgroundColor = Color.Transparent,
-        modifier = modifier
-
-    ) {
-        tabTitles.forEachIndexed { index, title ->
-            Tab(
-                selected = selectedTabIndex == index,
-                selectedContentColor = MaterialTheme.colorScheme.primary ,
-                unselectedContentColor = MaterialTheme.colorScheme.outline,
-                onClick = {
-                    selectedTabIndex = index
-                    onTabSelected(index)
-                },
-                modifier = Modifier.padding(vertical = 10.dp)
-            ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.labelLarge.copy(
-                        color = if (selectedTabIndex == index) 
-                                    MaterialTheme.colorScheme.primary 
-                                else 
-                                    MaterialTheme.colorScheme.outline
-                    )
-                )
-            }
-        }
-    }
-}
 
 @Composable
 fun ChargerSection(
