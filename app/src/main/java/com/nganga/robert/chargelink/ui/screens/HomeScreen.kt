@@ -217,5 +217,8 @@ fun NearbySection(
                     .height(120.dp)
             )
         }
+        item {
+            Spacer(modifier = Modifier.height(70.dp))
+        }
     }
 }

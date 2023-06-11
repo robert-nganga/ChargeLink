@@ -25,7 +25,7 @@ fun MapScreen(){
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize().padding(bottom = 80.dp),
             contentAlignment = Alignment.BottomCenter
         ) {
            ChargingStationsSection(

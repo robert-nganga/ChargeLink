@@ -92,7 +92,7 @@ fun ProfileScreen(){
                 leadingIcon = Icons.Outlined.Info,
                 text = stringResource(id = R.string.about_charge_link)
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(90.dp))
         }
     }
 }

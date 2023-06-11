@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.SettingsInputSvideo
 import androidx.compose.material.icons.filled.Speed
@@ -37,21 +37,21 @@ fun GarageItem(
         border = null,
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         colors = CardDefaults.cardColors(
-            contentColor = MaterialTheme.colorScheme.surface
+            containerColor = MaterialTheme.colorScheme.background
         )
 
     ) {
         Box(
             modifier = Modifier.padding(8.dp).fillMaxSize()
         ) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .fillMaxWidth(0.7f)
-                    .fillMaxHeight(0.6f)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .clip(RoundedCornerShape(10.dp))
-            )
+//            Box(
+//                modifier = Modifier
+//                    .align(Alignment.TopStart)
+//                    .fillMaxWidth(0.7f)
+//                    .fillMaxHeight(0.6f)
+//                    .background(MaterialTheme.colorScheme.surfaceVariant)
+//                    .clip(RoundedCornerShape(10.dp))
+//            )
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,

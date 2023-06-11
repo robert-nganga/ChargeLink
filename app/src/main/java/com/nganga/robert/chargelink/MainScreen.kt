@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -30,8 +31,7 @@ fun MainScreen(){
         bottomBar = { BottomBar(navController = navController) }
     ) { contentPadding ->
         BottomNavGraph(
-            navController = navController,
-            contentPadding = contentPadding
+            navController = navController
         )
     }
 }
@@ -50,7 +50,7 @@ fun BottomBar(
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
-        backgroundColor = MaterialTheme.colorScheme.primary,
+        backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
         modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp).clip(RoundedCornerShape(20.dp))
     ){
         screens.forEach { screen ->
@@ -69,19 +69,19 @@ fun RowScope.AddItem(
     navController: NavHostController,
     currentDestination: NavDestination?
 ){
+    val isSelected = currentDestination?.hierarchy?.any {
+        it.route == screen.route
+    } == true
     BottomNavigationItem(
-        label = {
-            Text(text = screen.route)
-        },
         icon = {
             Icon(
-                imageVector = screen.icon,
-                contentDescription = "Navigation Icon"
+                imageVector = if (isSelected) screen.selectedIcon else screen.unselectedIcon,
+                contentDescription = "Navigation Icon",
+                modifier = Modifier.size(28.dp),
+                tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
             )
         },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
+        selected = isSelected,
         onClick = {
             navController.navigate(screen.route){
                 popUpTo(navController.graph.findStartDestination().id)
@@ -89,7 +89,7 @@ fun RowScope.AddItem(
             }
         },
         alwaysShowLabel = false,
-        selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+        selectedContentColor = MaterialTheme.colorScheme.primary,
         unselectedContentColor = MaterialTheme.colorScheme.outline
     )
 }

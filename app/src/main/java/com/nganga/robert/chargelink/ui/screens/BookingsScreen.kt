@@ -44,7 +44,7 @@ fun BookingsScreen(
             onBackPressed = onBackPressed,
             title = "My Bookings"
         )
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         TabView(
             tabTitles = listOf("Upcoming", "Completed", "Canceled"),
             onTabSelected = { selectedTabIndex = it },
@@ -66,7 +66,7 @@ fun BookingsScreen(
                     
                 )
             ), 
-            reminder = true, 
+            reminder = isReminder,
             onReminderCheckChanged = {  isReminder = it }
         )
     }

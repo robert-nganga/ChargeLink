@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +22,13 @@ fun NearbyListItem(
     chargingStation: ChargingStation,
     modifier: Modifier = Modifier
 ){
-    Card(modifier = modifier.padding(bottom = 10.dp)) {
+    Card(
+        modifier = modifier.padding(bottom = 10.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+    ) {
         Row(modifier = Modifier
             .fillMaxSize()
             .padding(10.dp),

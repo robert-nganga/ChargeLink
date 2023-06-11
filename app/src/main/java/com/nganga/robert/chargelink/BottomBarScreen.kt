@@ -1,35 +1,41 @@
 package com.nganga.robert.chargelink
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.BookOnline
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class BottomBarScreen(
     val title: String,
     val route: String,
-    val icon: ImageVector
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector
 ){
     object Home: BottomBarScreen(
         title = "Home",
         route = "home",
-        icon = Icons.Outlined.Home
+        selectedIcon = Icons.Filled.Home,
+        unselectedIcon = Icons.Outlined.Home
     )
     object Maps: BottomBarScreen(
         title = "Map",
         route = "map",
-        icon = Icons.Outlined.Map
+        selectedIcon = Icons.Filled.Map,
+        unselectedIcon = Icons.Outlined.Map
     )
     object Bookings: BottomBarScreen(
         title = "Bookings",
         route = "bookings",
-        icon = Icons.Outlined.BookOnline
+        selectedIcon = Icons.Filled.Bookmark,
+        unselectedIcon = Icons.Outlined.Bookmark
     )
     object Profile: BottomBarScreen(
         title = "Profile",
         route = "profile",
-        icon = Icons.Outlined.AccountCircle
+        selectedIcon = Icons.Filled.AccountCircle,
+        unselectedIcon = Icons.Outlined.AccountCircle
     )
 }

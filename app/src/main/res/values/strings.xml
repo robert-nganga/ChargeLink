@@ -27,6 +27,6 @@
     <string name="remind_me">Remind me</string>
     <string name="max_power">Max Power</string>
     <string name="duration">Duration</string>
-    <string name="cancel_booking">Cancel Booking</string>
+    <string name="cancel_booking">Cancel</string>
     <string name="view">View</string>
 </resources>

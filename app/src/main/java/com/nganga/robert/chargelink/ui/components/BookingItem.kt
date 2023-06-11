@@ -31,7 +31,10 @@ fun BookingItem(
     Card(
         modifier = modifier.padding(horizontal = 10.dp),
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(5.dp)
+        elevation = CardDefaults.cardElevation(5.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp),
@@ -97,9 +100,9 @@ fun BookingItem(
                 modifier = Modifier
                     .border(
                         width = 1.dp,
-                        color = MaterialTheme.colorScheme.outline
+                        color = MaterialTheme.colorScheme.outline,
+                        shape = RoundedCornerShape(20.dp)
                     )
-                    .clip(RoundedCornerShape(20.dp))
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -119,10 +122,10 @@ fun BookingItem(
                         headerText = stringResource(id = R.string.duration),
                         trailingText = booking.duration,
                     )
-                    TextColumn(
-                        headerText = stringResource(id = R.string.price),
-                        trailingText = "Ksh 1000",
-                    )
+//                    TextColumn(
+//                        headerText = stringResource(id = R.string.price),
+//                        trailingText = "Ksh 1000",
+//                    )
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -132,7 +135,7 @@ fun BookingItem(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.SpaceAround
             ) {
                 OutlinedButton(
                     modifier = Modifier.weight(1f),
@@ -166,7 +169,9 @@ fun TextColumn(
     ) {
         Text(
             text = headerText,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.outline
+            )
         )
         if (icon != null){
             Icon(

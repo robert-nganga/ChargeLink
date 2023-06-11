@@ -15,13 +15,12 @@ import com.nganga.robert.chargelink.ui.screens.ProfileScreen
 
 @Composable
 fun BottomNavGraph(
-    navController: NavHostController,
-    contentPadding: PaddingValues
+    navController: NavHostController
 ){
    NavHost(
        navController = navController,
        startDestination = BottomBarScreen.Home.route,
-       modifier = Modifier.padding(contentPadding)
+       modifier = Modifier
    ){
        composable(route = BottomBarScreen.Home.route){
            HomeScreen()
