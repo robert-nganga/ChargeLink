@@ -25,4 +25,8 @@
     <string name="share_feedback">Share your feedback with us</string>
     <string name="language">Language</string>
     <string name="remind_me">Remind me</string>
+    <string name="max_power">Max Power</string>
+    <string name="duration">Duration</string>
+    <string name="cancel_booking">Cancel Booking</string>
+    <string name="view">View</string>
 </resources>

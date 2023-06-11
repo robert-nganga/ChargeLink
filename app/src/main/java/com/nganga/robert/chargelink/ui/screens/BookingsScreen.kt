@@ -50,6 +50,7 @@ fun BookingsScreen(
             onTabSelected = { selectedTabIndex = it },
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(10.dp))
         BookingItem(
             booking = Booking(
                 stationName = "EvGo Charger",
