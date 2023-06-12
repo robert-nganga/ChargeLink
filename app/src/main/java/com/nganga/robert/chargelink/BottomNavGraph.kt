@@ -6,19 +6,25 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.nganga.robert.chargelink.ui.screens.*
+import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 
 @Composable
 fun BottomNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: HomeScreenViewModel
 ){
+
+    val homeScreenState = viewModel.state
    NavHost(
        navController = navController,
        startDestination = BottomBarScreen.Home.route,
        modifier = Modifier
    ){
        composable(route = BottomBarScreen.Home.route){
-           HomeScreen()
+           HomeScreen(
+               homeScreenState = homeScreenState
+           )
        }
        composable(route = BottomBarScreen.Maps.route){
            MapScreen()

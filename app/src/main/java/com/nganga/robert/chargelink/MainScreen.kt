@@ -1,7 +1,6 @@
 package com.nganga.robert.chargelink
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -21,6 +21,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,6 +30,8 @@ import androidx.navigation.compose.rememberNavController
 fun MainScreen(){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    val viewModel: HomeScreenViewModel = viewModel()
 
     val showBottomBar = when(navBackStackEntry?.destination?.route){
         BottomBarScreen.Settings.route -> false
@@ -46,7 +49,8 @@ fun MainScreen(){
         }
     ) { contentPadding ->
         BottomNavGraph(
-            navController = navController
+            navController = navController,
+            viewModel = viewModel
         )
     }
 }
@@ -66,7 +70,9 @@ fun BottomBar(
 
     BottomNavigation(
         backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp).clip(RoundedCornerShape(20.dp)),
+        modifier = Modifier
+            .padding(horizontal = 10.dp, vertical = 10.dp)
+            .clip(RoundedCornerShape(20.dp)),
         elevation = 5.dp
     ){
         screens.forEach { screen ->

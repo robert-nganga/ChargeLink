@@ -16,19 +16,26 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.ui.components.GarageItem
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
+import com.nganga.robert.chargelink.ui.screens.statewrappers.HomeScreenState
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier){
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    homeScreenState: State<HomeScreenState>
+){
+    val state by remember{ homeScreenState }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -36,20 +43,20 @@ fun HomeScreen(modifier: Modifier = Modifier){
         horizontalAlignment = Alignment.Start
     ) {
         TopAppBar(
-            name = "Davido Mnodu",
-            location = "Nairobi, Kenya",
-            profile = painterResource(id = R.drawable.profile),
+            name = state.currentUser.name,
+            location = state.currentUser.location,
+            profile = painterResource(id = state.currentUser.image),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(15.dp))
         SearchSection()
         Spacer(modifier = Modifier.height(10.dp))
         GarageItem(
-            model = "2022 M4 Competition",
-            manufacturer = "BMW M4",
-            capacity = "100kMh",
-            range = "300km",
-            connectors = listOf("AC Type 1", "Type 2"),
+            model = state.currentUser.cars[0].model,
+            manufacturer = state.currentUser.cars[0].manufacturer,
+            capacity = state.currentUser.cars[0].batteryCapacity,
+            range = state.currentUser.cars[0].range,
+            connectors = listOf("AC", "DC"),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp)
@@ -60,26 +67,7 @@ fun HomeScreen(modifier: Modifier = Modifier){
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(5.dp))
-        NearbySection(stations = listOf(
-            ChargingStation(
-                name = "EvGo Charger",
-                location = "Waiyaki way, Westlands",
-                rating = "4",
-                imageUrl = R.drawable.station1
-            ),
-            ChargingStation(
-                name = "Charge Point",
-                location = "Garden City, Nairobi",
-                rating = "3",
-                imageUrl = R.drawable.station2
-            ),
-            ChargingStation(
-                name = "Electric Charger",
-                location = "Langata rd, Langata",
-                rating = "5",
-                imageUrl = R.drawable.station3
-            )
-        ))
+        NearbySection(stations = state.nearbyStations)
 
 
     }

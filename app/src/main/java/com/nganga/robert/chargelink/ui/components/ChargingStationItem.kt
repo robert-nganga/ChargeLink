@@ -1,7 +1,6 @@
 package com.nganga.robert.chargelink.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -12,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,7 +42,7 @@ fun ChargingStationItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = station.imageUrl,
+                    painter = painterResource(id = station.imageUrl),
                     contentDescription = null,
                     modifier = Modifier
                         .height(100.dp)
