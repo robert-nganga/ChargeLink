@@ -2,12 +2,11 @@ package com.nganga.robert.chargelink.models
 
 data class Car(
     val manufacturer: String,
-    val imageUrl: String,
+    // drawable resource e.g car1
+    val imageUrl: Int,
     val model: String,
     val batteryCapacity: String,
     val range: String,
-    val plugTypes: List<String>,
-    val type: String,
-    val connectors: List<String>,
+    val plug: String,
     val chargingSpeed: String
 )

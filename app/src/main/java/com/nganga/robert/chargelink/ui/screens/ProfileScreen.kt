@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -158,7 +157,7 @@ fun ProfileSection(
             iconTint = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.height(10.dp))
-        HorizontalDivider(modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.5f))
+        HorizontalDivider(modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.9f))
     }
 }
 
@@ -190,7 +189,7 @@ fun ProfileCategoryItem(
             .clickable { onCategoryClick() },
     ) {
         Row(
-            modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp),
+            modifier = Modifier.padding(vertical = 15.dp, horizontal = 5.dp),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -198,7 +197,7 @@ fun ProfileCategoryItem(
                 icon = leadingIcon,
                 text = "   $text",
                 textStyle = MaterialTheme.typography.titleMedium,
-                iconTint = MaterialTheme.colorScheme.onBackground
+                iconTint = MaterialTheme.colorScheme.primary
             )
             Box(modifier = Modifier.weight(1f))
             Icon(

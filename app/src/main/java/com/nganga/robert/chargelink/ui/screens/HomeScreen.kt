@@ -65,19 +65,19 @@ fun HomeScreen(modifier: Modifier = Modifier){
                 name = "EvGo Charger",
                 location = "Waiyaki way, Westlands",
                 rating = "4",
-                imageUrl = painterResource(id = R.drawable.station1)
+                imageUrl = R.drawable.station1
             ),
             ChargingStation(
                 name = "Charge Point",
                 location = "Garden City, Nairobi",
                 rating = "3",
-                imageUrl = painterResource(id = R.drawable.station2)
+                imageUrl = R.drawable.station2
             ),
             ChargingStation(
                 name = "Electric Charger",
                 location = "Langata rd, Langata",
                 rating = "5",
-                imageUrl = painterResource(id = R.drawable.station3)
+                imageUrl = R.drawable.station3
             )
         ))
 
