@@ -95,7 +95,7 @@ fun BookingsTopAppBar(
         Spacer(modifier = Modifier.width(20.dp))
         Text(
             text = title,
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleLarge
         )
         Box(modifier = Modifier.weight(1f))
         IconButton(

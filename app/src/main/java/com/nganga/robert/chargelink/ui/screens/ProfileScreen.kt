@@ -158,7 +158,7 @@ fun ProfileSection(
             iconTint = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.height(10.dp))
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.5f))
     }
 }
 
@@ -187,7 +187,7 @@ fun ProfileCategoryItem(
     Box(
         modifier = modifier
             .padding(horizontal = 10.dp)
-            .clickable {  },
+            .clickable { onCategoryClick() },
     ) {
         Row(
             modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp),
@@ -201,15 +201,10 @@ fun ProfileCategoryItem(
                 iconTint = MaterialTheme.colorScheme.onBackground
             )
             Box(modifier = Modifier.weight(1f))
-            IconButton(
-                onClick = { /*TODO*/ }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = text
-                )
-            }
-
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = text
+            )
         }
     }
 }

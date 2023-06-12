@@ -1,10 +1,7 @@
 package com.nganga.robert.chargelink
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,7 +27,7 @@ fun BottomNavGraph(
            ProfileScreen(
                onSettingsClick = {
                    navController.navigate(BottomBarScreen.Settings.route){
-                       popUpTo(navController.graph.findStartDestination().id)
+                       //popUpTo(navController.graph.findStartDestination().id)
                        launchSingleTop = true
                    }
                }
