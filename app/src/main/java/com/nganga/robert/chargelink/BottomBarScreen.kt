@@ -1,10 +1,7 @@
 package com.nganga.robert.chargelink
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -37,5 +34,17 @@ sealed class BottomBarScreen(
         route = "profile",
         selectedIcon = Icons.Filled.AccountCircle,
         unselectedIcon = Icons.Outlined.AccountCircle
+    )
+    object Settings: BottomBarScreen(
+        title = "Settings",
+        route = "settings",
+        selectedIcon = Icons.Filled.Settings,
+        unselectedIcon = Icons.Outlined.Settings
+    )
+    object Details: BottomBarScreen(
+        title = "Details",
+        route = "details",
+        selectedIcon = Icons.Filled.Info,
+        unselectedIcon = Icons.Outlined.Info
     )
 }

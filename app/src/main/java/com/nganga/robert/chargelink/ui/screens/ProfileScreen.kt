@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -26,7 +27,9 @@ import com.nganga.robert.chargelink.ui.components.IconText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(){
+fun ProfileScreen(
+    onSettingsClick: () -> Unit
+){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,22 +78,24 @@ fun ProfileScreen(){
             Spacer(modifier = Modifier.height(20.dp))
             ProfileCategoryItem(
                 leadingIcon = Icons.Outlined.DirectionsCar,
-                text = stringResource(id = R.string.my_vehicles)
+                text = stringResource(id = R.string.my_vehicles),
+                onCategoryClick = {}
             )
             ProfileCategoryItem(
                 leadingIcon = Icons.Outlined.Settings,
-                text = stringResource(id = R.string.settings)
+                text = stringResource(id = R.string.settings),
+                onCategoryClick =  onSettingsClick
             )
             ProfileCategoryItem(
                 leadingIcon = Icons.Outlined.CreditCard,
-                text = stringResource(id = R.string.payment_methods)
+                text = stringResource(id = R.string.payment_methods),
+                onCategoryClick = {}
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            HorizontalDivider()
             Spacer(modifier = Modifier.height(20.dp))
             ProfileCategoryItem(
                 leadingIcon = Icons.Outlined.Info,
-                text = stringResource(id = R.string.about_charge_link)
+                text = stringResource(id = R.string.about_charge_link),
+                onCategoryClick = {}
             )
             Spacer(modifier = Modifier.height(90.dp))
         }
@@ -176,10 +181,13 @@ fun RoundProfileImage(
 fun ProfileCategoryItem(
     leadingIcon: ImageVector,
     text: String,
+    onCategoryClick: ()->Unit,
     modifier: Modifier = Modifier
 ){
     Box(
-        modifier = modifier.padding(horizontal = 10.dp),
+        modifier = modifier
+            .padding(horizontal = 10.dp)
+            .clickable {  },
     ) {
         Row(
             modifier = Modifier.padding(vertical = 5.dp, horizontal = 5.dp),

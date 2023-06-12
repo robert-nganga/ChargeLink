@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -27,8 +28,22 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun MainScreen(){
     val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+    val showBottomBar = when(navBackStackEntry?.destination?.route){
+        BottomBarScreen.Settings.route -> false
+        BottomBarScreen.Details.route -> false
+        else -> true
+    }
     Scaffold(
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = {
+            if (showBottomBar){
+                BottomBar(
+                    navController = navController,
+                    navBackStackEntry = navBackStackEntry
+                )
+            }
+        }
     ) { contentPadding ->
         BottomNavGraph(
             navController = navController
@@ -38,7 +53,8 @@ fun MainScreen(){
 
 @Composable
 fun BottomBar(
-    navController: NavHostController
+    navController: NavHostController,
+    navBackStackEntry: NavBackStackEntry?
 ){
     val screens = listOf(
         BottomBarScreen.Home,
@@ -46,12 +62,12 @@ fun BottomBar(
         BottomBarScreen.Bookings,
         BottomBarScreen.Profile,
     )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
         backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp).clip(RoundedCornerShape(20.dp))
+        modifier = Modifier.padding(horizontal = 10.dp, vertical = 10.dp).clip(RoundedCornerShape(20.dp)),
+        elevation = 5.dp
     ){
         screens.forEach { screen ->
             AddItem(
@@ -77,7 +93,7 @@ fun RowScope.AddItem(
             Icon(
                 imageVector = if (isSelected) screen.selectedIcon else screen.unselectedIcon,
                 contentDescription = "Navigation Icon",
-                modifier = Modifier.size(28.dp),
+                modifier = Modifier.size(26.dp),
                 tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
             )
         },

@@ -4,13 +4,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.nganga.robert.chargelink.ui.screens.BookingsScreen
-import com.nganga.robert.chargelink.ui.screens.HomeScreen
-import com.nganga.robert.chargelink.ui.screens.MapScreen
-import com.nganga.robert.chargelink.ui.screens.ProfileScreen
+import com.nganga.robert.chargelink.ui.screens.*
 
 
 @Composable
@@ -29,13 +27,27 @@ fun BottomNavGraph(
            MapScreen()
        }
        composable(route = BottomBarScreen.Profile.route){
-           ProfileScreen()
+           ProfileScreen(
+               onSettingsClick = {
+                   navController.navigate(BottomBarScreen.Settings.route){
+                       popUpTo(navController.graph.findStartDestination().id)
+                       launchSingleTop = true
+                   }
+               }
+           )
        }
        composable(route = BottomBarScreen.Bookings.route){
            BookingsScreen(
                onBackPressed = { navController.popBackStack() }
            )
        }
+       composable(route = BottomBarScreen.Settings.route){
+           SettingsScreen()
+       }
+       composable(route = BottomBarScreen.Details.route){
+           StationDetailsScreen()
+       }
+
 
    }
 }

@@ -135,7 +135,7 @@ fun BookingItem(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceAround
+                horizontalArrangement = Arrangement.Start
             ) {
                 OutlinedButton(
                     modifier = Modifier.weight(1f),
@@ -143,6 +143,7 @@ fun BookingItem(
                 ) {
                     Text(text = stringResource(id = R.string.cancel_booking))
                 }
+                Spacer(modifier = Modifier.width(10.dp))
                 Button(
                     modifier = Modifier.weight(1f),
                     onClick = {  }
