@@ -7,8 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
@@ -33,19 +31,19 @@ fun MapScreen(){
                    ChargingStation(
                        name = "EvGo Charger",
                        location = "Waiyaki way, Westlands",
-                       rating = "4",
+                       averageRating = "4",
                        imageUrl = R.drawable.station1
                    ),
                    ChargingStation(
                        name = "Charge Point",
                        location = "Garden City, Nairobi",
-                       rating = "3",
+                       averageRating = "3",
                        imageUrl = R.drawable.station2
                    ),
                    ChargingStation(
                        name = "Electric Charger",
                        location = "Langata rd, Langata",
-                       rating = "5",
+                       averageRating = "5",
                        imageUrl = R.drawable.station3
                    )
                ),

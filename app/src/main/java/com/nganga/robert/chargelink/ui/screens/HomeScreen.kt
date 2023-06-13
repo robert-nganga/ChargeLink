@@ -33,7 +33,8 @@ import com.nganga.robert.chargelink.ui.screens.statewrappers.HomeScreenState
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    homeScreenState: State<HomeScreenState>
+    homeScreenState: State<HomeScreenState>,
+    onNearByItemClick: (String) -> Unit
 ){
     val state by remember{ homeScreenState }
     Column(
@@ -67,7 +68,10 @@ fun HomeScreen(
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(5.dp))
-        NearbySection(stations = state.nearbyStations)
+        NearbySection(
+            stations = state.nearbyStations,
+            onNearByItemClick = { onNearByItemClick(it) }
+        )
 
 
     }
@@ -194,7 +198,8 @@ fun SearchSection(
 @Composable
 fun NearbySection(
     modifier: Modifier = Modifier,
-    stations: List<ChargingStation>
+    stations: List<ChargingStation>,
+    onNearByItemClick: (String) ->Unit
 ){
     LazyColumn(modifier = modifier){
         items(stations){ station->
@@ -202,7 +207,8 @@ fun NearbySection(
                 chargingStation = station,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
+                    .height(120.dp),
+                onNearByItemClick = { onNearByItemClick(it) }
             )
         }
         item {

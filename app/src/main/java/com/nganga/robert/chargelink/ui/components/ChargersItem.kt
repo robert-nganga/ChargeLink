@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.models.Charger
 
@@ -36,7 +37,9 @@ fun ChargersItem(
            verticalArrangement = Arrangement.Top
        ) {
            Row(
-               modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+               modifier = Modifier
+                   .fillMaxWidth()
+                   .padding(horizontal = 10.dp),
                verticalAlignment = Alignment.CenterVertically,
                horizontalArrangement = Arrangement.Start
            ) {
@@ -76,7 +79,7 @@ fun ChargersItem(
                    )
                    Spacer(modifier = Modifier.height(10.dp))
                    Icon(
-                       painter = charger.image,
+                       painter = painterResource(id = charger.image),
                        modifier = Modifier.size(40.dp),
                        contentDescription = null,
                    )

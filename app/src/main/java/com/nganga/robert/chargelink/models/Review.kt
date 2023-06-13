@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.painter.Painter
 
 data class Review(
     val userName: String,
-    val userImage: Painter,
+    val userImage: Int,
     val date: String,
     val time: String,
     val message: String,

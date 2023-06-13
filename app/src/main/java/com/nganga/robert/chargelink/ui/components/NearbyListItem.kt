@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,10 +22,15 @@ import com.nganga.robert.chargelink.models.ChargingStation
 @Composable
 fun NearbyListItem(
     chargingStation: ChargingStation,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onNearByItemClick: (String)->Unit
 ){
     Card(
-        modifier = modifier.padding(bottom = 10.dp),
+        modifier = modifier
+            .padding(bottom = 10.dp)
+            .clickable {
+                   onNearByItemClick(chargingStation.id)
+            },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
@@ -63,7 +69,7 @@ fun NearbyListItem(
                     )
                 )
                 Spacer(modifier = Modifier.height(6.dp))
-                IconText(icon = Icons.Filled.Star, text = chargingStation.rating)
+                IconText(icon = Icons.Filled.Star, text = chargingStation.averageRating)
 
             }
         }

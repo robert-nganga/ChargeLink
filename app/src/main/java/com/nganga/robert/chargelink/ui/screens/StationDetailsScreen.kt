@@ -39,17 +39,23 @@ import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.OpenDay
 import com.nganga.robert.chargelink.models.Review
 import com.nganga.robert.chargelink.ui.components.*
+import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun StationDetailsScreen(){
+fun StationDetailsScreen(
+    id: String?,
+    viewModel: HomeScreenViewModel
+){
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
     }
     var rating by rememberSaveable {
         mutableStateOf(3)
     }
+
+    val chargingStation = viewModel.station
     val bottomState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
@@ -75,7 +81,7 @@ fun StationDetailsScreen(){
             contentAlignment = Alignment.TopCenter
         ) {
             ImageHeaderSection(
-                image = painterResource(id = R.drawable.station3),
+                image = painterResource(id = chargingStation.value.imageUrl),
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.35f)
@@ -92,8 +98,8 @@ fun StationDetailsScreen(){
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
                         .background(MaterialTheme.colorScheme.background),
-                    name = "EvGo Charger",
-                    location = "Waiyaki way, Westlands",
+                    name = chargingStation.value.name,
+                    location = chargingStation.value.location,
                     rating = 4
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -104,96 +110,23 @@ fun StationDetailsScreen(){
                 )
                 when (selectedTabIndex){
                     0 -> OverviewSection(
-                        description = "We offer charging services for various types of vehicles and manufactures, our chargers are fas.",
-                        phone = "012345345",
-                        openHours = "12 Hours",
-                        openDays = listOf(
-                            OpenDay(day = "Monday", hours = "08:00 AM - 10:00 PM"),
-                            OpenDay(day = "Tuesday", hours = "08:00 AM - 10:00 PM"),
-                            OpenDay(day = "Wednesday", hours = "08:00 AM - 10:00 PM"),
-                            OpenDay(day = "Thursday", hours = "08:00 AM - 10:00 PM"),
-                            OpenDay(day = "Friday", hours = "08:00 AM - 10:00 PM"),
-                            OpenDay(day = "Saturday", hours = "10:00 AM - 6:00 PM"),
-                        ),
-                        amenities = Amenities(
-                            wifi = true,
-                            restaurants = true,
-                            restrooms = false,
-                            tyrePressure = true,
-                            loungeArea = false,
-                            maintenance = true,
-                            shops = false
-                        )
+                        description = chargingStation.value.description,
+                        phone = chargingStation.value.phone,
+                        openHours = chargingStation.value.openHours,
+                        openDays = chargingStation.value.openDays,
+                        amenities = chargingStation.value.amenities
                     )
-                    1 -> ChargerSection(chargers = listOf(
-                        Charger(plug = "CCS 1 DC", power = "360kW", image = painterResource(
-                            id = R.drawable.ic_ev_plug_ccs2), isAvailable = true
-                        ),
-                        Charger(plug = "CCS 2 DC", power = "360kW", image = painterResource(
-                            id = R.drawable.ic_ev_plug_ccs2_combo), isAvailable = true
-                        ),
-                        Charger(plug = "Mennekes (Type 2) AC", power = "22kW", image = painterResource(
-                            id = R.drawable.ic_ev_plug_iec_mennekes_t2), isAvailable = true
-                        ),
-                        Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = painterResource(
-                            id = R.drawable.ic_ev_plug_j1772_t1), isAvailable = true
-                        ),
-                        Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = painterResource(
-                            id = R.drawable.ic_ev_plug_tesla), isAvailable = true
-                        )
-                    ),
+                    1 -> ChargerSection(chargers = chargingStation.value.chargers,
                         modifier = Modifier.fillMaxSize()
                     )
                     2 -> ReviewSection(
                         totalReviews = 120,
                         averageRating = 4.0f,
-                        reviews = listOf(
-                            Review(
-                                userName = "John Doe",
-                                userImage = painterResource(id = R.drawable.user1),
-                                date = "2023-06-04",
-                                time = "11:02 AM",
-                                message = "This was a great product! I would definitely recommend it to others.",
-                                rating = 5
-                            ),
-                            Review(
-                                userName = "Jane Doe",
-                                userImage = painterResource(id = R.drawable.user5),
-                                date = "2023-06-03",
-                                time = "10:00 AM",
-                                message = "This product was not as good as I expected. I would not recommend it to others.",
-                                rating = 2
-                            ),
-                            Review(
-                                userName = "Bill Smith",
-                                userImage = painterResource(id = R.drawable.user2),
-                                date = "2023-06-02",
-                                time = "9:00 AM",
-                                message = "This product was okay. I wouldn't say it was great, but it wasn't bad either.",
-                                rating = 3
-                            ),
-                            Review(
-                                userName = "Susan Jones",
-                                userImage = painterResource(id = R.drawable.user4),
-                                date = "2023-06-01",
-                                time = "8:00 AM",
-                                message = "I loved this product! It was everything I was looking for and more.",
-                                rating = 4
-                            ),
-                            Review(
-                                userName = "David Brown",
-                                userImage = painterResource(id = R.drawable.user3),
-                                date = "2023-05-31",
-                                time = "7:00 AM",
-                                message = "This product was a lifesaver! I don't know what I would have done without it.",
-                                rating = 5
-                            )
-                        ),
+                        reviews = chargingStation.value.reviews,
                         modifier = Modifier.fillMaxSize(),
                         onRatingChange = {
                             rating = it
                             scope.launch { bottomState.show() }
-                            println("ModalBottomSheet visibility ${bottomState.isVisible} and rating:: $rating")
                         }
                     )
                     3 -> ReviewBottomSheetContent(onRatingChanged = { _, _ ->}, rating = 4)

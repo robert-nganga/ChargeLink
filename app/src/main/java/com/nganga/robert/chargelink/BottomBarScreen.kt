@@ -47,4 +47,13 @@ sealed class BottomBarScreen(
         selectedIcon = Icons.Filled.Info,
         unselectedIcon = Icons.Outlined.Info
     )
+
+    fun withArgs(vararg args: String): String{
+        return buildString {
+            append(route)
+            args.forEach { arg ->
+                append("/$arg")
+            }
+        }
+    }
 }

@@ -3,10 +3,18 @@ package com.nganga.robert.chargelink.models
 import androidx.compose.ui.graphics.painter.Painter
 
 data class ChargingStation(
+    val id: String,
     val name: String,
     val location: String,
-    val rating: String,
-    //val description: String,
+    val averageRating: String,
+    val description: String,
+    //drawable resource e.g station1
     val imageUrl: Int,
-    //val isAvailable: Boolean
+    val phone: String,
+    val openHours: String,
+    val isAvailable: Boolean,
+    val chargers: List<Charger>,
+    val reviews: List<Review>,
+    val openDays: List<OpenDay>,
+    val amenities: Amenities
 )

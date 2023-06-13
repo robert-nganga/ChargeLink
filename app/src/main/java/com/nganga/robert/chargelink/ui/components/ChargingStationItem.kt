@@ -73,7 +73,7 @@ fun ChargingStationItem(
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Ratings(
-                        rating = station.rating.toInt(),
+                        rating = station.averageRating.toInt(),
                         starSize = 20.dp,
                         starColor = MaterialTheme.colorScheme.primary
                     )
