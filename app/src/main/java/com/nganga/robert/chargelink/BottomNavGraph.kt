@@ -32,7 +32,7 @@ fun BottomNavGraph(
            )
        }
        composable(route = BottomBarScreen.Maps.route){
-           MapScreen()
+           MapScreen(viewModel = viewModel)
        }
        composable(route = BottomBarScreen.Profile.route){
            ProfileScreen(
@@ -46,7 +46,8 @@ fun BottomNavGraph(
        }
        composable(route = BottomBarScreen.Bookings.route){
            BookingsScreen(
-               onBackPressed = { navController.popBackStack() }
+               onBackPressed = { navController.popBackStack() },
+               viewModel = viewModel
            )
        }
        composable(route = BottomBarScreen.Settings.route){
@@ -61,7 +62,7 @@ fun BottomNavGraph(
                }
            )
        ){ entry ->
-           StationDetailsScreen(id = entry.arguments?.getString("id"))
+           StationDetailsScreen(id = entry.arguments?.getString("id"), viewModel = viewModel)
        }
 
 

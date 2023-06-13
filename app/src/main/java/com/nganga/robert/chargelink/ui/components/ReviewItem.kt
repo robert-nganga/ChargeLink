@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.models.Review
 
@@ -28,7 +29,7 @@ fun ReviewItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = review.userImage,
+                painter = painterResource(id = review.userImage),
                 contentDescription = "Profile Image",
                 modifier = Modifier
                     .size(60.dp)

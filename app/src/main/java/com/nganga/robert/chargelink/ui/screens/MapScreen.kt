@@ -8,12 +8,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.ui.components.ChargingStationItem
+import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 @Composable
-fun MapScreen(){
+fun MapScreen(
+    viewModel: HomeScreenViewModel
+){
+
+    val state = viewModel.state
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     Box(
@@ -27,26 +31,7 @@ fun MapScreen(){
             contentAlignment = Alignment.BottomCenter
         ) {
            ChargingStationsSection(
-               stations = listOf(
-                   ChargingStation(
-                       name = "EvGo Charger",
-                       location = "Waiyaki way, Westlands",
-                       averageRating = "4",
-                       imageUrl = R.drawable.station1
-                   ),
-                   ChargingStation(
-                       name = "Charge Point",
-                       location = "Garden City, Nairobi",
-                       averageRating = "3",
-                       imageUrl = R.drawable.station2
-                   ),
-                   ChargingStation(
-                       name = "Electric Charger",
-                       location = "Langata rd, Langata",
-                       averageRating = "5",
-                       imageUrl = R.drawable.station3
-                   )
-               ),
+               stations = state.value.nearbyStations,
                modifier = Modifier.width(screenWidth - 20.dp)
            )
         }

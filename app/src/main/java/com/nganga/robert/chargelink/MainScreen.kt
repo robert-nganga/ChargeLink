@@ -30,10 +30,9 @@ import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 fun MainScreen(){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-
     val viewModel: HomeScreenViewModel = viewModel()
 
-    val showBottomBar = when(navBackStackEntry?.destination?.route){
+    val showBottomBar = when(navBackStackEntry?.destination?.route?.substringBefore("/")){
         BottomBarScreen.Settings.route -> false
         BottomBarScreen.Details.route -> false
         else -> true

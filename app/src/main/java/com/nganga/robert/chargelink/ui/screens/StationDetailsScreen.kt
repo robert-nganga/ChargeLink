@@ -34,9 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.Amenities
 import com.nganga.robert.chargelink.models.Charger
-import com.nganga.robert.chargelink.models.OpenDay
 import com.nganga.robert.chargelink.models.Review
 import com.nganga.robert.chargelink.ui.components.*
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
@@ -55,6 +53,9 @@ fun StationDetailsScreen(
         mutableStateOf(3)
     }
 
+    id?.let {
+        viewModel.getChargingStation(it)
+    }
     val chargingStation = viewModel.station
     val bottomState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()

@@ -12,6 +12,9 @@ class HomeScreenViewModel:ViewModel() {
     private var _state = mutableStateOf(HomeScreenState())
     val state: State<HomeScreenState> get() = _state
 
+    private var _booking = mutableStateOf(emptyBooking)
+    val booking: State<Booking> get() = _booking
+
     private var _station = mutableStateOf(emptyStation)
     val station: State<ChargingStation> get() = _station
 
@@ -20,6 +23,8 @@ class HomeScreenViewModel:ViewModel() {
         station?.let {
             _station.value = it
         }
+
+        _booking.value = myBooking
     }
 
     init {
@@ -28,8 +33,26 @@ class HomeScreenViewModel:ViewModel() {
             currentUser = user
         )
     }
-
 }
+
+val myBooking = Booking(
+    stationName = "EvGo Charger",
+    stationLocation = "Donholm, jogoo road",
+    date = "10 June 2023",
+    time = "2:00 PM",
+    duration = "1 Hour",
+    charger = Charger(plug = "CCS 1 DC", power = "360kW", image = R.drawable.ic_ev_plug_ccs2, isAvailable = true)
+)
+
+val emptyBooking = Booking(
+    stationName = "",
+    stationLocation = "",
+    date = "",
+    time = "",
+    duration = "",
+    charger = Charger(plug = "", power = "", image = R.drawable.ic_ev_plug_ccs2, isAvailable = true)
+)
+
 val emptyStation = ChargingStation(
     id = "",
     name = "",
@@ -145,7 +168,7 @@ val chargingStations = listOf(
         id = "1",
         name = "EcoCharge",
         location = "Ruaka, Limuru rd",
-        averageRating = "3.8",
+        averageRating = "3",
         description = "EcoCharge is dedicated to providing eco-friendly charging solutions for electric vehicles. Our charging station is conveniently located in Nairobi and offers fast and reliable charging services.",
         imageUrl = R.drawable.station1,
         phone = "+254123456789",
@@ -160,7 +183,7 @@ val chargingStations = listOf(
         id = "2",
         name = "MajiPower",
         location = "Thika rd, Nairobi",
-        averageRating = "5.0",
+        averageRating = "5",
         description = "MajiPower charging station in Mombasa provides efficient charging services for electric vehicles. We prioritize sustainability and offer a comfortable waiting area for our customers.",
         imageUrl = R.drawable.station2,
         phone = "+254987654321",

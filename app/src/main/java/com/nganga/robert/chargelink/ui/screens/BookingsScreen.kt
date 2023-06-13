@@ -22,10 +22,12 @@ import com.nganga.robert.chargelink.models.Booking
 import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.ui.components.BookingItem
 import com.nganga.robert.chargelink.ui.components.TabView
+import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 @Composable
 fun BookingsScreen(
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    viewModel: HomeScreenViewModel
 ){
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
@@ -34,6 +36,8 @@ fun BookingsScreen(
     var isReminder by rememberSaveable {
         mutableStateOf(false)
     }
+
+    val booking = viewModel.booking
     
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -52,20 +56,7 @@ fun BookingsScreen(
         )
         Spacer(modifier = Modifier.height(10.dp))
         BookingItem(
-            booking = Booking(
-                stationName = "EvGo Charger",
-                stationLocation = "Donholm, jogoo road",
-                date = "10 June 2023",
-                time = "2:00 PM",
-                duration = "1 Hour",
-                charger = Charger(
-                    plug = "Tesla",
-                    power = "250 kW",
-                    isAvailable = true,
-                    image = painterResource(id = R.drawable.ic_ev_plug_tesla)
-                    
-                )
-            ), 
+            booking = booking.value,
             reminder = isReminder,
             onReminderCheckChanged = {  isReminder = it }
         )
