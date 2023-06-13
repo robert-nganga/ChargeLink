@@ -1,6 +1,8 @@
 package com.nganga.robert.chargelink.ui.screens
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.*
 import androidx.compose.material.Text
@@ -10,9 +12,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.models.Car
 
 @Composable
 fun SelectVehicleScreen(){
@@ -25,6 +29,13 @@ fun SelectVehicleScreen(){
             title = stringResource(id = R.string.select_vehicle),
             onAddClicked = {}
         )
+        Button(
+            onClick = {  }
+        ) {
+            Text(
+                text = stringResource(id = R.string.continues)
+            )
+        }
     }
 }
 
@@ -58,6 +69,54 @@ fun SelectVehicleAppBar(
             Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Add vehicle"
+            )
+        }
+    }
+}
+
+@Composable
+fun SelectVehicleItem(
+    vehicle: Car,
+    isSelected: Boolean,
+    onSelectionChange: (Boolean)->Unit,
+    modifier: Modifier = Modifier
+){
+    Card(
+        modifier = modifier.padding(horizontal = 10.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(5.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background
+        ),
+    ){
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = vehicle.imageUrl),
+                contentDescription = "Vehicle image"
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            Column{
+                Text(
+                    text = vehicle.manufacturer,
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = vehicle.manufacturer,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                )
+            }
+            Box(modifier = Modifier.weight(1f))
+            RadioButton(
+                selected = isSelected,
+                onClick = {
+                    onSelectionChange(!isSelected)
+                }
             )
         }
     }

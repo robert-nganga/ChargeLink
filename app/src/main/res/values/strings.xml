@@ -30,4 +30,5 @@
     <string name="cancel_booking">Cancel</string>
     <string name="view">View</string>
     <string name="select_vehicle">Select your vehicle</string>
+    <string name="continues">Continue</string>
 </resources>
