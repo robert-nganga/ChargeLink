@@ -31,4 +31,6 @@
     <string name="view">View</string>
     <string name="select_vehicle">Select your vehicle</string>
     <string name="continues">Continue</string>
+    <string name="otp_verification">OTP Verification</string>
+    <string name="enter_number_for_verification">Enter your phone number for verification</string>
 </resources>
