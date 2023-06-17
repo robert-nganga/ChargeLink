@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 
@@ -30,7 +31,7 @@ fun OtpVerificationScreen(){
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -88,15 +89,16 @@ fun OtpVerificationCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 10.dp),
+                .padding(horizontal = 10.dp, vertical = 15.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(id = R.string.otp_verification),
-                style = MaterialTheme.typography.bodyMedium
+                text = "${stringResource(id = R.string.we_sent_an_sms)} +254723453621 ${stringResource(id = R.string.enter_the_validation)}",
+                style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             BasicTextField(
                 value = otp,
                 onValueChange = {
@@ -119,6 +121,7 @@ fun OtpVerificationCard(
                                 text = char,
                                 modifier = Modifier
                                     .width(40.dp)
+                                    .height(50.dp)
                                     .border(
                                         width = if (isFocused) 2.dp else 1.dp,
                                         color = if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
@@ -133,16 +136,28 @@ fun OtpVerificationCard(
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            Button(
-                onClick = {  },
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.align(Alignment.End)
+            Spacer(modifier = Modifier.height(25.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(id = R.string.continues)
+                    text = stringResource(id = R.string.tap_here_to_resend),
+                    color = MaterialTheme.colorScheme.primary,
+                    textDecoration = TextDecoration.Underline,
+                    style = MaterialTheme.typography.titleSmall
                 )
+                Button(
+                    onClick = {  },
+                    shape = RoundedCornerShape(10.dp),
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.continues)
+                    )
+                }
             }
+
         }
     }
 

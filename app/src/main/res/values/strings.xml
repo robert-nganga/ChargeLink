@@ -35,4 +35,7 @@
     <string name="enter_number_for_verification">We\'ll send an SMS with a code to verify your number</string>
     <string name="phone">Phone</string>
     <string name="phone_verification">Phone Verification</string>
+    <string name="we_sent_an_sms">We\'ve sent an SMS to </string>
+    <string name="enter_the_validation">enter the validation code in the SMS to access your account</string>
+    <string name="tap_here_to_resend">Tap here to resend</string>
 </resources>
