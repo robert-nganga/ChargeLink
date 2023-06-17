@@ -1,29 +1,97 @@
 package com.nganga.robert.chargelink.ui.screens.authentication
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.ui.components.BoxIcon
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterUserScreen(){
+
+    var name by remember{
+        mutableStateOf("")
+    }
+    var email by remember{
+        mutableStateOf("")
+    }
+    var gender by remember {
+        mutableStateOf("")
+    }
+
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         Spacer(modifier = Modifier.height(30.dp))
         ProfilePhotoSection()
+        Spacer(modifier = Modifier.height(30.dp))
+        TextField(
+            value = name,
+            onValueChange = {name = it},
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(text = stringResource(id = R.string.name))},
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0x0D000000)
+            )
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        TextField(
+            value = email,
+            onValueChange = {email = it},
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(text = stringResource(id = R.string.email))},
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color(0x0D000000)
+            )
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        GenderSelector(
+            gender = gender,
+            onGenderSelectionChanged = { gender = it }
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        CompositionLocalProvider(
+            LocalTextInputService provides null
+        ){
+            TextField(
+                value = email,
+                onValueChange = {email = it},
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(text = stringResource(id = R.string.email))},
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color(0x0D000000)
+                )
+            )
+        }
+
     }
 }
 
@@ -55,5 +123,68 @@ fun ProfilePhotoSection(
             )
         }
 
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GenderSelector(
+    modifier: Modifier = Modifier,
+    gender: String = "",
+    onGenderSelectionChanged: (String)->Unit
+){
+    var expanded by remember { mutableStateOf(false) }
+    val suggestions = listOf("Male","Female")
+
+    var textFieldSize by remember { mutableStateOf(Size.Zero)}
+
+    val icon = if (expanded)
+        Icons.Filled.ArrowDropUp //it requires androidx.compose.material:material-icons-extended
+    else
+        Icons.Filled.ArrowDropDown
+
+
+    Box {
+        CompositionLocalProvider(
+            LocalTextInputService provides null
+        ) {
+            TextField(
+                value = gender,
+                onValueChange = { onGenderSelectionChanged(it) },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .onFocusChanged {  }
+                    .onGloballyPositioned { coordinates ->
+                        //This value is used to assign to the DropDown the same width
+                        textFieldSize = coordinates.size.toSize()
+                    },
+                label = { Text(stringResource(id = R.string.gender)) },
+                trailingIcon = {
+                    Icon(icon,"contentDescription",
+                        Modifier.clickable { expanded = !expanded })
+                },
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color(0x0D000000)
+                ),
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(with(LocalDensity.current){textFieldSize.width.toDp()})
+        ) {
+            suggestions.forEach { label ->
+                DropdownMenuItem(
+                    onClick = {
+                    onGenderSelectionChanged(label)
+                },
+                    text = {
+                        Text(text = label)
+                    }
+                ) 
+            }
+        }
     }
 }
