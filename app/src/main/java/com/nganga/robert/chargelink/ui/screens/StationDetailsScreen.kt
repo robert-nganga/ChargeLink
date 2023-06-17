@@ -180,32 +180,6 @@ fun ImageHeaderSection(
 }
 
 @Composable
-fun BoxIcon(
-    modifier: Modifier = Modifier,
-    icon: ImageVector,
-    iconSize: Dp,
-    iconTint: Color,
-    background: Color
-){
-    Box(
-        contentAlignment = Alignment.Center, 
-        modifier = modifier
-            .padding(5.dp)
-            .background(background)
-            .clip(
-                RoundedCornerShape(10.dp)
-            )
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(iconSize),
-            tint = iconTint
-        )
-    }
-}
-
-@Composable
 fun DescriptionSection(
     modifier: Modifier = Modifier,
     name: String,

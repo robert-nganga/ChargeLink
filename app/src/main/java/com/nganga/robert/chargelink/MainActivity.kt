@@ -7,9 +7,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nganga.robert.chargelink.ui.screens.*
-import com.nganga.robert.chargelink.ui.screens.authentication.EnterNumberScreen
 import com.nganga.robert.chargelink.ui.screens.authentication.OtpVerificationScreen
+import com.nganga.robert.chargelink.ui.screens.authentication.RegisterUserScreen
 import com.nganga.robert.chargelink.ui.theme.ChargeLinkTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,6 +33,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     ChargeLinkTheme {
-        OtpVerificationScreen()
+        RegisterUserScreen()
     }
 }
