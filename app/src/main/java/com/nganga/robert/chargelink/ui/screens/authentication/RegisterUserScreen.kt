@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -26,12 +27,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import com.maxkeppeker.sheets.core.CoreDialog
+import com.maxkeppeker.sheets.core.models.CoreSelection
+import com.maxkeppeker.sheets.core.models.base.rememberSheetState
+import com.maxkeppeler.sheets.calendar.CalendarDialog
+import com.maxkeppeler.sheets.calendar.models.CalendarConfig
+import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.ui.components.BoxIcon
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterUserScreen(){
+
+    val calendarState = rememberSheetState()
 
     var name by remember{
         mutableStateOf("")
@@ -42,6 +52,23 @@ fun RegisterUserScreen(){
     var gender by remember {
         mutableStateOf("")
     }
+    var dob by remember {
+        mutableStateOf("")
+    }
+
+    CalendarDialog(
+        state = calendarState,
+        selection = CalendarSelection.Date{ date->
+            val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy")
+            dob = date.format(formatter)
+        },
+        config = CalendarConfig(
+            monthSelection = true,
+            yearSelection = true,
+            minYear = 1960,
+            maxYear = 2008
+        )
+    )
 
     Column(
         modifier = Modifier
@@ -53,7 +80,7 @@ fun RegisterUserScreen(){
         Spacer(modifier = Modifier.height(30.dp))
         ProfilePhotoSection()
         Spacer(modifier = Modifier.height(30.dp))
-        TextField(
+        OutlinedTextField(
             value = name,
             onValueChange = {name = it},
             modifier = Modifier.fillMaxWidth(),
@@ -63,7 +90,7 @@ fun RegisterUserScreen(){
             )
         )
         Spacer(modifier = Modifier.height(10.dp))
-        TextField(
+        OutlinedTextField(
             value = email,
             onValueChange = {email = it},
             modifier = Modifier.fillMaxWidth(),
@@ -81,14 +108,26 @@ fun RegisterUserScreen(){
         CompositionLocalProvider(
             LocalTextInputService provides null
         ){
-            TextField(
-                value = email,
-                onValueChange = {email = it},
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text(text = stringResource(id = R.string.email))},
+            OutlinedTextField(
+                value = dob,
+                onValueChange = {dob = it},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged {
+                            if (it.isFocused){
+                                calendarState.show()
+                            }
+                    },
+                label = { Text(text = stringResource(id = R.string.date_of_birth))},
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color(0x0D000000)
-                )
+                ),
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.CalendarMonth,
+                        contentDescription = "Calendar Icon"
+                    )
+                }
             )
         }
 
@@ -148,12 +187,12 @@ fun GenderSelector(
         CompositionLocalProvider(
             LocalTextInputService provides null
         ) {
-            TextField(
+            OutlinedTextField(
                 value = gender,
                 onValueChange = { onGenderSelectionChanged(it) },
                 modifier = modifier
                     .fillMaxWidth()
-                    .onFocusChanged {  }
+                    .onFocusChanged { }
                     .onGloballyPositioned { coordinates ->
                         //This value is used to assign to the DropDown the same width
                         textFieldSize = coordinates.size.toSize()
