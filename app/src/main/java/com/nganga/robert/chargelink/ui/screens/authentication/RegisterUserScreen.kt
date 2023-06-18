@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -11,10 +12,7 @@ import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,40 +27,29 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import com.maxkeppeker.sheets.core.CoreDialog
-import com.maxkeppeker.sheets.core.models.CoreSelection
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.ui.components.BoxIcon
+import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterUserScreen(){
+fun RegisterUserScreen(
+    viewModel: AuthenticationViewModel
+){
+    val registerFormState by viewModel.registerFormState
 
     val calendarState = rememberSheetState()
-
-    var name by remember{
-        mutableStateOf("")
-    }
-    var email by remember{
-        mutableStateOf("")
-    }
-    var gender by remember {
-        mutableStateOf("")
-    }
-    var dob by remember {
-        mutableStateOf("")
-    }
 
     CalendarDialog(
         state = calendarState,
         selection = CalendarSelection.Date{ date->
-            val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy")
-            dob = date.format(formatter)
+            val dob = date.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy"))
+            viewModel.onDobChange(dob)
         },
         config = CalendarConfig(
             monthSelection = true,
@@ -83,8 +70,8 @@ fun RegisterUserScreen(){
         ProfilePhotoSection()
         Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
-            value = name,
-            onValueChange = {name = it},
+            value = registerFormState.nameState.text,
+            onValueChange = { viewModel.onNameChange(it) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = stringResource(id = R.string.name))},
             colors = TextFieldDefaults.textFieldColors(
@@ -94,8 +81,8 @@ fun RegisterUserScreen(){
         )
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedTextField(
-            value = email,
-            onValueChange = {email = it},
+            value = registerFormState.emailState.text,
+            onValueChange = {viewModel.onEmailChange(it)},
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = stringResource(id = R.string.email))},
             colors = TextFieldDefaults.textFieldColors(
@@ -108,22 +95,22 @@ fun RegisterUserScreen(){
         )
         Spacer(modifier = Modifier.height(10.dp))
         GenderSelector(
-            gender = gender,
-            onGenderSelectionChanged = { gender = it }
+            gender = registerFormState.genderState.text,
+            onGenderSelectionChanged = { viewModel.onGenderChange(it)}
         )
         Spacer(modifier = Modifier.height(10.dp))
         CompositionLocalProvider(
             LocalTextInputService provides null
         ){
             OutlinedTextField(
-                value = dob,
-                onValueChange = {dob = it},
+                value = registerFormState.dobState.text,
+                onValueChange = {viewModel.onDobChange(it)},
                 modifier = Modifier
                     .fillMaxWidth()
                     .onFocusChanged {
-                            if (it.isFocused){
-                                calendarState.show()
-                            }
+                        if (it.isFocused) {
+                            calendarState.show()
+                        }
                     },
                 label = { Text(text = stringResource(id = R.string.date_of_birth))},
                 colors = TextFieldDefaults.textFieldColors(
@@ -141,7 +128,14 @@ fun RegisterUserScreen(){
                 singleLine = true
             )
         }
-
+        Spacer(modifier = Modifier.height(10.dp))
+        Button(
+            onClick = {  },
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text(text = stringResource(id = R.string.continues))
+        }
     }
 }
 
