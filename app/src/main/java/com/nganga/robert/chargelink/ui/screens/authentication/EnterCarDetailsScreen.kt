@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.ui.screens.authentication
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -11,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,7 +43,15 @@ fun EnterCarDetailsScreen(){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        EnterCarDetailsTopAppBar(title = stringResource(id = R.string.enter_car_details))
+        EnterCarDetailsTopAppBar(
+            title = stringResource(id = R.string.enter_car_details),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+//        Icon(
+//            painter = painterResource(id = R.drawable.ic_car_illustration),
+//            contentDescription = null
+//        )
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
             value = manufacturer,
@@ -71,25 +81,33 @@ fun EnterCarDetailsScreen(){
             )
             Spacer(modifier = Modifier.width(10.dp))
             OutlinedTextField(
-                value = range,
-                onValueChange = { range = it },
+                value = plug,
+                onValueChange = { plug = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                label = { Text(text = stringResource(id = R.string.range))},
+                label = { Text(text = stringResource(id = R.string.plug))},
                 singleLine = true
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedTextField(
-            value = plug,
-            onValueChange = { plug = it },
+            value = range,
+            onValueChange = { range = it },
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            label = { Text(text = stringResource(id = R.string.plug))},
+                .fillMaxWidth(),
+            label = { Text(text = stringResource(id = R.string.range))},
             singleLine = true
         )
+        Spacer(modifier = Modifier.height(20.dp))
+        Button(
+            onClick = {  },
+            shape = RoundedCornerShape(10.dp),
+            modifier = Modifier.align(Alignment.End)
+        ) {
+            Text(text = stringResource(id = R.string.continues))
+        }
+
     }
 }
 
