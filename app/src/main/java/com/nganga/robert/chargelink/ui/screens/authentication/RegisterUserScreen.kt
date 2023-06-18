@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.CalendarMonth
@@ -18,13 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
@@ -66,7 +67,11 @@ fun RegisterUserScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Spacer(modifier = Modifier.height(30.dp))
+        RegisterScreenTopAppBar(
+            title = stringResource(id = R.string.complete_profile),
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(10.dp))
         ProfilePhotoSection()
         Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
@@ -74,9 +79,6 @@ fun RegisterUserScreen(
             onValueChange = { viewModel.onNameChange(it) },
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = stringResource(id = R.string.name))},
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0x0D000000)
-            ),
             singleLine = true
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -85,9 +87,6 @@ fun RegisterUserScreen(
             onValueChange = {viewModel.onEmailChange(it)},
             modifier = Modifier.fillMaxWidth(),
             label = { Text(text = stringResource(id = R.string.email))},
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0x0D000000)
-            ),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email
             ),
@@ -96,7 +95,8 @@ fun RegisterUserScreen(
         Spacer(modifier = Modifier.height(10.dp))
         GenderSelector(
             gender = registerFormState.genderState.text,
-            onGenderSelectionChanged = { viewModel.onGenderChange(it)}
+            onGenderSelectionChanged = { viewModel.onGenderChange(it)},
+            modifier = Modifier.align(Alignment.Start)
         )
         Spacer(modifier = Modifier.height(10.dp))
         CompositionLocalProvider(
@@ -113,9 +113,6 @@ fun RegisterUserScreen(
                         }
                     },
                 label = { Text(text = stringResource(id = R.string.date_of_birth))},
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0x0D000000)
-                ),
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.CalendarMonth,
@@ -128,7 +125,7 @@ fun RegisterUserScreen(
                 singleLine = true
             )
         }
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         Button(
             onClick = {  },
             shape = RoundedCornerShape(10.dp),
@@ -144,7 +141,7 @@ fun ProfilePhotoSection(
     modifier: Modifier = Modifier
 ){
     Box(
-        modifier = modifier.size(100.dp)
+        modifier = modifier.size(150.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.user1),
@@ -170,6 +167,34 @@ fun ProfilePhotoSection(
     }
 }
 
+@Composable
+fun RegisterScreenTopAppBar(
+    modifier: Modifier = Modifier,
+    title: String
+){
+    Row(
+        modifier = modifier.padding(vertical = 20.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start
+    ) {
+        IconButton(
+            onClick = {  }
+        ) {
+            Icon(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Back"
+            )
+        }
+        Spacer(modifier = Modifier.width(15.dp))
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GenderSelector(
@@ -188,15 +213,15 @@ fun GenderSelector(
         Icons.Filled.ArrowDropDown
 
 
-    Box {
+    Box(modifier = modifier) {
         CompositionLocalProvider(
             LocalTextInputService provides null
         ) {
             OutlinedTextField(
                 value = gender,
                 onValueChange = { onGenderSelectionChanged(it) },
-                modifier = modifier
-                    .fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth(0.4f)
                     .onFocusChanged { }
                     .onGloballyPositioned { coordinates ->
                         //This value is used to assign to the DropDown the same width
@@ -206,10 +231,7 @@ fun GenderSelector(
                 trailingIcon = {
                     Icon(icon,"contentDescription",
                         Modifier.clickable { expanded = !expanded })
-                },
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0x0D000000)
-                ),
+                }
             )
         }
 
