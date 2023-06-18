@@ -43,4 +43,10 @@
     <string name="email">Email</string>
     <string name="gender">Gender</string>
     <string name="complete_profile">Complete profile</string>
+    <string name="enter_car_details">Enter car details</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="model">Model</string>
+    <string name="battery_capacity">Battery capacity</string>
+    <string name="range">Range on full charge</string>
+    <string name="plug">Plug</string>
 </resources>
