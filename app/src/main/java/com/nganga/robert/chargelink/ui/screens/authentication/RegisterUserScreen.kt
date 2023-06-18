@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
@@ -25,6 +26,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.maxkeppeker.sheets.core.CoreDialog
@@ -87,7 +89,8 @@ fun RegisterUserScreen(){
             label = { Text(text = stringResource(id = R.string.name))},
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0x0D000000)
-            )
+            ),
+            singleLine = true
         )
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedTextField(
@@ -97,7 +100,11 @@ fun RegisterUserScreen(){
             label = { Text(text = stringResource(id = R.string.email))},
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color(0x0D000000)
-            )
+            ),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email
+            ),
+            singleLine = true
         )
         Spacer(modifier = Modifier.height(10.dp))
         GenderSelector(
@@ -125,9 +132,13 @@ fun RegisterUserScreen(){
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Outlined.CalendarMonth,
-                        contentDescription = "Calendar Icon"
+                        contentDescription = "Calendar Icon",
+                        modifier = Modifier.clickable {
+                            calendarState.show()
+                        }
                     )
-                }
+                },
+                singleLine = true
             )
         }
 
