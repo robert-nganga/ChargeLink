@@ -1,5 +1,6 @@
 package com.nganga.robert.chargelink.ui.screens.authentication
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -48,10 +49,11 @@ fun EnterCarDetailsScreen(){
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
-//        Icon(
-//            painter = painterResource(id = R.drawable.ic_car_illustration),
-//            contentDescription = null
-//        )
+        Image(
+            painter = painterResource(id = R.drawable.electric_car),
+            contentDescription = null,
+            modifier = Modifier.size(10.dp)
+        )
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(
             value = manufacturer,

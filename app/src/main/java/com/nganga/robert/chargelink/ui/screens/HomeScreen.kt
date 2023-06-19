@@ -29,14 +29,15 @@ import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.ui.components.GarageItem
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
 import com.nganga.robert.chargelink.ui.screens.statewrappers.HomeScreenState
+import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    homeScreenState: State<HomeScreenState>,
+    viewModel: HomeScreenViewModel,
     onNearByItemClick: (String) -> Unit
 ){
-    val state by remember{ homeScreenState }
+    val state by viewModel.state
     Column(
         modifier = modifier
             .fillMaxSize()
