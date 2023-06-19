@@ -21,7 +21,9 @@ import com.nganga.robert.chargelink.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EnterCarDetailsScreen(){
+fun EnterCarDetailsScreen(
+    onFinishClicked: ()->Unit
+){
     var manufacturer by remember{
         mutableStateOf("")
     }
@@ -103,11 +105,11 @@ fun EnterCarDetailsScreen(){
         )
         Spacer(modifier = Modifier.height(20.dp))
         Button(
-            onClick = {  },
+            onClick = { onFinishClicked() },
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier.align(Alignment.End)
         ) {
-            Text(text = stringResource(id = R.string.continues))
+            Text(text = stringResource(id = R.string.finish))
         }
 
     }

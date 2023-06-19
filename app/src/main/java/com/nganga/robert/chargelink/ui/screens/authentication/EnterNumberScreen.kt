@@ -20,7 +20,9 @@ import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 
 @Composable
-fun EnterNumberScreen(){
+fun EnterNumberScreen(
+    onContinueClicked: ()->Unit
+){
     var phone by remember{
         mutableStateOf("")
     }
@@ -64,7 +66,8 @@ fun EnterNumberScreen(){
             Spacer(modifier = Modifier.height(30.dp))
             EnterNumberCard(
                 phone = phone,
-                onPhoneChanged = { phone = it }
+                onPhoneChanged = { phone = it },
+                onContinueClicked = {onContinueClicked()}
             )
 
         }
@@ -84,6 +87,7 @@ fun EnterNumberScreen(){
 fun EnterNumberCard(
     modifier: Modifier = Modifier,
     phone: String,
+    onContinueClicked: () -> Unit,
     onPhoneChanged: (String)->Unit
 ){
     Card(
@@ -131,7 +135,7 @@ fun EnterNumberCard(
             Button(
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.align(Alignment.End),
-                onClick = { }
+                onClick = { onContinueClicked() }
             ) {
                 Text(text = stringResource(id = R.string.continues))
             }

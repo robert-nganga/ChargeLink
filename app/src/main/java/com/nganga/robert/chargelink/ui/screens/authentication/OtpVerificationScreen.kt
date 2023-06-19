@@ -24,7 +24,9 @@ import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 
 @Composable
-fun OtpVerificationScreen(){
+fun OtpVerificationScreen(
+    onContinueClicked: ()->Unit
+){
 
     var otpValue by remember{
         mutableStateOf("")
@@ -64,7 +66,8 @@ fun OtpVerificationScreen(){
         Spacer(modifier = Modifier.height(20.dp))
         OtpVerificationCard(
             otp = otpValue,
-            onOtpChange = { otpValue = it }
+            onOtpChange = { otpValue = it },
+            onContinueClicked = { onContinueClicked() }
         )
 
     }
@@ -74,6 +77,7 @@ fun OtpVerificationScreen(){
 fun OtpVerificationCard(
     modifier: Modifier = Modifier,
     otp: String,
+    onContinueClicked: () -> Unit,
     onOtpChange: (String)->Unit
 ){
 
@@ -149,7 +153,7 @@ fun OtpVerificationCard(
                     style = MaterialTheme.typography.titleSmall
                 )
                 Button(
-                    onClick = {  },
+                    onClick = { onContinueClicked() },
                     shape = RoundedCornerShape(10.dp),
                 ) {
                     Text(

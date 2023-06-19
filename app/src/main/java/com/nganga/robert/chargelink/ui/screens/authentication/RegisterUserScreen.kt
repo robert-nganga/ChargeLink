@@ -40,7 +40,8 @@ import java.time.format.DateTimeFormatter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterUserScreen(
-    viewModel: AuthenticationViewModel
+    viewModel: AuthenticationViewModel,
+    onContinueClicked: ()->Unit
 ){
     val registerFormState by viewModel.registerFormState
 
@@ -127,7 +128,7 @@ fun RegisterUserScreen(
         }
         Spacer(modifier = Modifier.height(20.dp))
         Button(
-            onClick = {  },
+            onClick = { onContinueClicked() },
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier.align(Alignment.End)
         ) {
