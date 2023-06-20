@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.components.ProgressDialog
 import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @Composable
@@ -32,59 +33,73 @@ fun OtpVerificationScreen(
 ){
 
     val state = viewModel.otpVerificationState
-
-    Column(
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 10.dp),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(
-                modifier = Modifier.padding(vertical = 10.dp),
-                onClick = {  }
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }
-            Spacer(modifier = Modifier.width(10.dp))
-            Text(
-                text = stringResource(id = R.string.otp_verification),
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-        Spacer(modifier = Modifier.height(20.dp))
-        Icon(
-            painter = painterResource(id = R.drawable.ic_push_notifications),
-            contentDescription = "OTP Icon",
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        OtpVerificationCard(
-            otp = state.otpCode,
-            onOtpChange = { viewModel.onOtpCodeChange(it) },
-            onContinueClicked = {
-                viewModel.onSubmitOtpCode()
-            }
-        )
-        Spacer(modifier = Modifier.height(10.dp))
-        if (state.errorMsg.isNotEmpty()){
-            Text(
-                text = state.errorMsg,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = Color.Red
-                )
-            )
-        }
+            .fillMaxSize(),
 
+    ){
+        if (state.isLoading){
+            ProgressDialog(
+                text = stringResource(id = R.string.please_wait),
+                onDismiss = {}
+            )
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 10.dp),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    onClick = {  }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = stringResource(id = R.string.otp_verification),
+                    style = MaterialTheme.typography.titleLarge
+                )
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+            Icon(
+                painter = painterResource(id = R.drawable.ic_push_notifications),
+                contentDescription = "OTP Icon",
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            OtpVerificationCard(
+                otp = state.otpCode,
+                onOtpChange = { viewModel.onOtpCodeChange(it) },
+                onContinueClicked = {
+                    viewModel.onSubmitOtpCode()
+                }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            if (state.errorMsg.isNotEmpty()){
+                Text(
+                    text = state.errorMsg,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color.Red
+                    )
+                )
+            }
+
+        }
     }
+
+
 }
 
 @Composable
