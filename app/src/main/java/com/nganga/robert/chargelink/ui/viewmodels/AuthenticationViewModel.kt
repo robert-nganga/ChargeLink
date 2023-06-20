@@ -1,11 +1,17 @@
 package com.nganga.robert.chargelink.ui.viewmodels
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.nganga.robert.chargelink.ui.screens.authentication.EnterNumberState
 import com.nganga.robert.chargelink.ui.screens.authentication.RegisterFormState
 import com.nganga.robert.chargelink.ui.screens.authentication.TextFieldState
 
 class AuthenticationViewModel: ViewModel() {
+
+    var enterNumberState by mutableStateOf(EnterNumberState())
+        private set
 
     var registerFormState = mutableStateOf(RegisterFormState(
         nameState = TextFieldState(),
@@ -15,6 +21,10 @@ class AuthenticationViewModel: ViewModel() {
     ))
         private set
 
+
+    fun onNumberChanged(number: String){
+        enterNumberState = enterNumberState.copy(number = number)
+    }
 
     fun onNameChange(name: String){
         val newState = registerFormState.value.nameState.copy(text = name)

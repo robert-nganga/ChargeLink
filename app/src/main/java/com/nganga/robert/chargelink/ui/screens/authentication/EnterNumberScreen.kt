@@ -22,14 +22,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @Composable
 fun EnterNumberScreen(
-    onContinueClicked: ()->Unit
+    onContinueClicked: ()->Unit,
+    viewModel: AuthenticationViewModel
 ){
-    var phone by remember{
-        mutableStateOf("")
-    }
+    val state = viewModel.enterNumberState
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -69,8 +69,8 @@ fun EnterNumberScreen(
             )
             Spacer(modifier = Modifier.height(30.dp))
             EnterNumberCard(
-                phone = phone,
-                onPhoneChanged = { phone = it },
+                phone = state.number,
+                onPhoneChanged = { viewModel.onNumberChanged(it) },
                 onContinueClicked = {onContinueClicked()}
             )
 

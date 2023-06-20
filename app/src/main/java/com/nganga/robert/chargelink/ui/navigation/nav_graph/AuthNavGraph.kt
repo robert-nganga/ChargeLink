@@ -1,5 +1,11 @@
 package com.nganga.robert.chargelink.ui.navigation.nav_graph
 
+import android.annotation.SuppressLint
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -23,7 +29,8 @@ fun NavGraphBuilder.authNavGraph(
             EnterNumberScreen(
                 onContinueClicked = {
                     navController.navigate(route = AuthScreen.OtpVerification.route)
-                }
+                },
+                viewModel = it.sharedViewModel(navController)
             )
         }
         composable(route = AuthScreen.OtpVerification.route){
@@ -49,4 +56,14 @@ fun NavGraphBuilder.authNavGraph(
             )
         }
     }
+}
+
+@SuppressLint("RememberReturnType")
+@Composable
+inline fun <reified T: ViewModel>NavBackStackEntry.sharedViewModel(navController: NavHostController): T {
+    val navRoute = destination.parent?.route ?: viewModel()
+    val parentEntry = remember(this){
+        navController.getBackStackEntry(navRoute)
+    }
+    return viewModel(parentEntry)
 }
