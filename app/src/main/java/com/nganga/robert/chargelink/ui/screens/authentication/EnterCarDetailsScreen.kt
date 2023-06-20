@@ -54,7 +54,7 @@ fun EnterCarDetailsScreen(
         Image(
             painter = painterResource(id = R.drawable.electric_car),
             contentDescription = null,
-            modifier = Modifier.size(10.dp)
+            modifier = Modifier.size(80.dp)
         )
         Spacer(modifier = Modifier.height(20.dp))
         OutlinedTextField(

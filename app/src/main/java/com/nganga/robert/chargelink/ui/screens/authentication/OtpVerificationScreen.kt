@@ -39,7 +39,7 @@ fun OtpVerificationScreen(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(
@@ -51,12 +51,12 @@ fun OtpVerificationScreen(
                     contentDescription = "Back"
                 )
             }
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = stringResource(id = R.string.otp_verification),
+                style = MaterialTheme.typography.titleLarge
+            )
         }
-        Spacer(modifier = Modifier.height(40.dp))
-        Text(
-            text = stringResource(id = R.string.otp_verification),
-            style = MaterialTheme.typography.titleLarge
-        )
         Spacer(modifier = Modifier.height(20.dp))
         Icon(
             painter = painterResource(id = R.drawable.ic_push_notifications),
@@ -77,7 +77,7 @@ fun OtpVerificationScreen(
 fun OtpVerificationCard(
     modifier: Modifier = Modifier,
     otp: String,
-    onContinueClicked: () -> Unit,
+    onContinueClicked: ()-> Unit,
     onOtpChange: (String)->Unit
 ){
 
@@ -142,7 +142,8 @@ fun OtpVerificationCard(
             )
             Spacer(modifier = Modifier.height(25.dp))
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+                modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {

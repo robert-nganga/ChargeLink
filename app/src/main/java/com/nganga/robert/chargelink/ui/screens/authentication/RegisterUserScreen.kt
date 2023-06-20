@@ -72,9 +72,7 @@ fun RegisterUserScreen(
             title = stringResource(id = R.string.complete_profile),
             modifier = Modifier.fillMaxWidth()
         )
-        Spacer(modifier = Modifier.height(10.dp))
         ProfilePhotoSection()
-        Spacer(modifier = Modifier.height(30.dp))
         OutlinedTextField(
             value = registerFormState.nameState.text,
             onValueChange = { viewModel.onNameChange(it) },
@@ -142,7 +140,7 @@ fun ProfilePhotoSection(
     modifier: Modifier = Modifier
 ){
     Box(
-        modifier = modifier.size(150.dp)
+        modifier = modifier.size(120.dp)
     ) {
         Image(
             painter = painterResource(id = R.drawable.user1),
@@ -157,12 +155,23 @@ fun ProfilePhotoSection(
                 .align(Alignment.CenterEnd)
                 .padding(top = 30.dp)
         ) {
-            BoxIcon(
-                icon = Icons.Outlined.Edit,
-                iconSize = 24.dp,
-                iconTint = MaterialTheme.colorScheme.onPrimary,
-                background = MaterialTheme.colorScheme.primary
-            )
+            FilledIconButton(
+                onClick = {  },
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Edit,
+                    contentDescription = "edit profile"
+                )
+            }
+//            BoxIcon(
+//                icon = Icons.Outlined.Edit,
+//                iconSize = 24.dp,
+//                iconTint = MaterialTheme.colorScheme.onPrimary,
+//                background = MaterialTheme.colorScheme.primary
+//            )
         }
 
     }
@@ -174,7 +183,7 @@ fun RegisterScreenTopAppBar(
     title: String
 ){
     Row(
-        modifier = modifier.padding(vertical = 20.dp),
+        modifier = modifier.padding(vertical = 17.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -222,7 +231,7 @@ fun GenderSelector(
                 value = gender,
                 onValueChange = { onGenderSelectionChanged(it) },
                 modifier = Modifier
-                    .fillMaxWidth(0.4f)
+                    .fillMaxWidth(0.6f)
                     .onFocusChanged { }
                     .onGloballyPositioned { coordinates ->
                         //This value is used to assign to the DropDown the same width
@@ -246,6 +255,7 @@ fun GenderSelector(
                 DropdownMenuItem(
                     onClick = {
                     onGenderSelectionChanged(label)
+                    expanded = false
                 },
                     text = {
                         Text(text = label)

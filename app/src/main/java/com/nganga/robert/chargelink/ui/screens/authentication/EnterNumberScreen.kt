@@ -2,6 +2,7 @@ package com.nganga.robert.chargelink.ui.screens.authentication
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -16,7 +17,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.nganga.robert.chargelink.R
 
 @Composable
@@ -39,7 +43,7 @@ fun EnterNumberScreen(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
@@ -51,13 +55,13 @@ fun EnterNumberScreen(
                         contentDescription = "Back"
                     )
                 }
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(
+                    text = stringResource(id = R.string.phone_verification),
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
-            Spacer(modifier = Modifier.height(40.dp))
-            Text(
-                text = stringResource(id = R.string.phone_verification),
-                style = MaterialTheme.typography.titleLarge
-            )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             Icon(
                 painter = painterResource(id = R.drawable.ic_otp),
                 contentDescription = "OTP Icon",
@@ -123,13 +127,18 @@ fun EnterNumberCard(
                 onValueChange = { onPhoneChanged(it) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                textStyle = TextStyle(),
+                textStyle = TextStyle(
+                    fontSize = 20.sp
+                ),
                 leadingIcon = {
                     Text(text = "+254 ")
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent
-                )
+                ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number
+                ),
             )
             Spacer(modifier = Modifier.height(15.dp))
             Button(

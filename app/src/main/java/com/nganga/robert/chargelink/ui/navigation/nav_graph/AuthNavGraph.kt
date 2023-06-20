@@ -1,12 +1,10 @@
-package com.nganga.robert.chargelink
+package com.nganga.robert.chargelink.ui.navigation.nav_graph
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.nganga.robert.chargelink.ui.navigation.MAIN_ROUTE
-import com.nganga.robert.chargelink.ui.navigation.nav_graph.AUTHENTICATION_ROUTE
-import com.nganga.robert.chargelink.ui.navigation.nav_graph.AuthScreen
 import com.nganga.robert.chargelink.ui.screens.authentication.EnterCarDetailsScreen
 import com.nganga.robert.chargelink.ui.screens.authentication.EnterNumberScreen
 import com.nganga.robert.chargelink.ui.screens.authentication.OtpVerificationScreen

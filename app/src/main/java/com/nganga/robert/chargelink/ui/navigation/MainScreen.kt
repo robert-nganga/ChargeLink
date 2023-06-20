@@ -34,9 +34,11 @@ fun MainScreen(){
     val viewModel: HomeScreenViewModel = viewModel()
 
     val showBottomBar = when(navBackStackEntry?.destination?.route?.substringBefore("/")){
-        BottomBarScreen.Settings.route -> false
-        BottomBarScreen.Details.route -> false
-        else -> true
+        BottomBarScreen.Home.route -> true
+        BottomBarScreen.Maps.route -> true
+        BottomBarScreen.Bookings.route -> true
+        BottomBarScreen.Profile.route -> true
+        else -> false
     }
     Scaffold(
         bottomBar = {
