@@ -15,6 +15,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,18 +23,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @Composable
 fun OtpVerificationScreen(
-    onContinueClicked: ()->Unit
+    onContinueClicked: ()->Unit,
+    viewModel: AuthenticationViewModel
 ){
 
-    var otpValue by remember{
-        mutableStateOf("")
-    }
+    val state = viewModel.otpVerificationState
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 10.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -65,10 +68,21 @@ fun OtpVerificationScreen(
         )
         Spacer(modifier = Modifier.height(20.dp))
         OtpVerificationCard(
-            otp = otpValue,
-            onOtpChange = { otpValue = it },
-            onContinueClicked = { onContinueClicked() }
+            otp = state.otpCode,
+            onOtpChange = { viewModel.onOtpCodeChange(it) },
+            onContinueClicked = {
+                viewModel.onSubmitOtpCode()
+            }
         )
+        Spacer(modifier = Modifier.height(10.dp))
+        if (state.errorMsg.isNotEmpty()){
+            Text(
+                text = state.errorMsg,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.Red
+                )
+            )
+        }
 
     }
 }
@@ -142,7 +156,8 @@ fun OtpVerificationCard(
             )
             Spacer(modifier = Modifier.height(25.dp))
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 10.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
@@ -158,7 +173,7 @@ fun OtpVerificationCard(
                     shape = RoundedCornerShape(10.dp),
                 ) {
                     Text(
-                        text = stringResource(id = R.string.continues)
+                        text = stringResource(id = R.string.submit)
                     )
                 }
             }

@@ -4,13 +4,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.nganga.robert.chargelink.repository.AuthRepository
 import com.nganga.robert.chargelink.ui.screens.authentication.EnterNumberState
+import com.nganga.robert.chargelink.ui.screens.authentication.OtpVerificationState
 import com.nganga.robert.chargelink.ui.screens.authentication.RegisterFormState
 import com.nganga.robert.chargelink.ui.screens.authentication.TextFieldState
 
-class AuthenticationViewModel: ViewModel() {
+class AuthenticationViewModel(
+    private val repository: AuthRepository = AuthRepository()
+): ViewModel() {
 
     var enterNumberState by mutableStateOf(EnterNumberState())
+        private set
+
+    var otpVerificationState by mutableStateOf(OtpVerificationState())
         private set
 
     var registerFormState = mutableStateOf(RegisterFormState(
@@ -21,6 +28,16 @@ class AuthenticationViewModel: ViewModel() {
     ))
         private set
 
+    private val verificationId: String? = null
+
+
+    fun onOtpCodeChange(code: String){
+        otpVerificationState = otpVerificationState.copy(otpCode = code)
+    }
+
+    fun onSubmitOtpCode(){
+
+    }
 
     fun onNumberChanged(number: String){
         enterNumberState = enterNumberState.copy(number = number)

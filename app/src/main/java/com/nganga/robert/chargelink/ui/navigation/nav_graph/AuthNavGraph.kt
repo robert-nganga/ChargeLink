@@ -37,7 +37,8 @@ fun NavGraphBuilder.authNavGraph(
             OtpVerificationScreen(
                 onContinueClicked = {
                     navController.navigate(route = AuthScreen.Register.route)
-                }
+                },
+                viewModel = it.sharedViewModel(navController)
             )
         }
         composable(route = AuthScreen.Register.route){
