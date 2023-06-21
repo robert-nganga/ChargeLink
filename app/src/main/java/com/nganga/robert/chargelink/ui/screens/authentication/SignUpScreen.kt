@@ -26,7 +26,7 @@ fun SignUpScreen(
     onSignUpClicked:()->Unit,
     viewModel: AuthenticationViewModel
 ){
-    var name by remember {
+    var confirmPassword by remember {
         mutableStateOf("")
     }
     var email by remember {
@@ -37,6 +37,12 @@ fun SignUpScreen(
     }
     var passwordVisible by remember {
         mutableStateOf(false)
+    }
+    var confirmPasswordVisible by remember {
+        mutableStateOf(false)
+    }
+    var passwordsMatch by remember{
+        mutableStateOf(true)
     }
     Box(modifier = Modifier.fillMaxSize()) {
         SignUpScreenTopAppBar(
@@ -61,28 +67,6 @@ fun SignUpScreen(
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
                 OutlinedTextField(
-                    value = name,
-                    label = {
-                        Text(text = stringResource(id = R.string.email))
-                    },
-                    onValueChange = { name = it },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        containerColor = Color(0x0D000000)
-                    ),
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text
-                    ),
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Outlined.PersonOutline,
-                            contentDescription = "Email Icon"
-                        )
-                    }
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-                OutlinedTextField(
                     value = email,
                     label = {
                         Text(text = stringResource(id = R.string.email))
@@ -101,6 +85,45 @@ fun SignUpScreen(
                             imageVector = Icons.Outlined.MailOutline,
                             contentDescription = "Email Icon"
                         )
+                    }
+                )
+                Spacer(modifier = Modifier.height(15.dp))
+                OutlinedTextField(
+                    value = confirmPassword,
+                    label = {
+                        Text(text = stringResource(id = R.string.confirm_password))
+                    },
+                    onValueChange = { confirmPassword = it },
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        containerColor = Color(0x0D000000)
+                    ),
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Lock,
+                            contentDescription = "password icom"
+                        )
+                    },
+                    visualTransformation = if (confirmPasswordVisible)
+                        VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+                        IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
+                            if (confirmPasswordVisible){
+                                Icon(
+                                    imageVector = Icons.Outlined.VisibilityOff,
+                                    contentDescription = null
+                                )
+                            }else{
+                                Icon(
+                                    imageVector = Icons.Outlined.Visibility,
+                                    contentDescription = null
+                                )
+                            }
+                        }
                     }
                 )
                 Spacer(modifier = Modifier.height(15.dp))
@@ -142,9 +165,17 @@ fun SignUpScreen(
                         }
                     }
                 )
+                if (!passwordsMatch){
+                    Text(
+                        text = stringResource(id = R.string.passwords_dont_match),
+                        color = Color.Red
+                    )
+                }
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(5.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -160,7 +191,13 @@ fun SignUpScreen(
                     }
                     Button(
                         shape = RoundedCornerShape(10.dp),
-                        onClick = { onSignUpClicked() }
+                        onClick = {
+                            passwordsMatch = password == confirmPassword
+                            if (passwordsMatch){
+                                viewModel.onSignUpClicked(email, password)
+                            }
+                            onSignUpClicked()
+                        }
                     ) {
                         Text(text = stringResource(id = R.string.submit))
                     }

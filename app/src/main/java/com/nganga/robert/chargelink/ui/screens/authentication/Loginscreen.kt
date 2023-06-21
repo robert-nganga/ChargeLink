@@ -29,7 +29,7 @@ import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    viewModel: AuthenticationViewModel
+    viewModel: AuthenticationViewModel,
     onSubmitClicked:()->Unit
 ){
     var email by remember {
@@ -141,7 +141,10 @@ fun LoginScreen(
                 Button(
                     shape = RoundedCornerShape(10.dp),
                     modifier = Modifier.align(Alignment.End),
-                    onClick = { onSubmitClicked() }
+                    onClick = {
+                        viewModel.onLoginClicked(email, password)
+                        onSubmitClicked()
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.submit))
                 }

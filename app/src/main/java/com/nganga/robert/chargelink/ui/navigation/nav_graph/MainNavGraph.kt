@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink
+package com.nganga.robert.chargelink.ui.navigation.nav_graph
 
 import androidx.navigation.*
 import androidx.navigation.compose.composable
