@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
 
+    fun hasUser():Boolean
+
     fun createUser(
         email: String,
         password: String

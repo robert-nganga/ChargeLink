@@ -16,7 +16,6 @@ import androidx.compose.ui.window.DialogProperties
 fun ProgressDialog(
     text: String,
     color: Color = MaterialTheme.colorScheme.primary,
-    onDismiss: (Boolean) -> Unit
 ){
     Dialog(
         onDismissRequest = {},

@@ -1,6 +1,8 @@
 package com.nganga.robert.chargelink.ui.screens.authentication
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement.Absolute.Center
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -17,13 +19,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.components.ProgressDialog
 import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +37,8 @@ fun LoginScreen(
     viewModel: AuthenticationViewModel,
     onSubmitClicked:()->Unit
 ){
+
+    val state = viewModel.loginState
     var email by remember {
         mutableStateOf("")
     }
@@ -50,6 +57,11 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 15.dp)
         )
+        if (state.isLoading) {
+            ProgressDialog(
+                text = stringResource(id = R.string.please_wait),
+            )
+        }
         Card(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -123,9 +135,20 @@ fun LoginScreen(
                         }
                     }
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+                if (state.isError){
+                    Text(
+                        text = state.errorMsg,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(5.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(5.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -143,15 +166,22 @@ fun LoginScreen(
                     modifier = Modifier.align(Alignment.End),
                     onClick = {
                         viewModel.onLoginClicked(email, password)
-                        onSubmitClicked()
+                        if (state.isLoginSuccessful){
+                            onSubmitClicked.invoke()
+                        }
                     }
                 ) {
                     Text(text = stringResource(id = R.string.submit))
                 }
             }
         }
-    }
 
+        LaunchedEffect(key1 = viewModel.hasUser){
+            if (viewModel.hasUser){
+                onSubmitClicked.invoke()
+            }
+        }
+    }
 }
 
 @Composable

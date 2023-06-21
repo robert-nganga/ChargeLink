@@ -18,6 +18,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.components.ProgressDialog
 import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -26,6 +27,9 @@ fun SignUpScreen(
     onSignUpClicked:()->Unit,
     viewModel: AuthenticationViewModel
 ){
+
+    var state = viewModel.signUpState
+
     var confirmPassword by remember {
         mutableStateOf("")
     }
@@ -44,6 +48,7 @@ fun SignUpScreen(
     var passwordsMatch by remember{
         mutableStateOf(true)
     }
+
     Box(modifier = Modifier.fillMaxSize()) {
         SignUpScreenTopAppBar(
             title = stringResource(id = R.string.sign_up),
@@ -53,6 +58,11 @@ fun SignUpScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 15.dp)
         )
+        if (state.isLoading) {
+            ProgressDialog(
+                text = stringResource(id = R.string.please_wait),
+            )
+        }
         Card(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -165,13 +175,21 @@ fun SignUpScreen(
                         }
                     }
                 )
+                Spacer(modifier = Modifier.height(10.dp))
+                if (state.isError){
+                    Text(
+                        text = state.errorMsg,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
                 if (!passwordsMatch){
                     Text(
                         text = stringResource(id = R.string.passwords_dont_match),
                         color = Color.Red
                     )
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -196,13 +214,18 @@ fun SignUpScreen(
                             if (passwordsMatch){
                                 viewModel.onSignUpClicked(email, password)
                             }
-                            onSignUpClicked()
+
                         }
                     ) {
                         Text(text = stringResource(id = R.string.submit))
                     }
                 }
 
+            }
+        }
+        LaunchedEffect(key1 = viewModel.hasUser){
+            if (viewModel.hasUser){
+                onSignUpClicked.invoke()
             }
         }
     }

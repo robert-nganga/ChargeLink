@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth): AuthRepository {
 
-    val currentUser = auth.currentUser
+    override fun hasUser(): Boolean = auth.currentUser != null
 
     override fun createUser(
         email: String,
