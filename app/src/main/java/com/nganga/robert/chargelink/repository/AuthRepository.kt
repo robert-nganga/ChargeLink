@@ -1,45 +1,17 @@
 package com.nganga.robert.chargelink.repository
 
-import android.util.Log
-import com.google.firebase.FirebaseException
-import com.google.firebase.FirebaseTooManyRequestsException
-import com.google.firebase.auth.*
-import kotlinx.coroutines.tasks.await
-import java.util.concurrent.TimeUnit
-import javax.inject.Inject
+import com.nganga.robert.chargelink.utils.ResultState
+import kotlinx.coroutines.flow.Flow
 
-class AuthRepository @Inject constructor(private val auth: FirebaseAuth) {
+interface AuthRepository {
 
-    val currentUser = auth.currentUser
-
-    suspend fun createUser(
+    fun createUser(
         email: String,
-        password: String,
-        onComplete: (Boolean)->Unit
-    ){
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onComplete.invoke(true)
-                } else {
-                    onComplete.invoke(false)
-                }
-            }.await()
-    }
+        password: String
+    ): Flow<ResultState<String>>
 
-    suspend fun login(
+    fun login(
         email: String,
-        password: String,
-        onComplete: (Boolean)->Unit
-    ){
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onComplete.invoke(true)
-                } else {
-                    onComplete.invoke(false)
-                }
-            }.await()
-    }
-
+        password: String
+    ): Flow<ResultState<String>>
 }
