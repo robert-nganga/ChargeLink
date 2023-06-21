@@ -8,9 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.nganga.robert.chargelink.ui.screens.authentication.EnterCarDetailsScreen
-import com.nganga.robert.chargelink.ui.screens.authentication.OtpVerificationScreen
-import com.nganga.robert.chargelink.ui.screens.authentication.RegisterUserScreen
+import com.nganga.robert.chargelink.ui.screens.authentication.*
 import com.nganga.robert.chargelink.ui.theme.ChargeLinkTheme
 import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
@@ -36,7 +34,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     ChargeLinkTheme {
-        EnterCarDetailsScreen {
+        SignUpScreen {
 
         }
     }

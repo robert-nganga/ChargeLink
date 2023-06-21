@@ -51,4 +51,7 @@
     <string name="plug">Plug</string>
     <string name="finish">Finish</string>
     <string name="please_wait">Please wait</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign Up</string>
 </resources>
