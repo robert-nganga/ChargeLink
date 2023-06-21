@@ -6,66 +6,40 @@ import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class AuthRepository {
-    private val tag = "FirebaseAuth"
-    private val auth = FirebaseAuth.getInstance()
+class AuthRepository @Inject constructor(private val auth: FirebaseAuth) {
 
-    private var storedVerificationId: String? = null
-    private lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
+    val currentUser = auth.currentUser
 
-
-
-    fun hasUser(): Boolean = auth.currentUser != null
-
-
-
-    suspend fun sendVerificationCode(
-        number: String,
-        onVerificationComplete: (PhoneAuthCredential)-> Unit,
-        onVerificationFailed: (FirebaseException) -> Unit,
-        onCodeSent: (String) -> Unit,
+    suspend fun createUser(
+        email: String,
+        password: String,
+        onComplete: (Boolean)->Unit
     ){
-
-        val options = PhoneAuthOptions.newBuilder(auth)
-            .setPhoneNumber(number) // Phone number to verify
-            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-            .setCallbacks(object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-                override fun onVerificationCompleted(credential: PhoneAuthCredential) {
-                    onVerificationComplete.invoke(credential)
-                    Log.d(tag, "onVerificationCompleted:$credential")
-                }
-
-                override fun onVerificationFailed(e: FirebaseException) {
-                    onVerificationFailed.invoke(e)
-                    Log.w(tag, "onVerificationFailed", e)
-                }
-
-                override fun onCodeSent(
-                    verificationId: String,
-                    token: PhoneAuthProvider.ForceResendingToken,
-                ) {
-                    onCodeSent.invoke(verificationId)
-                    Log.d(tag, "onCodeSent:$verificationId")
-                    storedVerificationId = verificationId
-                    resendToken = token
-                }
-            })
-            .build()
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-    suspend fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential, onComplete: (Boolean)->Unit) {
-        auth.signInWithCredential(credential)
+        auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    onComplete(true)
+                    onComplete.invoke(true)
                 } else {
-                    onComplete(false)
+                    onComplete.invoke(false)
                 }
             }.await()
     }
 
+    suspend fun login(
+        email: String,
+        password: String,
+        onComplete: (Boolean)->Unit
+    ){
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    onComplete.invoke(true)
+                } else {
+                    onComplete.invoke(false)
+                }
+            }.await()
+    }
 
 }
