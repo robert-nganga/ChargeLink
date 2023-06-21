@@ -71,7 +71,10 @@ fun EnterNumberScreen(
             EnterNumberCard(
                 phone = state.number,
                 onPhoneChanged = { viewModel.onNumberChanged(it) },
-                onContinueClicked = {onContinueClicked()}
+                onContinueClicked = {
+                    viewModel.onSubmitNumberForVerification()
+                    onContinueClicked()
+                }
             )
 
         }

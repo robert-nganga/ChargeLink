@@ -40,17 +40,6 @@ class AuthRepository {
                 override fun onVerificationFailed(e: FirebaseException) {
                     onVerificationFailed.invoke(e)
                     Log.w(tag, "onVerificationFailed", e)
-                    when (e) {
-                        is FirebaseAuthInvalidCredentialsException -> {
-                            // Invalid request
-                        }
-                        is FirebaseTooManyRequestsException -> {
-                            // The SMS quota for the project has been exceeded
-                        }
-                        is FirebaseAuthMissingActivityForRecaptchaException -> {
-                            // reCAPTCHA verification attempted with null Activity
-                        }
-                    }
                 }
 
                 override fun onCodeSent(

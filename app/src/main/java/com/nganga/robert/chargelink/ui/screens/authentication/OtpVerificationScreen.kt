@@ -8,11 +8,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -97,6 +93,11 @@ fun OtpVerificationScreen(
             }
 
         }
+        LaunchedEffect(key1 = viewModel.hasUser){
+            if (viewModel.hasUser){
+                onContinueClicked.invoke()
+            }
+        }
     }
 
 
@@ -135,7 +136,7 @@ fun OtpVerificationCard(
             BasicTextField(
                 value = otp,
                 onValueChange = {
-                    if (it.length <= 5){
+                    if (it.length <= 6){
                         onOtpChange(it)
                     }
                 },
@@ -144,7 +145,7 @@ fun OtpVerificationCard(
                 ),
                 decorationBox = {
                     Row(horizontalArrangement = Arrangement.Center) {
-                        repeat(times = 5){ index ->
+                        repeat(times = 6){ index ->
                             val char = when {
                                 index >= otp.length -> ""
                                 else -> otp[index].toString()
@@ -153,8 +154,8 @@ fun OtpVerificationCard(
                             Text(
                                 text = char,
                                 modifier = Modifier
-                                    .width(40.dp)
-                                    .height(50.dp)
+                                    .width(30.dp)
+                                    .height(40.dp)
                                     .border(
                                         width = if (isFocused) 2.dp else 1.dp,
                                         color = if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
