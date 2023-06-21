@@ -1,7 +1,7 @@
 package com.nganga.robert.chargelink
 
 import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
 
-class ChargeLinkApp: Application() {
-
-}
+@HiltAndroidApp
+class ChargeLinkApp: Application()
