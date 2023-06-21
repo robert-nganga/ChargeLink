@@ -18,11 +18,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    onSubmitClicked:()->Unit
+    onSignUpClicked:()->Unit,
+    viewModel: AuthenticationViewModel
 ){
     var name by remember {
         mutableStateOf("")
@@ -146,7 +148,9 @@ fun SignUpScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(
+                        onClick = {  }
+                    ) {
                         Text(
                             text = stringResource(id = R.string.login),
                             color = MaterialTheme.colorScheme.primary,
@@ -156,8 +160,7 @@ fun SignUpScreen(
                     }
                     Button(
                         shape = RoundedCornerShape(10.dp),
-                        modifier = Modifier.align(Alignment.End),
-                        onClick = { onSubmitClicked() }
+                        onClick = { onSignUpClicked() }
                     ) {
                         Text(text = stringResource(id = R.string.submit))
                     }

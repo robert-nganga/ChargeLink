@@ -24,10 +24,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    viewModel: AuthenticationViewModel
     onSubmitClicked:()->Unit
 ){
     var email by remember {

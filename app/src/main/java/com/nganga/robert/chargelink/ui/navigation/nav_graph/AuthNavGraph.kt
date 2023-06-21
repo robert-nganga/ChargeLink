@@ -11,10 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.nganga.robert.chargelink.ui.navigation.MAIN_ROUTE
-import com.nganga.robert.chargelink.ui.screens.authentication.EnterCarDetailsScreen
-import com.nganga.robert.chargelink.ui.screens.authentication.EnterNumberScreen
-import com.nganga.robert.chargelink.ui.screens.authentication.OtpVerificationScreen
-import com.nganga.robert.chargelink.ui.screens.authentication.RegisterUserScreen
+import com.nganga.robert.chargelink.ui.screens.authentication.*
 import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 
@@ -22,20 +19,20 @@ fun NavGraphBuilder.authNavGraph(
     navController: NavHostController
 ){
     navigation(
-        startDestination = AuthScreen.EnterNumber.route,
+        startDestination = AuthScreen.Login.route,
         route = AUTHENTICATION_ROUTE
     ){
-        composable(route = AuthScreen.EnterNumber.route){
-            EnterNumberScreen(
-                onContinueClicked = {
-                    navController.navigate(route = AuthScreen.OtpVerification.route)
+        composable(route = AuthScreen.Login.route){
+            LoginScreen(
+                onSubmitClicked = {
+                    navController.navigate(route = AuthScreen.SingUp.route)
                 },
                 viewModel = it.sharedViewModel(navController)
             )
         }
-        composable(route = AuthScreen.OtpVerification.route){
-            OtpVerificationScreen(
-                onContinueClicked = {
+        composable(route = AuthScreen.SingUp.route){
+            SignUpScreen(
+                onSignUpClicked = {
                     navController.navigate(route = AuthScreen.Register.route)
                 },
                 viewModel = it.sharedViewModel(navController)
