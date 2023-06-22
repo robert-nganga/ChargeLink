@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.ui.screens.authentication
+package com.nganga.robert.chargelink.screens.models
 
 data class SignUpState(
     val isSignUpSuccessful: Boolean = false,

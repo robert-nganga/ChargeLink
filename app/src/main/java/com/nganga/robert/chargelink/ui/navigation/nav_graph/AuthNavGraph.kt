@@ -11,10 +11,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.nganga.robert.chargelink.ui.navigation.MAIN_ROUTE
-import com.nganga.robert.chargelink.ui.screens.authentication.EnterCarDetailsScreen
-import com.nganga.robert.chargelink.ui.screens.authentication.LoginScreen
-import com.nganga.robert.chargelink.ui.screens.authentication.RegisterUserScreen
-import com.nganga.robert.chargelink.ui.screens.authentication.SignUpScreen
+import com.nganga.robert.chargelink.screens.authentication_screens.EnterCarDetailsScreen
+import com.nganga.robert.chargelink.screens.authentication_screens.LoginScreen
+import com.nganga.robert.chargelink.screens.authentication_screens.RegisterUserScreen
+import com.nganga.robert.chargelink.screens.authentication_screens.SignUpScreen
+import com.nganga.robert.chargelink.ui.navigation.AUTHENTICATION_ROUTE
+import com.nganga.robert.chargelink.ui.navigation.AuthScreen
 
 
 fun NavGraphBuilder.authNavGraph(
@@ -27,9 +29,16 @@ fun NavGraphBuilder.authNavGraph(
         composable(route = AuthScreen.Login.route){
             LoginScreen(
                 onSubmitClicked = {
-                    navController.navigate(route = AuthScreen.SingUp.route)
+                    navController.navigate(route = AuthScreen.SingUp.route){
+                        launchSingleTop = true
+                    }
                 },
-                viewModel = it.sharedViewModel(navController)
+                viewModel = it.sharedViewModel(navController),
+                onNavigateToSignUp = {
+                    navController.navigate(route = AuthScreen.SingUp.route){
+                        launchSingleTop = true
+                    }
+                }
             )
         }
         composable(route = AuthScreen.SingUp.route){
@@ -37,7 +46,13 @@ fun NavGraphBuilder.authNavGraph(
                 onSignUpClicked = {
                     navController.navigate(route = AuthScreen.Register.route)
                 },
+                onNavigateToLogin = {
+                    navController.navigate(route = AuthScreen.Login.route) {
+                        launchSingleTop = true
+                    }
+                },
                 viewModel = it.sharedViewModel(navController)
+
             )
         }
         composable(route = AuthScreen.Register.route){

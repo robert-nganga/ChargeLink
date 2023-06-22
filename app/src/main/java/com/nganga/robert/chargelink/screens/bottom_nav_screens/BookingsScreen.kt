@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.ui.screens
+package com.nganga.robert.chargelink.screens.bottom_nav_screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -15,11 +15,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.Booking
-import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.ui.components.BookingItem
 import com.nganga.robert.chargelink.ui.components.TabView
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel

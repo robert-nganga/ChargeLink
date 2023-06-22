@@ -22,6 +22,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.nganga.robert.chargelink.ui.navigation.BottomBarScreen
+import com.nganga.robert.chargelink.ui.navigation.nav_graph.MainNavGraph
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 
@@ -50,7 +51,7 @@ fun MainScreen(){
             }
         }
     ) { contentPadding ->
-        NavGraph(
+        MainNavGraph(
             navController = navController,
             viewModel = viewModel
         )

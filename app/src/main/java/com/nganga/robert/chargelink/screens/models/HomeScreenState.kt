@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.ui.screens.statewrappers
+package com.nganga.robert.chargelink.screens.models
 
 import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.models.User

@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.ui.screens
+package com.nganga.robert.chargelink.screens.bottom_nav_screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

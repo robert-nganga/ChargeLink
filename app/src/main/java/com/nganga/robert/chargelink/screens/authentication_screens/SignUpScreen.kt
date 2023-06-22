@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.ui.screens.authentication
+package com.nganga.robert.chargelink.screens.authentication_screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,8 +24,9 @@ import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
-    onSignUpClicked:()->Unit,
-    viewModel: AuthenticationViewModel
+    onSignUpClicked: () -> Unit,
+    viewModel: AuthenticationViewModel,
+    onNavigateToLogin: () -> Unit
 ){
 
     var state = viewModel.signUpState
@@ -198,7 +199,7 @@ fun SignUpScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(
-                        onClick = {  }
+                        onClick = { onNavigateToLogin.invoke() }
                     ) {
                         Text(
                             text = stringResource(id = R.string.login),

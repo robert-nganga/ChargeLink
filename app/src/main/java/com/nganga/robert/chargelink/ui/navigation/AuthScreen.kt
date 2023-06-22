@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.ui.navigation.nav_graph
+package com.nganga.robert.chargelink.ui.navigation
 
 
 const val AUTHENTICATION_ROUTE = "authentication"

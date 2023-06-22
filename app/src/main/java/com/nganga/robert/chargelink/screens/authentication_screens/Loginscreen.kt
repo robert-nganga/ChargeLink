@@ -1,8 +1,6 @@
-package com.nganga.robert.chargelink.ui.screens.authentication
+package com.nganga.robert.chargelink.screens.authentication_screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement.Absolute.Center
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -19,14 +17,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.ui.components.ProgressDialog
 import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
@@ -35,7 +31,8 @@ import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 @Composable
 fun LoginScreen(
     viewModel: AuthenticationViewModel,
-    onSubmitClicked:()->Unit
+    onSubmitClicked:()->Unit,
+    onNavigateToSignUp: ()->Unit
 ){
 
     val state = viewModel.loginState
@@ -152,7 +149,9 @@ fun LoginScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TextButton(onClick = { /*TODO*/ }) {
+                    TextButton(
+                        onClick = { onNavigateToSignUp.invoke() }
+                    ) {
                         Text(
                             text = stringResource(id = R.string.sign_up),
                             color = MaterialTheme.colorScheme.primary,
@@ -160,19 +159,20 @@ fun LoginScreen(
                             style = MaterialTheme.typography.titleSmall
                         )
                     }
-                }
-                Button(
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.align(Alignment.End),
-                    onClick = {
-                        viewModel.onLoginClicked(email, password)
-                        if (state.isLoginSuccessful){
-                            onSubmitClicked.invoke()
+
+                    Button(
+                        shape = RoundedCornerShape(10.dp),
+                        onClick = {
+                            viewModel.onLoginClicked(email, password)
+                            if (state.isLoginSuccessful){
+                                onSubmitClicked.invoke()
+                            }
                         }
+                    ) {
+                        Text(text = stringResource(id = R.string.submit))
                     }
-                ) {
-                    Text(text = stringResource(id = R.string.submit))
                 }
+
             }
         }
 

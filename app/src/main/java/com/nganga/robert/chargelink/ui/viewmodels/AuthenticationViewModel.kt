@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nganga.robert.chargelink.repository.AuthRepository
-import com.nganga.robert.chargelink.ui.screens.authentication.LoginState
-import com.nganga.robert.chargelink.ui.screens.authentication.SignUpState
+import com.nganga.robert.chargelink.screens.models.LoginState
+import com.nganga.robert.chargelink.screens.models.SignUpState
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

@@ -26,6 +26,9 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth): Au
             .addOnFailureListener { exception->
                 trySend(ResultState.error(exception.message))
             }
+        awaitClose {
+            close()
+        }
     }
 
     override fun login(

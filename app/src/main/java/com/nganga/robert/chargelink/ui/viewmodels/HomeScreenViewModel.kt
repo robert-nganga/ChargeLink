@@ -5,7 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.*
-import com.nganga.robert.chargelink.ui.screens.statewrappers.HomeScreenState
+import com.nganga.robert.chargelink.screens.models.HomeScreenState
 
 class HomeScreenViewModel:ViewModel() {
 
