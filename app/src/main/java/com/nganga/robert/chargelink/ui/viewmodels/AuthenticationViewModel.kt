@@ -1,5 +1,6 @@
 package com.nganga.robert.chargelink.ui.viewmodels
 
+import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -32,11 +33,23 @@ class AuthenticationViewModel @Inject constructor(
 
 
     fun onLoginClicked(email: String, password: String){
-        login(email, password)
+        val validate = validateInputs(email, password)
+        if (validate != null){
+            loginState = loginState.copy(isError = true, errorMsg = validate)
+        }else{
+            loginState = loginState.copy(isError = false, errorMsg = "")
+            login(email, password)
+        }
     }
 
     fun onSignUpClicked(email: String, password: String){
-        createUser(email, password)
+        val validate = validateInputs(email, password)
+        if (validate != null){
+            signUpState = signUpState.copy(isError = true, errorMsg = validate)
+        }else{
+            signUpState = signUpState.copy(isError = false, errorMsg = "")
+            createUser(email, password)
+        }
     }
 
     private fun login(email: String, password: String) = viewModelScope.launch{
@@ -96,6 +109,15 @@ class AuthenticationViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    fun validateInputs(email: String, password: String): String?{
+        return when{
+            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> "Invalid email address"
+            password.isEmpty() -> "Password must not be empty"
+            password.length < 6 -> "Password length must be greater than 6"
+            else -> null
         }
     }
 
