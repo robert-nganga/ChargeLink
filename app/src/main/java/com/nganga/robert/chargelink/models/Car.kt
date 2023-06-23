@@ -9,4 +9,14 @@ data class Car(
     val range: String,
     val plug: String,
     val chargingSpeed: String
-)
+){
+    fun toMap() = hashMapOf(
+        "manufacturer" to manufacturer,
+        "imageUrl" to imageUrl,
+        "model" to model,
+        "batteryCapacity" to batteryCapacity,
+        "range" to range,
+        "plug" to plug,
+        "chargingSpeed" to chargingSpeed
+    )
+}

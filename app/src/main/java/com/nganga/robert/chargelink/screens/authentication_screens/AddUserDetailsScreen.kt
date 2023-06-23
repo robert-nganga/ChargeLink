@@ -33,6 +33,7 @@ import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.components.ProgressDialog
 import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 import java.time.format.DateTimeFormatter
 
@@ -43,12 +44,14 @@ fun RegisterUserScreen(
     onContinueClicked: ()->Unit
 ){
 
+    val state = viewModel.addUserDetailsState
+
     val calendarState = rememberSheetState()
 
     var name by remember{
-        mutableStateOf("")
+        mutableStateOf(viewModel.userEmail)
     }
-    var email by remember{
+    var phone by remember{
         mutableStateOf("")
     }
     var gender by remember {
@@ -72,6 +75,12 @@ fun RegisterUserScreen(
         )
     )
 
+    LaunchedEffect(key1 = state.isUserAddedSuccessfully){
+        if (state.isUserAddedSuccessfully){
+            onContinueClicked.invoke()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,6 +93,11 @@ fun RegisterUserScreen(
             modifier = Modifier.fillMaxWidth()
         )
         ProfilePhotoSection()
+        if (state.isLoading) {
+            ProgressDialog(
+                text = stringResource(id = R.string.please_wait),
+            )
+        }
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedTextField(
             value = name,
@@ -94,12 +108,12 @@ fun RegisterUserScreen(
         )
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = phone,
+            onValueChange = { phone = it },
             modifier = Modifier.fillMaxWidth(),
-            label = { Text(text = stringResource(id = R.string.email))},
+            label = { Text(text = stringResource(id = R.string.phone))},
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email
+                keyboardType = KeyboardType.Number
             ),
             singleLine = true
         )
@@ -136,13 +150,23 @@ fun RegisterUserScreen(
                 singleLine = true
             )
         }
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(10.dp))
+        if (state.isError){
+            Text(
+                text = state.errorMsg,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
         Button(
-            onClick = { onContinueClicked() },
+            onClick = {
+               viewModel.onSubmitUserDetailsClicked(name, phone, gender, dob)
+            },
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier.align(Alignment.End)
         ) {
-            Text(text = stringResource(id = R.string.continues))
+            Text(text = stringResource(id = R.string.submit))
         }
     }
 }
@@ -178,12 +202,6 @@ fun ProfilePhotoSection(
                     contentDescription = "edit profile"
                 )
             }
-//            BoxIcon(
-//                icon = Icons.Outlined.Edit,
-//                iconSize = 24.dp,
-//                iconTint = MaterialTheme.colorScheme.onPrimary,
-//                background = MaterialTheme.colorScheme.primary
-//            )
         }
 
     }
@@ -195,7 +213,7 @@ fun RegisterScreenTopAppBar(
     title: String
 ){
     Row(
-        modifier = modifier.padding(vertical = 20.dp),
+        modifier = modifier.padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -244,7 +262,9 @@ fun GenderSelector(
                 onValueChange = { onGenderSelectionChanged(it) },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
-                    .onFocusChanged { }
+                    .onFocusChanged {
+                        expanded = !expanded
+                    }
                     .onGloballyPositioned { coordinates ->
                         //This value is used to assign to the DropDown the same width
                         textFieldSize = coordinates.size.toSize()

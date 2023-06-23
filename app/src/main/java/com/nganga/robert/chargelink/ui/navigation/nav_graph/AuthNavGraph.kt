@@ -57,10 +57,11 @@ fun NavGraphBuilder.authNavGraph(
         }
         composable(route = AuthScreen.Register.route){
             RegisterUserScreen(
-                viewModel = it.sharedViewModel(navController)
-            ) {
-                navController.navigate(route = AuthScreen.CarDetails.route)
-            }
+                viewModel = it.sharedViewModel(navController),
+                onContinueClicked = {
+                    navController.navigate(route = AuthScreen.CarDetails.route)
+                }
+            )
         }
         composable(route = AuthScreen.CarDetails.route){
             EnterCarDetailsScreen(
