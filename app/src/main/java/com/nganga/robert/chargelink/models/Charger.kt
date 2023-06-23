@@ -7,4 +7,11 @@ data class Charger(
     val power: String,
     val image: Int,
     val isAvailable: Boolean
-)
+){
+    fun toMap() = hashMapOf(
+        "plug" to plug,
+        "power" to power,
+        "image" to image,
+        "isAvailable" to isAvailable
+    )
+}

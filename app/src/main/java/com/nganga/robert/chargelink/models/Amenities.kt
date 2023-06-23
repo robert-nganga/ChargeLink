@@ -8,4 +8,14 @@ data class Amenities (
     val loungeArea: Boolean,
     val maintenance: Boolean,
     val tyrePressure: Boolean
+    ){
+    fun toMap() = hashMapOf(
+        "wifi" to wifi,
+        "restaurants" to restaurants,
+        "restrooms" to restrooms,
+        "shops" to shops,
+        "loungeArea" to loungeArea,
+        "maintenance" to maintenance,
+        "tyrePressure" to tyrePressure
     )
+}

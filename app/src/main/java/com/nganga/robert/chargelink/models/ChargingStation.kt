@@ -1,7 +1,5 @@
 package com.nganga.robert.chargelink.models
 
-import androidx.compose.ui.graphics.painter.Painter
-
 data class ChargingStation(
     val id: String,
     val name: String,
