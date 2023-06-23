@@ -3,7 +3,7 @@ package com.nganga.robert.chargelink.ui.navigation.nav_graph
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.nganga.robert.chargelink.ui.navigation.BottomBarScreen
-import com.nganga.robert.chargelink.ui.navigation.MAIN_ROUTE
+import com.nganga.robert.chargelink.ui.navigation.BOTTOM_NAV_ROUTE
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.*
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
@@ -13,7 +13,7 @@ fun NavGraphBuilder.bottomNavGraph(
 ) {
     navigation(
         startDestination = BottomBarScreen.Home.route,
-        route = MAIN_ROUTE
+        route = BOTTOM_NAV_ROUTE
     ){
         composable(route = BottomBarScreen.Home.route){
             HomeScreen(

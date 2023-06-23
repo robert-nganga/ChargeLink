@@ -49,7 +49,7 @@ fun RegisterUserScreen(
     val calendarState = rememberSheetState()
 
     var name by remember{
-        mutableStateOf(viewModel.userEmail)
+        mutableStateOf("")
     }
     var phone by remember{
         mutableStateOf("")
@@ -263,7 +263,9 @@ fun GenderSelector(
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .onFocusChanged {
-                        expanded = !expanded
+                        if (it.isFocused) {
+                            expanded = !expanded
+                        }
                     }
                     .onGloballyPositioned { coordinates ->
                         //This value is used to assign to the DropDown the same width

@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.nganga.robert.chargelink.ui.navigation.AUTHENTICATION_ROUTE
+import com.nganga.robert.chargelink.ui.navigation.BOTTOM_NAV_ROUTE
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 
@@ -16,7 +17,7 @@ fun MainNavGraph(
 
    NavHost(
        navController = navController,
-       startDestination = AUTHENTICATION_ROUTE,
+       startDestination = BOTTOM_NAV_ROUTE,
        modifier = Modifier,
        route = "root"
    ){

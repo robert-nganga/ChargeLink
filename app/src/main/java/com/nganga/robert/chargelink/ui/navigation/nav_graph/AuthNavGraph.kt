@@ -10,7 +10,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.nganga.robert.chargelink.ui.navigation.MAIN_ROUTE
+import com.nganga.robert.chargelink.ui.navigation.BOTTOM_NAV_ROUTE
 import com.nganga.robert.chargelink.screens.authentication_screens.EnterCarDetailsScreen
 import com.nganga.robert.chargelink.screens.authentication_screens.LoginScreen
 import com.nganga.robert.chargelink.screens.authentication_screens.RegisterUserScreen
@@ -59,15 +59,23 @@ fun NavGraphBuilder.authNavGraph(
             RegisterUserScreen(
                 viewModel = it.sharedViewModel(navController),
                 onContinueClicked = {
-                    navController.navigate(route = AuthScreen.CarDetails.route)
+                    navController.navigate(route = AuthScreen.CarDetails.route){
+                        launchSingleTop = true
+                    }
                 }
             )
         }
         composable(route = AuthScreen.CarDetails.route){
             EnterCarDetailsScreen(
                 onFinishClicked = {
-                    navController.navigate(route = MAIN_ROUTE)
-                }
+                    navController.navigate(route = BOTTOM_NAV_ROUTE){
+                        launchSingleTop = true
+                        popUpTo(AUTHENTICATION_ROUTE){
+                            inclusive = true
+                        }
+                    }
+                },
+                viewModel = it.sharedViewModel(navController)
             )
         }
     }

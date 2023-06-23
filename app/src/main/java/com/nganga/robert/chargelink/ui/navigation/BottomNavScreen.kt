@@ -6,7 +6,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 
-const val MAIN_ROUTE = "main"
+const val BOTTOM_NAV_ROUTE = "main"
 sealed class BottomBarScreen(
     val title: String,
     val route: String,

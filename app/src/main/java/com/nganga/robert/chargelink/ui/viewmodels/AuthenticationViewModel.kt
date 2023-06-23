@@ -6,8 +6,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nganga.robert.chargelink.models.Car
 import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.repository.AuthRepository
+import com.nganga.robert.chargelink.screens.models.AddCarDetailsState
 import com.nganga.robert.chargelink.screens.models.AddUserDetailsState
 import com.nganga.robert.chargelink.screens.models.LoginState
 import com.nganga.robert.chargelink.screens.models.SignUpState
@@ -27,6 +29,9 @@ class AuthenticationViewModel @Inject constructor(
     val hasUser: Boolean
         get() = repository.hasUser()
 
+    var addCarDetailsState by mutableStateOf(AddCarDetailsState())
+        private set
+
     var addUserDetailsState by mutableStateOf(AddUserDetailsState())
         private set
 
@@ -36,6 +41,31 @@ class AuthenticationViewModel @Inject constructor(
     var signUpState by mutableStateOf(SignUpState())
         private set
 
+
+    fun onSubmitCarDetailsClicked(
+        manufacturer: String,
+        model: String,
+        batteryCapacity: String,
+        range: String,
+        plug: String
+    ){
+        val car = Car(
+            manufacturer = manufacturer,
+            imageUrl = 0,
+            model = model,
+            batteryCapacity = batteryCapacity,
+            range = range,
+            plug = plug,
+            chargingSpeed = ""
+        )
+        val validate = validateCarDetails(manufacturer, model, batteryCapacity, range, plug)
+        if (validate != null) {
+            addCarDetailsState = addCarDetailsState.copy(isError = true, errorMsg = validate)
+        }else{
+            addCarDetailsState = addCarDetailsState.copy(isError = false, errorMsg = "")
+            addCarToDatabase(car)
+        }
+    }
 
     fun onSubmitUserDetailsClicked(
         name: String,
@@ -71,6 +101,26 @@ class AuthenticationViewModel @Inject constructor(
         }else{
             signUpState = signUpState.copy(isError = false, errorMsg = "")
             createUser(email, password)
+        }
+    }
+
+    private fun addCarToDatabase(car: Car) = viewModelScope.launch {
+        withContext(Dispatchers.IO){
+            repository.addUserCarDetails(car).collect{result ->
+                when(result.status){
+                    ResultState.Status.LOADING -> {
+                        addCarDetailsState = addCarDetailsState.copy(isLoading = true)
+                    }
+                    ResultState.Status.SUCCESS -> {
+                        addCarDetailsState = addCarDetailsState.copy(isLoading = false, isCarAddedSuccessfully = true, isError = false, errorMsg = "")
+                    }
+                    ResultState.Status.ERROR -> {
+                        result.message?.let {
+                            addCarDetailsState = addCarDetailsState.copy(isLoading = false, isCarAddedSuccessfully = false, isError = true, errorMsg = it)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -179,6 +229,17 @@ class AuthenticationViewModel @Inject constructor(
             dob.isEmpty() -> "Date of birth must not be empty"
             gender.isEmpty() -> "Gender must not be empty"
             phone.length < 10 -> "Enter a valid phone number"
+            else -> null
+        }
+    }
+
+    private fun validateCarDetails(manufacturer: String, model: String, batteryCapacity: String, range: String, plug: String): String?{
+        return when{
+            manufacturer.isEmpty() -> "Manufacturer must not be empty"
+            model.isEmpty() -> "Model must not be empty"
+            batteryCapacity.isEmpty() -> "Battery capacity must not be empty"
+            range.isEmpty() -> "Range must not be empty"
+            plug.isEmpty() -> "Plug must not be empty"
             else -> null
         }
     }

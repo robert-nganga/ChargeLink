@@ -6,11 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -18,12 +14,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.components.ProgressDialog
+import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EnterCarDetailsScreen(
-    onFinishClicked: ()->Unit
+    onFinishClicked: ()->Unit,
+    viewModel: AuthenticationViewModel
 ){
+
+    val state = viewModel.addCarDetailsState
+
     var manufacturer by remember{
         mutableStateOf("")
     }
@@ -39,6 +41,13 @@ fun EnterCarDetailsScreen(
     var plug by remember{
         mutableStateOf("")
     }
+
+    LaunchedEffect(key1 = state.isCarAddedSuccessfully){
+        if(state.isCarAddedSuccessfully){
+            onFinishClicked()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -51,6 +60,9 @@ fun EnterCarDetailsScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
+        if (state.isLoading){
+            ProgressDialog(text = stringResource(id = R.string.please_wait))
+        }
         Image(
             painter = painterResource(id = R.drawable.electric_car),
             contentDescription = null,
@@ -103,9 +115,25 @@ fun EnterCarDetailsScreen(
             label = { Text(text = stringResource(id = R.string.range))},
             singleLine = true
         )
+        if (state.isError){
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = state.errorMsg,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error
+            )
+        }
         Spacer(modifier = Modifier.height(20.dp))
         Button(
-            onClick = { onFinishClicked() },
+            onClick = {
+                viewModel.onSubmitCarDetailsClicked(
+                    manufacturer = manufacturer,
+                    model = model,
+                    batteryCapacity = batteryCapacity,
+                    range = range,
+                    plug = plug
+                )
+           },
             shape = RoundedCornerShape(10.dp),
             modifier = Modifier.align(Alignment.End)
         ) {
