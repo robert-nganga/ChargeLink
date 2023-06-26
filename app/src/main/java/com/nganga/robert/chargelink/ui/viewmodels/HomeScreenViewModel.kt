@@ -3,11 +3,21 @@ package com.nganga.robert.chargelink.ui.viewmodels
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.*
+import com.nganga.robert.chargelink.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.screens.models.HomeScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class HomeScreenViewModel:ViewModel() {
+
+@HiltViewModel
+class HomeScreenViewModel@Inject constructor(
+    private val repository: ChargingStationRepository):ViewModel() {
 
     private var _state = mutableStateOf(HomeScreenState())
     val state: State<HomeScreenState> get() = _state
@@ -32,6 +42,13 @@ class HomeScreenViewModel:ViewModel() {
             nearbyStations = chargingStations,
             currentUser = user
         )
+        addAll()
+    }
+
+    private fun addAll() = viewModelScope.launch {
+        withContext(Dispatchers.IO){
+            repository.addAll()
+        }
     }
 }
 
@@ -88,6 +105,19 @@ val chargers = listOf(
     Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = R.drawable.ic_ev_plug_j1772_t1, isAvailable = true
     ),
     Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = R.drawable.ic_ev_plug_tesla, isAvailable = true
+    )
+)
+
+val chargers0 = listOf(
+    Charger(plug = "CCS 1 DC", power = "360kW", image = 0, isAvailable = true
+    ),
+    Charger(plug = "CCS 2 DC", power = "360kW", image = 0, isAvailable = true
+    ),
+    Charger(plug = "Mennekes (Type 2) AC", power = "22kW", image = 0, isAvailable = true
+    ),
+    Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = 0, isAvailable = true
+    ),
+    Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = 0, isAvailable = true
     )
 )
 

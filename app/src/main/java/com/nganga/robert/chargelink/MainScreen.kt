@@ -32,7 +32,6 @@ import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 fun MainScreen(){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val viewModel: HomeScreenViewModel = viewModel()
 
     val showBottomBar = when(navBackStackEntry?.destination?.route?.substringBefore("/")){
         BottomBarScreen.Home.route -> true
@@ -52,8 +51,7 @@ fun MainScreen(){
         }
     ) { contentPadding ->
         MainNavGraph(
-            navController = navController,
-            viewModel = viewModel
+            navController = navController
         )
     }
 }

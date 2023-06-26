@@ -11,8 +11,7 @@ import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 @Composable
 fun MainNavGraph(
-    navController: NavHostController,
-    viewModel: HomeScreenViewModel
+    navController: NavHostController
 ){
 
    NavHost(
@@ -22,7 +21,7 @@ fun MainNavGraph(
        route = "root"
    ){
        authNavGraph(navController)
-       bottomNavGraph(navController, viewModel)
+       bottomNavGraph(navController)
 
    }
 }

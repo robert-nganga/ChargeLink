@@ -2,6 +2,8 @@ package com.nganga.robert.chargelink.di
 
 import com.nganga.robert.chargelink.repository.AuthRepository
 import com.nganga.robert.chargelink.repository.AuthRepositoryImpl
+import com.nganga.robert.chargelink.repository.ChargingStationRepository
+import com.nganga.robert.chargelink.repository.ChargingStationRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,4 +21,10 @@ abstract class RepositoryModule {
     abstract fun providesFirebaseAuthRepository(
         repo: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun providesChargingStationRepository(
+        repo: ChargingStationRepositoryImpl
+    ): ChargingStationRepository
 }
