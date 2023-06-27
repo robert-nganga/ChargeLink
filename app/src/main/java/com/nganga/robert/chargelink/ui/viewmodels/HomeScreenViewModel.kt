@@ -12,6 +12,7 @@ import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.*
 import com.nganga.robert.chargelink.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.screens.models.HomeScreenState
+import com.nganga.robert.chargelink.screens.models.StationDetailsState
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,9 @@ class HomeScreenViewModel@Inject constructor(
     private val repository: ChargingStationRepository):ViewModel() {
 
     var homeScreenState by mutableStateOf(HomeScreenState())
+        private set
+
+    var stationDetailsScreenState by mutableStateOf(StationDetailsState())
         private set
 
     private var _booking = mutableStateOf(emptyBooking)
@@ -44,6 +48,29 @@ class HomeScreenViewModel@Inject constructor(
 
     init {
         getCurrentUser()
+    }
+
+    fun getStationById(id: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO){
+            repository.getChargingStationById(id).collect{ result->
+                when(result.status){
+                    ResultState.Status.SUCCESS -> {
+                        val station = result.data
+                        station?.let {
+                            stationDetailsScreenState = stationDetailsScreenState.copy(
+                                chargingStation = it,
+                            )
+                            Log.i("HomeScreenViewModel", "Station name: ${it.name}")
+                        }
+                    }
+                    ResultState.Status.ERROR -> {
+                        Log.i("HomeScreenViewModel", "Error getting station: ${result.message}")
+                    }
+                    ResultState.Status.LOADING -> {
+                    }
+                }
+            }
+        }
     }
 
 

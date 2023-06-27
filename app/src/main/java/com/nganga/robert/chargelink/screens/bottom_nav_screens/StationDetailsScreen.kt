@@ -50,10 +50,12 @@ fun StationDetailsScreen(
         mutableStateOf(3)
     }
 
-    id?.let {
-        viewModel.getChargingStation(it)
+    LaunchedEffect(key1 = true){
+        id?.let {
+            viewModel.getStationById(it)
+        }
     }
-    val chargingStation = viewModel.station
+    val chargingStation =  viewModel.stationDetailsScreenState.chargingStation
     val bottomState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
     val scope = rememberCoroutineScope()
 
@@ -79,7 +81,7 @@ fun StationDetailsScreen(
             contentAlignment = Alignment.TopCenter
         ) {
             ImageHeaderSection(
-                image = painterResource(id = chargingStation.value.imageUrl),
+                image = painterResource(id = R.drawable.station3),
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.35f)
@@ -96,8 +98,8 @@ fun StationDetailsScreen(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
                         .background(MaterialTheme.colorScheme.background),
-                    name = chargingStation.value.name,
-                    location = chargingStation.value.location,
+                    name = chargingStation.name,
+                    location = chargingStation.location,
                     rating = 4
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -108,19 +110,19 @@ fun StationDetailsScreen(
                 )
                 when (selectedTabIndex){
                     0 -> OverviewSection(
-                        description = chargingStation.value.description,
-                        phone = chargingStation.value.phone,
-                        openHours = chargingStation.value.openHours,
-                        openDays = chargingStation.value.openDays,
-                        amenities = chargingStation.value.amenities
+                        description = chargingStation.description,
+                        phone = chargingStation.phone,
+                        openHours = chargingStation.openHours,
+                        openDays = chargingStation.openDays,
+                        amenities = chargingStation.amenities
                     )
-                    1 -> ChargerSection(chargers = chargingStation.value.chargers,
+                    1 -> ChargerSection(chargers = chargingStation.chargers,
                         modifier = Modifier.fillMaxSize()
                     )
                     2 -> ReviewSection(
                         totalReviews = 120,
                         averageRating = 4.0f,
-                        reviews = chargingStation.value.reviews,
+                        reviews = chargingStation.reviews,
                         modifier = Modifier.fillMaxSize(),
                         onRatingChange = {
                             rating = it

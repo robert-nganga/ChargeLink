@@ -24,13 +24,31 @@ class ChargingStationRepositoryImpl@Inject constructor(
 
 
     override suspend fun getCurrentUser(): Flow<ResultState<NewUser>> = callbackFlow{
-
         fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser?.uid!!)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = task.result?.toObject(NewUser::class.java)
                     trySend(ResultState.success(user!!))
+                }
+            }
+            .addOnFailureListener {
+                trySend(ResultState.error(it.message?: "Unknown error"))
+            }
+
+        awaitClose {
+            close()
+        }
+
+    }
+
+    override suspend fun getChargingStationById(id: String): Flow<ResultState<NewChargingStation>> = callbackFlow{
+        fireStoreDb.collection(CHARGING_STATIONS_COLLECTION_REF).whereEqualTo("id", id)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val chargingStation = task.result?.toObjects(NewChargingStation::class.java)
+                    trySend(ResultState.success(chargingStation!![0]))
                 }
             }
             .addOnFailureListener {

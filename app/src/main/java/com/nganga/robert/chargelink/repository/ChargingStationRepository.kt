@@ -10,5 +10,7 @@ interface ChargingStationRepository {
 
     suspend fun getCurrentUser(): Flow<ResultState<NewUser>>
 
+    suspend fun getChargingStationById(id: String): Flow<ResultState<NewChargingStation>>
+
     suspend fun getNearByStations(latitude: Double, longitude: Double): Flow<ResultState<List<NewChargingStation>>>
 }
