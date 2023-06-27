@@ -17,11 +17,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.nganga.robert.chargelink.models.ChargingStation
+import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.models.NewChargingStation
 
 @Composable
 fun NearbyListItem(
-    chargingStation: ChargingStation,
+    chargingStation: NewChargingStation,
     modifier: Modifier = Modifier,
     onNearByItemClick: (String)->Unit
 ){
@@ -43,7 +44,7 @@ fun NearbyListItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = chargingStation.imageUrl),
+                painter = painterResource(id = R.drawable.station2),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxHeight(0.8f)

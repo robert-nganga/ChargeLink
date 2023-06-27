@@ -2,11 +2,7 @@ package com.nganga.robert.chargelink.screens.bottom_nav_screens
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
-import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -40,7 +36,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.google.android.gms.location.LocationServices
 import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.ChargingStation
+import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.ui.components.GarageItem
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
 import com.nganga.robert.chargelink.ui.components.PermissionDialog
@@ -72,7 +68,7 @@ fun HomeScreen(
                     locationClient.lastLocation
                         .addOnSuccessListener { location ->
                             location?.let {
-
+                                viewModel.getNearbyStations(it)
                             }
                         }
                 }
@@ -98,7 +94,7 @@ fun HomeScreen(
                         locationClient.lastLocation
                             .addOnSuccessListener { location ->
                                 if (location != null) {
-
+                                    viewModel.getNearbyStations(location)
                                 }
                             }
                     }
@@ -138,7 +134,7 @@ fun HomeScreen(
             }
         )
     }
-    val state by viewModel.state
+    val state = viewModel.homeScreenState
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -147,8 +143,8 @@ fun HomeScreen(
     ) {
         TopAppBar(
             name = state.currentUser.name,
-            location = state.currentUser.location,
-            profile = painterResource(id = state.currentUser.image),
+            location = "Nairobi, Kenya",
+            profile = painterResource(id = R.drawable.user2),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(15.dp))
@@ -300,7 +296,7 @@ fun SearchSection(
 @Composable
 fun NearbySection(
     modifier: Modifier = Modifier,
-    stations: List<ChargingStation>,
+    stations: List<NewChargingStation>,
     onNearByItemClick: (String) ->Unit
 ){
     LazyColumn(modifier = modifier){
@@ -309,9 +305,8 @@ fun NearbySection(
                 chargingStation = station,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp),
-                onNearByItemClick = { onNearByItemClick(it) }
-            )
+                    .height(120.dp)
+            ) { onNearByItemClick(it) }
         }
         item {
             Spacer(modifier = Modifier.height(70.dp))

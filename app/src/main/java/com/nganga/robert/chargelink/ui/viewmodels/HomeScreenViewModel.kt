@@ -2,15 +2,16 @@ package com.nganga.robert.chargelink.ui.viewmodels
 
 import android.location.Location
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.*
 import com.nganga.robert.chargelink.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.screens.models.HomeScreenState
+import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,8 +26,8 @@ class HomeScreenViewModel@Inject constructor(
 
 
 
-    private var _state = mutableStateOf(HomeScreenState())
-    val state: State<HomeScreenState> get() = _state
+    var homeScreenState by mutableStateOf(HomeScreenState())
+        private set
 
     private var _booking = mutableStateOf(emptyBooking)
     val booking: State<Booking> get() = _booking
@@ -43,15 +44,36 @@ class HomeScreenViewModel@Inject constructor(
         _booking.value = myBooking
     }
 
-    init {
-        _state.value = HomeScreenState(
-            nearbyStations = chargingStations,
-            currentUser = user
-        )
-    }
+
 
     fun getNearbyStations(location: Location) = viewModelScope.launch {
-
+        withContext(Dispatchers.IO){
+            repository.getNearByStations(location.latitude, location.longitude).collect{ result->
+                when(result.status){
+                    ResultState.Status.SUCCESS -> {
+                        val stations = result.data
+                        stations?.let {
+                            homeScreenState = homeScreenState.copy(
+                                isNearByStationsLoading = false,
+                                isNearByStationsError = false,
+                                nearbyStations = it
+                            )
+                        }
+                    }
+                    ResultState.Status.ERROR -> {
+                        homeScreenState = homeScreenState.copy(
+                            isNearByStationsLoading = false,
+                            isNearByStationsError = true
+                        )
+                    }
+                    ResultState.Status.LOADING -> {
+                        homeScreenState = homeScreenState.copy(
+                            isNearByStationsLoading = true
+                        )
+                    }
+                }
+            }
+        }
     }
 
 
@@ -180,24 +202,6 @@ val amenities = Amenities(
     shops = false
 )
 
-val user = User(
-    name = "Beatrice Muthoni",
-    email = "beat.mut@gmail.com",
-    image = R.drawable.user2,
-    phone = "013-456-7890",
-    location = "Donholm, Nairobi",
-    cars = listOf(
-        Car(
-            manufacturer = "BMW",
-            imageUrl = R.drawable.bmw,
-            model = "M4 CSL",
-            batteryCapacity = "75 kWh",
-            range = "358 km",
-            plug = "Type 2",
-            chargingSpeed = "150 kW"
-        )
-    )
-)
 
 val chargingStations = listOf(
     ChargingStation(

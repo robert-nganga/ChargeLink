@@ -7,5 +7,7 @@ import com.nganga.robert.chargelink.models.User
 
 data class HomeScreenState(
     val nearbyStations: List<NewChargingStation> = emptyList(),
-    val currentUser: NewUser = NewUser()
+    val currentUser: NewUser = NewUser(),
+    val isNearByStationsLoading: Boolean = false,
+    val isNearByStationsError: Boolean = false,
 )
