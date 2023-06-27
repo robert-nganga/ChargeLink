@@ -1,5 +1,14 @@
 package com.nganga.robert.chargelink.screens.bottom_nav_screens
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,32 +17,113 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.google.android.gms.location.LocationServices
+import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.ui.components.GarageItem
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
+import com.nganga.robert.chargelink.ui.components.PermissionDialog
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 @Composable
 fun HomeScreen(
+    activity: Activity,
     modifier: Modifier = Modifier,
     viewModel: HomeScreenViewModel,
     onNearByItemClick: (String) -> Unit
 ){
+
+
+    val context = LocalContext.current
+    var shouldShowPermissionDialog by remember {
+        mutableStateOf(false)
+    }
+    val locationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
+    val locationPermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted->
+            if (isGranted) {
+                locationClient.lastLocation
+                    .addOnSuccessListener { location ->
+                    if (location != null) {
+
+                    }
+                }
+            }
+        }
+    )
+
+
+
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(
+        key1 = lifecycleOwner
+    ) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+
+                when {
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+
+                    }
+                    ActivityCompat.shouldShowRequestPermissionRationale(
+                        context as Activity,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) -> {
+                        shouldShowPermissionDialog = true
+                    }
+                    else -> {
+                        locationPermissionResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                    }
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    if (shouldShowPermissionDialog) {
+        PermissionDialog(
+            text = stringResource(id = R.string.location_reason),
+            onDismiss = {
+                shouldShowPermissionDialog = false
+            },
+            onOkayClick = {
+                shouldShowPermissionDialog = false
+                locationPermissionResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+        )
+    }
     val state by viewModel.state
     Column(
         modifier = modifier
@@ -214,3 +304,4 @@ fun NearbySection(
         }
     }
 }
+

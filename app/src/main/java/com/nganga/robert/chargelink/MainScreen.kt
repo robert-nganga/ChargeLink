@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -29,7 +30,9 @@ import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(){
+fun MainScreen(
+    activity: Activity
+){
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
@@ -51,7 +54,8 @@ fun MainScreen(){
         }
     ) { contentPadding ->
         MainNavGraph(
-            navController = navController
+            navController = navController,
+            activity = activity
         )
     }
 }

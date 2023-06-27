@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.ui.viewmodels
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel@Inject constructor(
     private val repository: ChargingStationRepository):ViewModel() {
+
+
+
 
     private var _state = mutableStateOf(HomeScreenState())
     val state: State<HomeScreenState> get() = _state
@@ -44,6 +48,7 @@ class HomeScreenViewModel@Inject constructor(
         )
         addAll()
     }
+
 
     private fun addAll() = viewModelScope.launch {
         withContext(Dispatchers.IO){

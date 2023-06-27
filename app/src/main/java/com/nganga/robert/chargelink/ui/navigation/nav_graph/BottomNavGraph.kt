@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.ui.navigation.nav_graph
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,7 +14,8 @@ import com.nganga.robert.chargelink.screens.bottom_nav_screens.*
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 fun NavGraphBuilder.bottomNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    activity: Activity
 ) {
     navigation(
         startDestination = BottomBarScreen.Home.route,
@@ -24,7 +26,8 @@ fun NavGraphBuilder.bottomNavGraph(
                 viewModel = it.sharedViewModel(navController),
                 onNearByItemClick = { id ->
                     navController.navigate(BottomBarScreen.Details.withArgs(id))
-                }
+                },
+                activity = activity
             )
         }
         composable(route = BottomBarScreen.Maps.route){
