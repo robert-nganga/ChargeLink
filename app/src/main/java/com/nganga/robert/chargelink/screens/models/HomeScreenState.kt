@@ -1,16 +1,11 @@
 package com.nganga.robert.chargelink.screens.models
 
 import com.nganga.robert.chargelink.models.ChargingStation
+import com.nganga.robert.chargelink.models.NewChargingStation
+import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.models.User
 
 data class HomeScreenState(
-    val nearbyStations: List<ChargingStation> = emptyList(),
-    val currentUser: User = User(
-        name = "",
-        email = "",
-        image = 0,
-        phone = "",
-        location = "",
-        cars = emptyList()
-    )
+    val nearbyStations: List<NewChargingStation> = emptyList(),
+    val currentUser: NewUser = NewUser()
 )

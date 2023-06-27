@@ -1,10 +1,12 @@
 package com.nganga.robert.chargelink.ui.viewmodels
 
+import android.location.Location
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.*
 import com.nganga.robert.chargelink.repository.ChargingStationRepository
@@ -46,15 +48,14 @@ class HomeScreenViewModel@Inject constructor(
             nearbyStations = chargingStations,
             currentUser = user
         )
-        addAll()
+    }
+
+    fun getNearbyStations(location: Location) = viewModelScope.launch {
+
     }
 
 
-    private fun addAll() = viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            repository.addAll()
-        }
-    }
+
 }
 
 val myBooking = Booking(

@@ -10,6 +10,16 @@ data class NewUser(
     val cars: List<Car>
 
 ){
+    constructor():this(
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        emptyList()
+    )
+
     fun toMap() = hashMapOf(
         "name" to name,
         "email" to email,

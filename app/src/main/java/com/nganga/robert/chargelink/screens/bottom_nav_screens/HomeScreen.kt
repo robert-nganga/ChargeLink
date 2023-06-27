@@ -45,6 +45,7 @@ import com.nganga.robert.chargelink.ui.components.GarageItem
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
 import com.nganga.robert.chargelink.ui.components.PermissionDialog
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -59,6 +60,7 @@ fun HomeScreen(
     var shouldShowPermissionDialog by remember {
         mutableStateOf(false)
     }
+    val scope = rememberCoroutineScope()
     val locationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
     }
@@ -66,11 +68,13 @@ fun HomeScreen(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted->
             if (isGranted) {
-                locationClient.lastLocation
-                    .addOnSuccessListener { location ->
-                    if (location != null) {
+                scope.launch {
+                    locationClient.lastLocation
+                        .addOnSuccessListener { location ->
+                            location?.let {
 
-                    }
+                            }
+                        }
                 }
             }
         }
@@ -91,7 +95,12 @@ fun HomeScreen(
                         context,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED -> {
+                        locationClient.lastLocation
+                            .addOnSuccessListener { location ->
+                                if (location != null) {
 
+                                }
+                            }
                     }
                     ActivityCompat.shouldShowRequestPermissionRationale(
                         context as Activity,
@@ -120,7 +129,12 @@ fun HomeScreen(
             },
             onOkayClick = {
                 shouldShowPermissionDialog = false
-                locationPermissionResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                if (ActivityCompat.shouldShowRequestPermissionRationale(
+                        context as Activity,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )){
+                    locationPermissionResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+                }
             }
         )
     }
