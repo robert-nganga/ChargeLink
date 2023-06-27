@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.ui.viewmodels
 
 import android.location.Location
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,9 +24,6 @@ import javax.inject.Inject
 class HomeScreenViewModel@Inject constructor(
     private val repository: ChargingStationRepository):ViewModel() {
 
-
-
-
     var homeScreenState by mutableStateOf(HomeScreenState())
         private set
 
@@ -44,9 +42,36 @@ class HomeScreenViewModel@Inject constructor(
         _booking.value = myBooking
     }
 
+    init {
+        getCurrentUser()
+    }
 
+
+    private fun getCurrentUser() = viewModelScope.launch {
+        withContext(Dispatchers.IO){
+            repository.getCurrentUser().collect{ result->
+                when(result.status){
+                    ResultState.Status.SUCCESS -> {
+                        val user = result.data
+                        user?.let {
+                            homeScreenState = homeScreenState.copy(
+                                currentUser = it,
+                            )
+                            Log.i("HomeScreenViewModel", "CurrentUser email: ${it.email}")
+                        }
+                    }
+                    ResultState.Status.ERROR -> {
+                        Log.i("HomeScreenViewModel", "getCurrentUser: ${result.message}")
+                    }
+                    ResultState.Status.LOADING -> {
+                    }
+                }
+            }
+        }
+    }
 
     fun getNearbyStations(location: Location) = viewModelScope.launch {
+        Log.i("HomeScreenViewModel", "My Location: ${location.latitude}, ${location.longitude}")
         withContext(Dispatchers.IO){
             repository.getNearByStations(location.latitude, location.longitude).collect{ result->
                 when(result.status){
@@ -58,6 +83,7 @@ class HomeScreenViewModel@Inject constructor(
                                 isNearByStationsError = false,
                                 nearbyStations = it
                             )
+                            Log.i("HomeScreenViewModel", "Nearby Stations: ${it.size}")
                         }
                     }
                     ResultState.Status.ERROR -> {
@@ -65,6 +91,7 @@ class HomeScreenViewModel@Inject constructor(
                             isNearByStationsLoading = false,
                             isNearByStationsError = true
                         )
+                        Log.i("HomeScreenViewModel", "getNearbyStations error:: ${result.message}")
                     }
                     ResultState.Status.LOADING -> {
                         homeScreenState = homeScreenState.copy(

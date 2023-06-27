@@ -17,9 +17,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val fireStoreDb: FirebaseFirestore,
     private val auth: FirebaseAuth): AuthRepository {
 
-    private val currentUser = auth.currentUser
-
-    private val userId = auth.currentUser?.uid.orEmpty()
 
     override fun hasUser(): Boolean = auth.currentUser != null
 
@@ -27,14 +24,15 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun addUserDetails(user: NewUser): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.loading())
-        fireStoreDb.collection(USERS_COLLECTION_REF).document(userId)
-            .set(user.copy(email = currentUser?.email!!).toMap())
-            .addOnSuccessListener {
-                trySend(ResultState.success("Added successfully"))
-            }
-            .addOnFailureListener { exception ->
-                trySend(ResultState.error(exception.message?: "Unknown error"))
-            }
+            fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser?.uid!!)
+                .set(user.copy(email = auth.currentUser?.email!!).toMap())
+                .addOnSuccessListener {
+                    trySend(ResultState.success("Added successfully"))
+                }
+                .addOnFailureListener { exception ->
+                    trySend(ResultState.error(exception.message?: "Unknown error"))
+                }
+
 
         awaitClose {
             close()
@@ -43,7 +41,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun addUserCarDetails(car: Car): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.loading())
-        fireStoreDb.collection(USERS_COLLECTION_REF).document(userId)
+        fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser!!.uid)
             .update("cars", FieldValue.arrayUnion(car.toMap()))
             .addOnCompleteListener {
                 trySend(ResultState.success("Car details added successfully"))

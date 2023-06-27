@@ -8,6 +8,12 @@ data class Charger(
     val image: Int,
     val isAvailable: Boolean
 ){
+    constructor():this(
+        "",
+        "",
+        0,
+        false
+    )
     fun toMap() = hashMapOf(
         "plug" to plug,
         "power" to power,

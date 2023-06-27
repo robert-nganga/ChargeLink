@@ -9,6 +9,15 @@ data class Amenities (
     val maintenance: Boolean,
     val tyrePressure: Boolean
     ){
+    constructor():this(
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+    )
     fun toMap() = hashMapOf(
         "wifi" to wifi,
         "restaurants" to restaurants,

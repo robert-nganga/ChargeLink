@@ -17,7 +17,7 @@ data class NewUser(
         "",
         "",
         "",
-        emptyList()
+        listOf(Car())
     )
 
     fun toMap() = hashMapOf(

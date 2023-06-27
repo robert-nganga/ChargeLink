@@ -16,12 +16,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.ChargingStation
+import com.nganga.robert.chargelink.models.NewChargingStation
 
 
 @Composable
 fun ChargingStationItem(
-    station: ChargingStation,
+    station: NewChargingStation,
     modifier: Modifier = Modifier
 ){
     Card(
@@ -42,7 +42,7 @@ fun ChargingStationItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(id = station.imageUrl),
+                    painter = painterResource(id = R.drawable.station3),
                     contentDescription = null,
                     modifier = Modifier
                         .height(100.dp)

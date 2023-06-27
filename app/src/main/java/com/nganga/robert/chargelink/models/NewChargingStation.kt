@@ -18,6 +18,24 @@ data class NewChargingStation(
     val openDays: List<OpenDay>,
     val amenities: Amenities
 ){
+    constructor():this(
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        false,
+        listOf(Charger()),
+        listOf(Review()),
+        listOf(OpenDay()),
+        Amenities()
+    )
     fun toMap() = hashMapOf(
         "id" to id,
         "name" to name,

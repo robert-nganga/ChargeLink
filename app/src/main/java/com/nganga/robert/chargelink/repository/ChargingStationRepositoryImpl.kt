@@ -1,13 +1,17 @@
 package com.nganga.robert.chargelink.repository
 
+import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.nganga.robert.chargelink.models.NewChargingStation
+import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.utils.Constants.CHARGING_STATIONS_COLLECTION_REF
+import com.nganga.robert.chargelink.utils.Constants.USERS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +19,29 @@ import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 class ChargingStationRepositoryImpl@Inject constructor(
+    private val auth: FirebaseAuth,
     private val fireStoreDb: FirebaseFirestore): ChargingStationRepository {
+
+
+    override suspend fun getCurrentUser(): Flow<ResultState<NewUser>> = callbackFlow{
+
+        fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser?.uid!!)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val user = task.result?.toObject(NewUser::class.java)
+                    trySend(ResultState.success(user!!))
+                }
+            }
+            .addOnFailureListener {
+                trySend(ResultState.error(it.message?: "Unknown error"))
+            }
+
+        awaitClose {
+            close()
+        }
+
+    }
 
 
     override suspend fun getNearByStations(
@@ -39,6 +65,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
             tasks.add(q.get())
         }
 
+        Log.i("ChargingStationRepositoryImpl", "initial tasks size: ${tasks.size}")
         Tasks.whenAllComplete(tasks)
             .addOnCompleteListener {
                 val matchingDocs: MutableList<NewChargingStation> = ArrayList()

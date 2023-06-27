@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.nganga.robert.chargelink.models.ChargingStation
+import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.ui.components.ChargingStationItem
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
@@ -17,7 +17,7 @@ fun MapScreen(
     viewModel: HomeScreenViewModel
 ){
 
-    val state = viewModel.state
+    val state = viewModel.homeScreenState
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     Box(
@@ -31,7 +31,7 @@ fun MapScreen(
             contentAlignment = Alignment.BottomCenter
         ) {
            ChargingStationsSection(
-               stations = state.value.nearbyStations,
+               stations = state.nearbyStations,
                modifier = Modifier.width(screenWidth - 20.dp)
            )
         }
@@ -40,7 +40,7 @@ fun MapScreen(
 
 @Composable
 fun ChargingStationsSection(
-    stations: List<ChargingStation>,
+    stations: List<NewChargingStation>,
     modifier: Modifier = Modifier
 ){
     LazyRow(

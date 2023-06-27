@@ -10,6 +10,13 @@ data class Car(
     val plug: String,
     val chargingSpeed: String
 ){
+    constructor(): this("",
+        0,
+        "",
+        "",
+        "",
+        "",
+        "")
     fun toMap() = hashMapOf(
         "manufacturer" to manufacturer,
         "imageUrl" to imageUrl,

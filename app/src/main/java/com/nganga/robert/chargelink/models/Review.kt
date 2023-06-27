@@ -10,6 +10,14 @@ data class Review(
     val message: String,
     val rating: Int
 ){
+    constructor():this(
+        "",
+        0,
+        "",
+        "",
+        "",
+        0
+    )
     fun toMap() = hashMapOf(
         "userName" to userName,
         "userImage" to userImage,
