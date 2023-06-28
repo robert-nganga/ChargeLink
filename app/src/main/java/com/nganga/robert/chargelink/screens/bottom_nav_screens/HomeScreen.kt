@@ -147,27 +147,22 @@ fun HomeScreen(
     ) {
         TopAppBar(
             name = state.currentUser.name,
-            location = "Nairobi, Kenya",
             profile = painterResource(id = R.drawable.user2),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(15.dp))
         SearchSection()
-        Spacer(modifier = Modifier.height(10.dp))
-        GarageItem(
-            model = state.currentUser.cars[0].model,
-            manufacturer = state.currentUser.cars[0].manufacturer,
-            capacity = state.currentUser.cars[0].batteryCapacity,
-            range = state.currentUser.cars[0].range,
-            connectors = listOf("AC", "DC"),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-        )
         Spacer(modifier = Modifier.height(15.dp))
         Text(
             text = "NearBy Stations",
             style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(5.dp))
+        Text(
+            text = "Nairobi Kenya",
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.outline
+            )
         )
         Spacer(modifier = Modifier.height(5.dp))
         NearbySection(
@@ -182,7 +177,6 @@ fun HomeScreen(
 @Composable
 fun TopAppBar(
     name: String,
-    location: String,
     profile: Painter,
     modifier: Modifier = Modifier
 ){
@@ -193,29 +187,18 @@ fun TopAppBar(
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = name,
-                style = MaterialTheme.typography.titleMedium
+                text = stringResource(id = R.string.good_morning),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    color = MaterialTheme.colorScheme.outline
+                )
             )
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.LocationOn,
-                    contentDescription = "location",
-                    modifier = Modifier.size(20.dp)
-                )
-                Spacer(modifier = Modifier.width(5.dp))
-                Text(
-                    text = location,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.outline
-                    )
-                )
-            }
+            Text(
+                text = name,
+                style = MaterialTheme.typography.titleLarge
+            )
         }
 
         RoundImage(

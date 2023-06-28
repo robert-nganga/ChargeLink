@@ -48,6 +48,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
+                        Log.i("ChargingStationRepositoryImpl", "Fetch station with id $id successful with name${document.getString("name")}")
                         val chargingStation = document.toObject(NewChargingStation::class.java)
                         trySend(ResultState.success(chargingStation))
                     }
