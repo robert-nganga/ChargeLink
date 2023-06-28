@@ -15,4 +15,20 @@ data class ChargingStation(
     val reviews: List<Review>,
     val openDays: List<OpenDay>,
     val amenities: Amenities
-)
+){
+constructor():this(
+        "",
+        "",
+        "",
+        "",
+        "",
+        0,
+        "",
+        "",
+        false,
+        listOf(Charger()),
+        listOf(Review()),
+        listOf(OpenDay()),
+        Amenities()
+    )
+}

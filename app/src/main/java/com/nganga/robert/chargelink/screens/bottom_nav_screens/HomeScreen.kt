@@ -3,6 +3,7 @@ package com.nganga.robert.chargelink.screens.bottom_nav_screens
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -94,6 +95,7 @@ fun HomeScreen(
                         locationClient.lastLocation
                             .addOnSuccessListener { location ->
                                 if (location != null) {
+                                    Log.d("HomeScreen", "Permission granted Location: ${location.latitude}, ${location.longitude}")
                                     viewModel.getNearbyStations(location)
                                 }
                             }
@@ -102,9 +104,11 @@ fun HomeScreen(
                         context as Activity,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) -> {
+                        Log.i("HomeScreen", "Permission should be requested")
                         shouldShowPermissionDialog = true
                     }
                     else -> {
+                        Log.i("HomeScreen", "Permission requested")
                         locationPermissionResultLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
                 }
