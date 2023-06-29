@@ -34,14 +34,12 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.google.android.gms.location.LocationServices
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
 import com.nganga.robert.chargelink.ui.components.NearbyShimmerListItem
 import com.nganga.robert.chargelink.ui.components.PermissionDialog
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -56,25 +54,14 @@ fun HomeScreen(
     var shouldShowPermissionDialog by remember {
         mutableStateOf(false)
     }
-    val scope = rememberCoroutineScope()
-    val locationClient = remember {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
     val locationPermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted->
             Log.i("HomeScreen", "Permission result: $isGranted")
-            if (isGranted) {
-                scope.launch {
-                    locationClient.lastLocation
-                        .addOnSuccessListener { location ->
-                            location?.let {
-                                Log.d("HomeScreen", "Permission granted Location: ${location.latitude}, ${location.longitude}")
-                                viewModel.getNearbyStations(it)
-                            }
-                        }
-                }
+            if (isGranted){
+                viewModel.fetchNearbyStations()
             }
+
         }
     )
 
@@ -94,13 +81,7 @@ fun HomeScreen(
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED -> {
                         Log.i("HomeScreen", "Permission granted")
-                        locationClient.lastLocation
-                            .addOnSuccessListener { location ->
-                                if (location != null) {
-                                    Log.d("HomeScreen", "Permission granted Location: ${location.latitude}, ${location.longitude}")
-                                    viewModel.getNearbyStations(location)
-                                }
-                            }
+                        viewModel.fetchNearbyStations()
                     }
                     ActivityCompat.shouldShowRequestPermissionRationale(
                         context as Activity,

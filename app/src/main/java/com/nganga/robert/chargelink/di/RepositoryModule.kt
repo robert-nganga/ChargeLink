@@ -1,9 +1,6 @@
 package com.nganga.robert.chargelink.di
 
-import com.nganga.robert.chargelink.repository.AuthRepository
-import com.nganga.robert.chargelink.repository.AuthRepositoryImpl
-import com.nganga.robert.chargelink.repository.ChargingStationRepository
-import com.nganga.robert.chargelink.repository.ChargingStationRepositoryImpl
+import com.nganga.robert.chargelink.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,4 +24,10 @@ abstract class RepositoryModule {
     abstract fun providesChargingStationRepository(
         repo: ChargingStationRepositoryImpl
     ): ChargingStationRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun providesLocationRepository(
+        repo: LocationRepositoryImpl
+    ): LocationRepository
 }

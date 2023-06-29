@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.*
 import com.nganga.robert.chargelink.repository.ChargingStationRepository
+import com.nganga.robert.chargelink.repository.LocationRepository
 import com.nganga.robert.chargelink.screens.models.HomeScreenState
 import com.nganga.robert.chargelink.screens.models.StationDetailsState
 import com.nganga.robert.chargelink.utils.ResultState
@@ -23,13 +24,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel@Inject constructor(
-    private val repository: ChargingStationRepository):ViewModel() {
+    private val locationRepo: LocationRepository,
+    private val chargingStationRepo: ChargingStationRepository):ViewModel() {
 
     var homeScreenState by mutableStateOf(HomeScreenState())
         private set
 
     var stationDetailsScreenState by mutableStateOf(StationDetailsState())
         private set
+
 
     private var _booking = mutableStateOf(emptyBooking)
     val booking: State<Booking> get() = _booking
@@ -39,9 +42,15 @@ class HomeScreenViewModel@Inject constructor(
         _booking.value = myBooking
     }
 
+    fun fetchNearbyStations(){
+        locationRepo.getLocationOnce { location ->
+            getNearbyStations(location)
+        }
+    }
+
     fun getStationById(id: String) = viewModelScope.launch {
         withContext(Dispatchers.IO){
-            repository.getChargingStationById(id).collect{ result->
+            chargingStationRepo.getChargingStationById(id).collect{ result->
                 when(result.status){
                     ResultState.Status.SUCCESS -> {
                         val station = result.data
@@ -65,7 +74,7 @@ class HomeScreenViewModel@Inject constructor(
 
     private fun getCurrentUser() = viewModelScope.launch {
         withContext(Dispatchers.IO){
-            repository.getCurrentUser().collect{ result->
+            chargingStationRepo.getCurrentUser().collect{ result->
                 when(result.status){
                     ResultState.Status.SUCCESS -> {
                         val user = result.data
@@ -86,10 +95,10 @@ class HomeScreenViewModel@Inject constructor(
         }
     }
 
-    fun getNearbyStations(location: Location) = viewModelScope.launch {
+    private fun getNearbyStations(location: Location) = viewModelScope.launch {
         Log.i("HomeScreenViewModel", "My Location: ${location.latitude}, ${location.longitude}")
         withContext(Dispatchers.IO){
-            repository.getNearByStations(location.latitude, location.longitude).collect{ result->
+            chargingStationRepo.getNearByStations(location.latitude, location.longitude).collect{ result->
                 when(result.status){
                     ResultState.Status.SUCCESS -> {
                         val stations = result.data

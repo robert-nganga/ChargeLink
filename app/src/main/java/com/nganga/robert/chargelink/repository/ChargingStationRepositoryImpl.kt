@@ -72,7 +72,6 @@ class ChargingStationRepositoryImpl@Inject constructor(
     ): Flow<ResultState<List<NewChargingStation>>> = callbackFlow {
 
         trySend(ResultState.loading())
-        delay(30000)
         val center = GeoLocation(latitude, longitude)
         val radiusInM = 50.0 * 1000.0
 

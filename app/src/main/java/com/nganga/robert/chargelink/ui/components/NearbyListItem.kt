@@ -109,9 +109,9 @@ fun NearbyShimmerListItem(){
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxHeight(0.9f)
+                    .height(80.dp)
                     .weight(3f)
-                    .clip(RoundedCornerShape(60.dp))
+                    .clip(RoundedCornerShape(20.dp))
                     .shimmerEffect()
             )
             Spacer(modifier = Modifier.width(10.dp))
@@ -124,7 +124,7 @@ fun NearbyShimmerListItem(){
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
                         .height(20.dp)
-                        .clip(RoundedCornerShape(5.dp))
+                        .clip(RoundedCornerShape(8.dp))
                         .shimmerEffect()
                 )
                 Spacer(modifier = Modifier.height(3.dp))
@@ -132,7 +132,7 @@ fun NearbyShimmerListItem(){
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
                         .height(20.dp)
-                        .clip(RoundedCornerShape(5.dp))
+                        .clip(RoundedCornerShape(8.dp))
                         .shimmerEffect()
                 )
                 Spacer(modifier = Modifier.height(6.dp))
@@ -140,6 +140,7 @@ fun NearbyShimmerListItem(){
                     modifier = Modifier
                         .fillMaxWidth(0.5f)
                         .height(20.dp)
+                        .clip(RoundedCornerShape(8.dp))
                         .shimmerEffect()
                 )
             }
