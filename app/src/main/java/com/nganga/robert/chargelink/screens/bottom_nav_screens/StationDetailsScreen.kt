@@ -1,5 +1,6 @@
 package com.nganga.robert.chargelink.screens.bottom_nav_screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -46,9 +47,7 @@ fun StationDetailsScreen(
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
     }
-    var rating by remember {
-        mutableStateOf(0)
-    }
+    var rating = 0
 
     LaunchedEffect(key1 = true){
         id?.let {
@@ -68,6 +67,7 @@ fun StationDetailsScreen(
             ReviewBottomSheetContent(
                 onRatingChanged = { rating, message ->
                     scope.launch { bottomState.hide() }
+                    Log.i("StationDetailsScreen", "Rating: $rating, Message: $message, id ${chargingStation.id}")
                     viewModel.submitReview(chargingStation.id, rating, message)
                     // Refresh the station details screen to reflect the new review
                     viewModel.getStationById(chargingStation.id)
@@ -128,6 +128,7 @@ fun StationDetailsScreen(
                         reviews = chargingStation.reviews,
                         modifier = Modifier.fillMaxSize(),
                         onRatingChange = {
+                            Log.i("StationDetailsScreen", "Rating: $it")
                             rating = it
                             scope.launch { bottomState.show() }
                         }

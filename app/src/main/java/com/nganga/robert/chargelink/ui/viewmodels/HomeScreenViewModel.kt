@@ -50,11 +50,12 @@ class HomeScreenViewModel@Inject constructor(
         val review = Review(
             userName = homeScreenState.currentUser.name,
             userImage = 0,
-            date = current.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")),
+            date = current.format(DateTimeFormatter.ofPattern("MM/dd/yy")),
             time = current.format(DateTimeFormatter.ofPattern("hh:mm a")),
             message = message,
             rating = rating
         )
+        Log.i("HomeScreenViewModel", "Review: ${review.userName}")
         chargingStationRepo.submitReview(stationId, review).collect{ result->
             when(result.status){
                 ResultState.Status.SUCCESS -> {
@@ -85,7 +86,7 @@ class HomeScreenViewModel@Inject constructor(
                             stationDetailsScreenState = stationDetailsScreenState.copy(
                                 chargingStation = it,
                             )
-                            Log.i("HomeScreenViewModel", "Station name: ${it.name}")
+                            Log.i("HomeScreenViewModel", "Station id: ${it.id}")
                         }
                     }
                     ResultState.Status.ERROR -> {

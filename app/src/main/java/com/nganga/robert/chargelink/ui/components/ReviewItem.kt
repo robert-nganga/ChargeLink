@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Review
 
 @Composable
@@ -29,7 +30,7 @@ fun ReviewItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = review.userImage),
+                painter = painterResource(id = R.drawable.user4),
                 contentDescription = "Profile Image",
                 modifier = Modifier
                     .size(60.dp)

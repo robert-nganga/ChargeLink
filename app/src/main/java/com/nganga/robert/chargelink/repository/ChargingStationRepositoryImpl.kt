@@ -31,7 +31,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
         stationId: String,
         review: Review
     ): Flow<ResultState<String>> = callbackFlow {
-        fireStoreDb.collection(CHARGING_STATIONS_COLLECTION_REF).document(stationId)
+        fireStoreDb.collection(CHARGING_STATIONS_COLLECTION_REF).document(stationId.trim())
             .update("reviews", FieldValue.arrayUnion(review.toMap()))
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
