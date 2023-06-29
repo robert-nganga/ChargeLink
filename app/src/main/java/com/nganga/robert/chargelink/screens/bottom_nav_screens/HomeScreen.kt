@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,8 +37,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.google.android.gms.location.LocationServices
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.NewChargingStation
-import com.nganga.robert.chargelink.ui.components.GarageItem
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
+import com.nganga.robert.chargelink.ui.components.NearbyShimmerListItem
 import com.nganga.robert.chargelink.ui.components.PermissionDialog
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 import kotlinx.coroutines.launch
@@ -64,11 +63,13 @@ fun HomeScreen(
     val locationPermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted->
+            Log.i("HomeScreen", "Permission result: $isGranted")
             if (isGranted) {
                 scope.launch {
                     locationClient.lastLocation
                         .addOnSuccessListener { location ->
                             location?.let {
+                                Log.d("HomeScreen", "Permission granted Location: ${location.latitude}, ${location.longitude}")
                                 viewModel.getNearbyStations(it)
                             }
                         }
@@ -92,6 +93,7 @@ fun HomeScreen(
                         context,
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED -> {
+                        Log.i("HomeScreen", "Permission granted")
                         locationClient.lastLocation
                             .addOnSuccessListener { location ->
                                 if (location != null) {
@@ -167,7 +169,8 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(5.dp))
         NearbySection(
             stations = state.nearbyStations,
-            onNearByItemClick = { onNearByItemClick(it) }
+            onNearByItemClick = { onNearByItemClick(it) },
+            isLoading = state.isNearByStationsLoading
         )
 
 
@@ -284,16 +287,23 @@ fun SearchSection(
 fun NearbySection(
     modifier: Modifier = Modifier,
     stations: List<NewChargingStation>,
-    onNearByItemClick: (String) ->Unit
+    onNearByItemClick: (String) -> Unit,
+    isLoading: Boolean
 ){
     LazyColumn(modifier = modifier){
-        items(stations){ station->
-            NearbyListItem(
-                chargingStation = station,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-            ) { onNearByItemClick(it) }
+        if (isLoading && stations.isEmpty()){
+            items(5){
+                NearbyShimmerListItem()
+            }
+        }else{
+            items(stations){ station->
+                NearbyListItem(
+                    chargingStation = station,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp)
+                ) { onNearByItemClick(it) }
+            }
         }
         item {
             Spacer(modifier = Modifier.height(70.dp))

@@ -14,6 +14,7 @@ import com.nganga.robert.chargelink.utils.Constants.CHARGING_STATIONS_COLLECTION
 import com.nganga.robert.chargelink.utils.Constants.USERS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
@@ -71,7 +72,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
     ): Flow<ResultState<List<NewChargingStation>>> = callbackFlow {
 
         trySend(ResultState.loading())
-
+        delay(30000)
         val center = GeoLocation(latitude, longitude)
         val radiusInM = 50.0 * 1000.0
 
