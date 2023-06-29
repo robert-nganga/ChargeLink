@@ -2,11 +2,13 @@ package com.nganga.robert.chargelink.repository
 
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.NewUser
+import com.nganga.robert.chargelink.models.Review
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.flow.Flow
 
 interface ChargingStationRepository {
 
+    suspend fun submitReview(stationId: String, review: Review): Flow<ResultState<String>>
 
     suspend fun getCurrentUser(): Flow<ResultState<NewUser>>
 

@@ -46,8 +46,8 @@ fun StationDetailsScreen(
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
     }
-    var rating by rememberSaveable {
-        mutableStateOf(3)
+    var rating by remember {
+        mutableStateOf(0)
     }
 
     LaunchedEffect(key1 = true){
@@ -66,8 +66,11 @@ fun StationDetailsScreen(
         sheetShape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
         sheetContent = {
             ReviewBottomSheetContent(
-                onRatingChanged = { _, _ ->
+                onRatingChanged = { rating, message ->
                     scope.launch { bottomState.hide() }
+                    viewModel.submitReview(chargingStation.id, rating, message)
+                    // Refresh the station details screen to reflect the new review
+                    viewModel.getStationById(chargingStation.id)
                 },
                 rating = rating,
                 modifier = Modifier.fillMaxWidth()
@@ -129,7 +132,7 @@ fun StationDetailsScreen(
                             scope.launch { bottomState.show() }
                         }
                     )
-                    3 -> ReviewBottomSheetContent(onRatingChanged = { _, _ ->}, rating = 4)
+                    3 -> { }
                 }
             }
         }

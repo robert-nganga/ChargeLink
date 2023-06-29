@@ -49,7 +49,7 @@ fun NearbyListItem(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
         Row(modifier = Modifier
             .fillMaxSize()
@@ -98,8 +98,7 @@ fun NearbyShimmerListItem(){
             .padding(bottom = 10.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+        )
     ) {
         Row(modifier = Modifier
             .fillMaxSize()

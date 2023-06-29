@@ -6,10 +6,12 @@ import com.firebase.geofire.GeoLocation
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.NewUser
+import com.nganga.robert.chargelink.models.Review
 import com.nganga.robert.chargelink.utils.Constants.CHARGING_STATIONS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.Constants.USERS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.ResultState
@@ -22,6 +24,28 @@ import javax.inject.Inject
 class ChargingStationRepositoryImpl@Inject constructor(
     private val auth: FirebaseAuth,
     private val fireStoreDb: FirebaseFirestore): ChargingStationRepository {
+
+
+
+    override suspend fun submitReview(
+        stationId: String,
+        review: Review
+    ): Flow<ResultState<String>> = callbackFlow {
+        fireStoreDb.collection(CHARGING_STATIONS_COLLECTION_REF).document(stationId)
+            .update("reviews", FieldValue.arrayUnion(review.toMap()))
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    trySend(ResultState.success("Review submitted successfully"))
+                }
+            }
+            .addOnFailureListener {
+                trySend(ResultState.error(it.message?: "Unknown error"))
+            }
+
+        awaitClose {
+            close()
+        }
+    }
 
 
     override suspend fun getCurrentUser(): Flow<ResultState<NewUser>> = callbackFlow{

@@ -19,6 +19,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
@@ -33,6 +35,7 @@ class HomeScreenViewModel@Inject constructor(
     var stationDetailsScreenState by mutableStateOf(StationDetailsState())
         private set
 
+    var rating by mutableStateOf(0)
 
     private var _booking = mutableStateOf(emptyBooking)
     val booking: State<Booking> get() = _booking
@@ -40,6 +43,30 @@ class HomeScreenViewModel@Inject constructor(
     init {
         getCurrentUser()
         _booking.value = myBooking
+    }
+
+    fun submitReview(stationId: String, rating:Int, message: String) = viewModelScope.launch{
+        val current = LocalDateTime.now()
+        val review = Review(
+            userName = homeScreenState.currentUser.name,
+            userImage = 0,
+            date = current.format(DateTimeFormatter.ofPattern("MMMM dd, yyyy")),
+            time = current.format(DateTimeFormatter.ofPattern("hh:mm a")),
+            message = message,
+            rating = rating
+        )
+        chargingStationRepo.submitReview(stationId, review).collect{ result->
+            when(result.status){
+                ResultState.Status.SUCCESS -> {
+                    Log.i("HomeScreenViewModel", "Review submitted successfully")
+                }
+                ResultState.Status.ERROR -> {
+                    Log.i("HomeScreenViewModel", "Error submitting review: ${result.message}")
+                }
+                ResultState.Status.LOADING -> {
+                }
+            }
+        }
     }
 
     fun fetchNearbyStations(){
