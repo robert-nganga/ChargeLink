@@ -7,6 +7,7 @@ import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.nganga.robert.chargelink.models.PlaceSuggestion
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -30,7 +31,7 @@ class LocationRepositoryImpl@Inject constructor(
             }
     }
 
-    override fun searchPlaces(query: String): Flow<ResultState<List<AutocompletePrediction>>> = callbackFlow {
+    override fun searchPlaces(query: String): Flow<ResultState<List<PlaceSuggestion>>> = callbackFlow {
         trySend(ResultState.loading())
         getLocationOnce { location ->
             val request = FindAutocompletePredictionsRequest.builder()
@@ -42,7 +43,13 @@ class LocationRepositoryImpl@Inject constructor(
 
             placesClient.findAutocompletePredictions(request)
                 .addOnSuccessListener { response ->
-                    trySend(ResultState.success(response.autocompletePredictions))
+                    val places = response.autocompletePredictions.map { prediction ->
+                        PlaceSuggestion(
+                            prediction.placeId,
+                            prediction.getPrimaryText(null).toString(),
+                            prediction.getSecondaryText(null).toString()
+                        ) }
+                    trySend(ResultState.success(places))
                 }
                 .addOnFailureListener { exception ->
                     trySend(ResultState.error( exception.message?: "Unknown error"))

@@ -13,6 +13,7 @@ import com.nganga.robert.chargelink.models.*
 import com.nganga.robert.chargelink.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.repository.LocationRepository
 import com.nganga.robert.chargelink.screens.models.HomeScreenState
+import com.nganga.robert.chargelink.screens.models.PlaceSuggestionsState
 import com.nganga.robert.chargelink.screens.models.StationDetailsState
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,6 +36,9 @@ class HomeScreenViewModel@Inject constructor(
     var stationDetailsScreenState by mutableStateOf(StationDetailsState())
         private set
 
+    var placeSuggestionsState by mutableStateOf(PlaceSuggestionsState())
+        private set
+
     var rating by mutableStateOf(0)
 
     private var _booking = mutableStateOf(emptyBooking)
@@ -43,6 +47,39 @@ class HomeScreenViewModel@Inject constructor(
     init {
         getCurrentUser()
         _booking.value = myBooking
+    }
+
+    fun searchPlaces(query: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO){
+            locationRepo.searchPlaces(query).collect { result->
+                when(result.status){
+                    ResultState.Status.SUCCESS -> {
+                        val suggestions = result.data
+                        suggestions?.let {
+                            placeSuggestionsState = placeSuggestionsState.copy(
+                                suggestions = it,
+                                isLoading = false,
+                                error = ""
+                            )
+                            Log.i("HomeScreenViewModel", "Suggestions: ${it.size}")
+                        }
+                    }
+                    ResultState.Status.ERROR -> {
+                        placeSuggestionsState = placeSuggestionsState.copy(
+                            suggestions = emptyList(),
+                            isLoading = false,
+                            error = result.message!!
+                        )
+                        Log.i("HomeScreenViewModel", "Error searching places: ${result.message}")
+                    }
+                    ResultState.Status.LOADING -> {
+                        placeSuggestionsState = placeSuggestionsState.copy(
+                            isLoading = true,
+                        )
+                    }
+                }
+            }
+        }
     }
 
     fun submitReview(stationId: String, rating:Int, message: String) = viewModelScope.launch{
