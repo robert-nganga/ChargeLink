@@ -74,6 +74,9 @@ dependencies {
     implementation 'com.google.maps.android:maps-compose:2.11.4'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
+    //Places sdk
+    implementation 'com.google.android.libraries.places:places:3.1.0'
+
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:32.1.1')
     implementation 'com.google.firebase:firebase-auth-ktx'

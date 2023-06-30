@@ -2,12 +2,24 @@ package com.nganga.robert.chargelink.repository
 
 import android.location.Location
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.model.AutocompletePrediction
+import com.google.android.libraries.places.api.model.AutocompleteSessionToken
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
+import com.google.android.libraries.places.api.net.PlacesClient
+import com.nganga.robert.chargelink.utils.ResultState
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 @Suppress("MissingPermission")
 class LocationRepositoryImpl@Inject constructor(
+    private val placesClient: PlacesClient,
     private val fusedLocationProviderClient: FusedLocationProviderClient
 ): LocationRepository {
+
+    private val autocompleteSessionToken: AutocompleteSessionToken = AutocompleteSessionToken.newInstance()
 
     override fun getLocationOnce(location: (Location) -> Unit) {
         fusedLocationProviderClient.lastLocation
@@ -17,4 +29,29 @@ class LocationRepositoryImpl@Inject constructor(
                 }
             }
     }
+
+    override fun searchPlaces(query: String): Flow<ResultState<List<AutocompletePrediction>>> = callbackFlow {
+        trySend(ResultState.loading())
+        getLocationOnce { location ->
+            val request = FindAutocompletePredictionsRequest.builder()
+                .setCountries("KE")
+                .setOrigin(LatLng(location.latitude, location.longitude))
+                .setSessionToken(autocompleteSessionToken)
+                .setQuery(query)
+                .build()
+
+            placesClient.findAutocompletePredictions(request)
+                .addOnSuccessListener { response ->
+                    trySend(ResultState.success(response.autocompletePredictions))
+                }
+                .addOnFailureListener { exception ->
+                    trySend(ResultState.error( exception.message?: "Unknown error"))
+                }
+        }
+        awaitClose {
+            close()
+        }
+    }
+
+
 }
