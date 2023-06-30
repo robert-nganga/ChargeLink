@@ -62,4 +62,5 @@
     <string name="location_reason">This app needs access to your location in order to find Charging Stations nearby</string>
     <string name="grant_permission_in_settings">It seems you permanently declined location permission go to app settings to grant it</string>
     <string name="good_morning">Good Morning</string>
+    <string name="search_for_a_place">Search for a place</string>
 </resources>

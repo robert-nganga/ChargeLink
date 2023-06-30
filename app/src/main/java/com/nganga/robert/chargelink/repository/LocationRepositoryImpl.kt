@@ -44,10 +44,12 @@ class LocationRepositoryImpl@Inject constructor(
             placesClient.findAutocompletePredictions(request)
                 .addOnSuccessListener { response ->
                     val places = response.autocompletePredictions.map { prediction ->
+                        val primary = prediction.getFullText(null).toString().substringBefore(",")
+                        val secondary = prediction.getFullText(null).toString().substringAfter(",")
                         PlaceSuggestion(
-                            prediction.placeId,
-                            prediction.getPrimaryText(null).toString(),
-                            prediction.getSecondaryText(null).toString()
+                            placeId = prediction.placeId,
+                            primaryText = primary,
+                            secondaryText = secondary
                         ) }
                     trySend(ResultState.success(places))
                 }

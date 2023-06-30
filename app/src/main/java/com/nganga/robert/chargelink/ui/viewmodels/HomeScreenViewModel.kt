@@ -49,7 +49,16 @@ class HomeScreenViewModel@Inject constructor(
         _booking.value = myBooking
     }
 
-    fun searchPlaces(query: String) = viewModelScope.launch {
+    fun onQueryChange(query: String){
+        placeSuggestionsState = placeSuggestionsState.copy(
+            query = query
+        )
+        if(query.isNotEmpty()){
+            searchPlaces(query)
+        }
+    }
+
+    private fun searchPlaces(query: String) = viewModelScope.launch {
         withContext(Dispatchers.IO){
             locationRepo.searchPlaces(query).collect { result->
                 when(result.status){
