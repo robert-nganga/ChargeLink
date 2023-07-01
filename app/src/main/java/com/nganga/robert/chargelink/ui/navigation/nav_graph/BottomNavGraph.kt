@@ -1,17 +1,12 @@
 package com.nganga.robert.chargelink.ui.navigation.nav_graph
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.nganga.robert.chargelink.ui.navigation.BottomBarScreen
 import com.nganga.robert.chargelink.ui.navigation.BOTTOM_NAV_ROUTE
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.*
-import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen.MapScreen
 
 fun NavGraphBuilder.bottomNavGraph(
     navController: NavHostController,
@@ -31,7 +26,10 @@ fun NavGraphBuilder.bottomNavGraph(
             )
         }
         composable(route = BottomBarScreen.Maps.route){
-            MapScreen(viewModel = it.sharedViewModel(navController))
+            MapScreen(
+                homeScreenViewModel = it.sharedViewModel(navController),
+                mapScreenViewModel = it.sharedViewModel(navController)
+            )
         }
         composable(route = BottomBarScreen.Profile.route){
             ProfileScreen(

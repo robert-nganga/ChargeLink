@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.screens.bottom_nav_screens
+package com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -11,7 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -43,10 +42,11 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapScreen(
-    viewModel: HomeScreenViewModel
+    homeScreenViewModel: HomeScreenViewModel,
+    mapScreenViewModel: MapScreenViewModel
 ){
 
-    val state = viewModel.homeScreenState
+    val homeScreenState = homeScreenViewModel.homeScreenState
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
@@ -54,11 +54,24 @@ fun MapScreen(
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
+    //Initial camera state is Nairobi
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(-1.286389, 36.817223), 10f)
     }
 
-    val placeSuggestionsState = viewModel.placeSuggestionsState
+    val placeSuggestionsState = mapScreenViewModel.placeSuggestionsState
+    val nearbyStationsState = mapScreenViewModel.nearbyStationsState
+    var chargingStations by remember{
+        mutableStateOf(listOf<NewChargingStation>())
+    }
+
+    LaunchedEffect(key1 = nearbyStationsState.location){
+        chargingStations = if (nearbyStationsState.location != null) nearbyStationsState.nearbyStations
+        else homeScreenState.nearbyStations
+    }
+
+
+
 
     var isSearchViewFocused by remember{
         mutableStateOf(false)
@@ -85,7 +98,7 @@ fun MapScreen(
             ),
 
             ) {
-            state.nearbyStations.forEachIndexed { index, station ->
+            chargingStations.forEachIndexed { index, station ->
                 Marker(
                     state = MarkerState(
                         position = LatLng(station.lat.toDouble(), station.long.toDouble()),
@@ -107,7 +120,7 @@ fun MapScreen(
                 .padding(bottom = 80.dp)
         ) {
             ChargingStationsSection(
-                stations = state.nearbyStations,
+                stations = chargingStations,
                 width = screenWidth - 20.dp,
                 listState = listState
             )
@@ -124,7 +137,7 @@ fun MapScreen(
                     suggestions = placeSuggestionsState.suggestions,
                     onItemClick = {
                         isSearchViewFocused = false
-                        viewModel.onQueryChange("")
+                        mapScreenViewModel.onQueryChange("")
                         focusManager.clearFocus()
                     }
                 )
@@ -151,7 +164,7 @@ fun MapScreen(
                             }
                         },
                     value = placeSuggestionsState.query,
-                    onValueChange = viewModel::onQueryChange,
+                    onValueChange = mapScreenViewModel::onQueryChange,
                     colors = TextFieldDefaults.textFieldColors(
                         containerColor = MaterialTheme.colorScheme.surface.copy(
                             alpha = 1.0f
@@ -171,7 +184,7 @@ fun MapScreen(
                         if (placeSuggestionsState.query.isNotEmpty()) {
                             IconButton(
                                 onClick = {
-                                    viewModel.onQueryChange("")
+                                    mapScreenViewModel.onQueryChange("")
                                 }
                             ) {
                                 Icon(
@@ -187,7 +200,7 @@ fun MapScreen(
                             IconButton(
                                 onClick = {
                                     isSearchViewFocused = false
-                                    viewModel.onQueryChange("")
+                                    mapScreenViewModel.onQueryChange("")
                                     focusManager.clearFocus()
                                 }
                             ) {

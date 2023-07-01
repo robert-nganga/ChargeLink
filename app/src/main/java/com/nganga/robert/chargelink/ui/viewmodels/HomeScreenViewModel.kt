@@ -36,10 +36,6 @@ class HomeScreenViewModel@Inject constructor(
     var stationDetailsScreenState by mutableStateOf(StationDetailsState())
         private set
 
-    var placeSuggestionsState by mutableStateOf(PlaceSuggestionsState())
-        private set
-
-    var rating by mutableStateOf(0)
 
     private var _booking = mutableStateOf(emptyBooking)
     val booking: State<Booking> get() = _booking
@@ -47,48 +43,6 @@ class HomeScreenViewModel@Inject constructor(
     init {
         getCurrentUser()
         _booking.value = myBooking
-    }
-
-    fun onQueryChange(query: String){
-        placeSuggestionsState = placeSuggestionsState.copy(
-            query = query
-        )
-        if(query.isNotEmpty()){
-            searchPlaces(query)
-        }
-    }
-
-    private fun searchPlaces(query: String) = viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            locationRepo.searchPlaces(query).collect { result->
-                when(result.status){
-                    ResultState.Status.SUCCESS -> {
-                        val suggestions = result.data
-                        suggestions?.let {
-                            placeSuggestionsState = placeSuggestionsState.copy(
-                                suggestions = it,
-                                isLoading = false,
-                                error = ""
-                            )
-                            Log.i("HomeScreenViewModel", "Suggestions: ${it.size}")
-                        }
-                    }
-                    ResultState.Status.ERROR -> {
-                        placeSuggestionsState = placeSuggestionsState.copy(
-                            suggestions = emptyList(),
-                            isLoading = false,
-                            error = result.message!!
-                        )
-                        Log.i("HomeScreenViewModel", "Error searching places: ${result.message}")
-                    }
-                    ResultState.Status.LOADING -> {
-                        placeSuggestionsState = placeSuggestionsState.copy(
-                            isLoading = true,
-                        )
-                    }
-                }
-            }
-        }
     }
 
     fun submitReview(stationId: String, rating:Int, message: String) = viewModelScope.launch{
