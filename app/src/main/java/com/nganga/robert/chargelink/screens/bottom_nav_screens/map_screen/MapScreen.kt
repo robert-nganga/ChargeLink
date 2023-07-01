@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -36,6 +37,7 @@ import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.PlaceSuggestion
 import com.nganga.robert.chargelink.ui.components.ChargingStationItem
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
+import com.nganga.robert.chargelink.ui.components.ProgressDialog
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 import kotlinx.coroutines.launch
 
@@ -56,7 +58,7 @@ fun MapScreen(
 
     //Initial camera state is Nairobi
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(-1.286389, 36.817223), 10f)
+        position = CameraPosition.fromLatLngZoom(homeScreenState.currentLocation, 10f)
     }
 
     val placeSuggestionsState = mapScreenViewModel.placeSuggestionsState
@@ -68,6 +70,13 @@ fun MapScreen(
     LaunchedEffect(key1 = nearbyStationsState.location){
         chargingStations = if (nearbyStationsState.location != null) nearbyStationsState.nearbyStations
         else homeScreenState.nearbyStations
+
+        cameraPositionState.animate(
+            CameraUpdateFactory.newLatLngZoom(
+                nearbyStationsState.location ?: homeScreenState.currentLocation,
+                20f
+            )
+        )
     }
 
 
@@ -86,6 +95,9 @@ fun MapScreen(
             .fillMaxSize()
 
     ) {
+        if (nearbyStationsState.isLoading){
+            ProgressDialog(text = stringResource(id = R.string.please_wait))
+        }
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
             properties = MapProperties(
@@ -95,7 +107,12 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             contentPadding = PaddingValues(
                 bottom = screenHeight * 0.48f,
+                top = 70.dp,
             ),
+            onMyLocationButtonClick = {
+                mapScreenViewModel.clearLocation()
+                true
+            }
 
             ) {
             chargingStations.forEachIndexed { index, station ->
@@ -135,10 +152,12 @@ fun MapScreen(
             ) {
                 PlaceSuggestionsSection(
                     suggestions = placeSuggestionsState.suggestions,
-                    onItemClick = {
+                    onItemClick = { id->
                         isSearchViewFocused = false
                         mapScreenViewModel.onQueryChange("")
                         focusManager.clearFocus()
+                        mapScreenViewModel.clearSuggestions()
+                        mapScreenViewModel.getCoordinatesFromPlaceId(id)
                     }
                 )
             }
@@ -202,6 +221,7 @@ fun MapScreen(
                                     isSearchViewFocused = false
                                     mapScreenViewModel.onQueryChange("")
                                     focusManager.clearFocus()
+                                    mapScreenViewModel.clearSuggestions()
                                 }
                             ) {
                                 Icon(

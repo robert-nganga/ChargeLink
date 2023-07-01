@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.*
 import com.nganga.robert.chargelink.repository.ChargingStationRepository
@@ -72,6 +73,9 @@ class HomeScreenViewModel@Inject constructor(
 
     fun fetchNearbyStations(){
         locationRepo.getLocationOnce { location ->
+            homeScreenState = homeScreenState.copy(
+                currentLocation = LatLng(location.latitude, location.longitude)
+            )
             getNearbyStations(location)
         }
     }
