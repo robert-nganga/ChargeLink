@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.repository
 
 import android.location.Location
+import com.google.android.gms.maps.model.LatLng
 import com.nganga.robert.chargelink.models.PlaceSuggestion
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.flow.Flow
@@ -8,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 interface LocationRepository {
 
     fun getLocationOnce(location: (Location)->Unit)
+
+    fun getLatLngFromPlaceId(placeId: String, latLng: (LatLng)->Unit)
 
     fun searchPlaces(query: String): Flow<ResultState<List<PlaceSuggestion>>>
 }

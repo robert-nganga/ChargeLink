@@ -1,10 +1,13 @@
 package com.nganga.robert.chargelink.repository
 
 import android.location.Location
+import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.nganga.robert.chargelink.models.PlaceSuggestion
@@ -29,6 +32,19 @@ class LocationRepositoryImpl@Inject constructor(
                     location(task.result)
                 }
             }
+    }
+
+    override fun getLatLngFromPlaceId(placeId: String, latLng: (LatLng) -> Unit) {
+        val placeFields = listOf(Place.Field.ID, Place.Field.LAT_LNG)
+
+        val request = FetchPlaceRequest.newInstance(placeId, placeFields)
+        placesClient.fetchPlace(request)
+            .addOnSuccessListener { response ->
+                val place = response.place
+                place.latLng?.let { latLng.invoke(it) }
+                Log.i("LocationRepositoryImpl", "Place found: ${place.name}")
+            }
+
     }
 
     override fun searchPlaces(query: String): Flow<ResultState<List<PlaceSuggestion>>> = callbackFlow {

@@ -40,7 +40,25 @@ class MapScreenViewModel@Inject constructor(
         }
     }
 
+    fun clearSuggestions(){
+        placeSuggestionsState = placeSuggestionsState.copy(
+            suggestions =  emptyList()
+        )
+    }
+
+    fun clearLocation(){
+        nearbyStationsState = nearbyStationsState.copy(
+            location = null
+        )
+    }
+
     fun getCoordinatesFromPlaceId(placeId: String){
+        locationRepo.getLatLngFromPlaceId(placeId){ latLng->
+            nearbyStationsState = nearbyStationsState.copy(
+                location = latLng
+            )
+            updateNearbyStations(latLng)
+        }
 
     }
 

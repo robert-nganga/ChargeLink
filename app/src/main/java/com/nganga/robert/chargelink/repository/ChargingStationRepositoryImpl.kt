@@ -97,7 +97,8 @@ class ChargingStationRepositoryImpl@Inject constructor(
 
         trySend(ResultState.loading())
         val center = GeoLocation(latitude, longitude)
-        val radiusInM = 50.0 * 1000.0
+        //Radius of 15km
+        val radiusInM = 15.0 * 1000.0
 
         val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInM)
         val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
