@@ -161,7 +161,7 @@ fun TextColumn(
     headerText: String,
     modifier: Modifier = Modifier,
     icon: Painter? = null,
-    trailingText: String
+    trailingText: String,
 ){
     Column(
         modifier = modifier.padding(5.dp),
