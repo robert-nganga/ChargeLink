@@ -24,6 +24,7 @@ fun MainNavGraph(
    ){
        authNavGraph(navController)
        bottomNavGraph(navController, activity)
+       bookingNavGraph(navController)
 
    }
 }
