@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.screens.booking_screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,20 +20,23 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Charger
+import com.nganga.robert.chargelink.utils.IconUtils.getChargerIcon
 
 @Composable
 fun SelectChargerScreen(
     bookingViewModel: BookingViewModel,
     onBackButtonClicked: () -> Unit,
     onNextButtonClicked: () -> Unit,
-    stationId: String?,
-    //chargerId: String?
+    stationId: String?
 ){
     var selectedId by remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = true){
         stationId?.let {
-            bookingViewModel.getStation(it)
+            val chargingStationId = it.substringBefore(",")
+            val chargerId = it.substringAfter(",")
+            bookingViewModel.getStation(chargingStationId)
+            selectedId = chargerId
         }
     }
 
@@ -49,7 +53,10 @@ fun SelectChargerScreen(
             SelectChargerScreenTopAppBar(
                 title = stringResource(id = R.string.select_charger),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                onBackButtonClicked = {
+                    onBackButtonClicked.invoke()
+                }
             )
             Spacer(modifier = Modifier.height(20.dp))
             ChargerList(
@@ -61,12 +68,12 @@ fun SelectChargerScreen(
                 },
                 selectedId = selectedId,
             )
-            Spacer(modifier = Modifier.height(70.dp))
         }
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 20.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -99,10 +106,7 @@ fun SelectChargerScreen(
                     text = stringResource(id = R.string.continues)
                 )
             }
-
         }
-
-
     }
 
 
@@ -111,7 +115,8 @@ fun SelectChargerScreen(
 @Composable
 fun SelectChargerScreenTopAppBar(
     modifier: Modifier = Modifier,
-    title: String
+    title: String,
+    onBackButtonClicked: () -> Unit
 ){
     Row(
         modifier = modifier.padding(top = 10.dp, end = 10.dp),
@@ -119,7 +124,9 @@ fun SelectChargerScreenTopAppBar(
         horizontalArrangement = Arrangement.Start
     ) {
         IconButton(
-            onClick = {  }
+            onClick = {
+                onBackButtonClicked.invoke()
+            }
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
@@ -157,6 +164,9 @@ fun ChargerList(
                 }
             )
         }
+        item {
+            Spacer(modifier = Modifier.height(80.dp))
+        }
     }
 
 }
@@ -165,7 +175,7 @@ fun ChargerList(
 fun ChargerListItem(
     charger: Charger,
     modifier: Modifier = Modifier,
-    selected: Boolean = false,
+    selected: Boolean,
     onChargerSelected: ()->Unit
 ){
 
@@ -188,7 +198,7 @@ fun ChargerListItem(
                 modifier = Modifier.weight(1f),
                 headerText = charger.plug,
                 trailingText = "",
-                icon = painterResource(id = R.drawable.ic_ev_plug_j1772_t1),
+                icon = painterResource(id = getChargerIcon(charger.plug)),
                 iconTint = MaterialTheme.colorScheme.primary
             )
             ChargerTextColumn(

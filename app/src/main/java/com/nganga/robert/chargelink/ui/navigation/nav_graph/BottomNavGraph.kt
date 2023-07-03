@@ -64,7 +64,7 @@ fun NavGraphBuilder.bottomNavGraph(
                 id = entry.arguments?.getString("id"),
                 viewModel = entry.sharedViewModel(navController),
                 onBookClicked = {chargerId, stationId->
-                    navController.navigate("$BOOKING_ROUTE/$stationId"){
+                    navController.navigate("$BOOKING_ROUTE/$stationId,$chargerId"){
                         launchSingleTop = true
                     }
                 }

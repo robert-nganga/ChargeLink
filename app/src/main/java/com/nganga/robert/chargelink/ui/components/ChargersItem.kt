@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Charger
+import com.nganga.robert.chargelink.utils.IconUtils.getChargerIcon
 
 @Composable
 fun ChargersItem(
@@ -82,7 +83,7 @@ fun ChargersItem(
                    )
                    Spacer(modifier = Modifier.height(10.dp))
                    Icon(
-                       painter = painterResource(id = R.drawable.ic_ev_plug_j1772_t1),
+                       painter = painterResource(id = getChargerIcon(charger.plug)),
                        modifier = Modifier.size(40.dp),
                        contentDescription = null,
                    )

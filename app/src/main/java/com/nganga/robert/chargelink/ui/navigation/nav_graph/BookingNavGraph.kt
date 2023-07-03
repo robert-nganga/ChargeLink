@@ -4,6 +4,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.nganga.robert.chargelink.screens.booking_screens.EnterBookingDetailsScreen
 import com.nganga.robert.chargelink.screens.booking_screens.SelectChargerScreen
 import com.nganga.robert.chargelink.ui.navigation.BOOKING_ROUTE
 import com.nganga.robert.chargelink.ui.navigation.BookingScreen
@@ -27,7 +28,6 @@ fun NavGraphBuilder.bookingNavGraph(
         ){
             val parentEntry = remember(it) { navController.getBackStackEntry("$BOOKING_ROUTE/{id}") }
             val id = parentEntry.arguments?.getString("id")
-            //val chargerId = parentEntry.arguments?.getString("selectedIndex")
             SelectChargerScreen(
                 bookingViewModel = it.sharedViewModel(navController),
                 stationId = id,
@@ -35,9 +35,24 @@ fun NavGraphBuilder.bookingNavGraph(
                 onBackButtonClicked = {
                     navController.popBackStack()
                 },
-                onNextButtonClicked = {}
+                onNextButtonClicked = {
+                    navController.navigate(BookingScreen.EnterBookingDetails.route){
+                        launchSingleTop = true
+                    }
+                }
             )
         }
 
+        composable(
+            route = BookingScreen.EnterBookingDetails.route
+        ){
+            EnterBookingDetailsScreen(
+                bookingViewModel = it.sharedViewModel(navController),
+                onBackButtonClicked = {
+                    navController.popBackStack()
+                },
+                onNextButtonClicked = {}
+            )
+        }
     }
 }
