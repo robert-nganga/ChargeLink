@@ -9,6 +9,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.models.Review
@@ -19,15 +21,45 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class ChargingStationRepositoryImpl@Inject constructor(
     private val auth: FirebaseAuth,
     private val fireStoreDb: FirebaseFirestore): ChargingStationRepository {
 
+    val chargers = listOf(
+        Charger(plug = "CCS 1 DC", power = "360kW", image = R.drawable.ic_ev_plug_ccs2, isAvailable = true
+        ),
+        Charger(plug = "CCS 2 DC", power = "360kW", image = R.drawable.ic_ev_plug_ccs2_combo, isAvailable = true
+        ),
+        Charger(plug = "Mennekes (Type 2) AC", power = "22kW", image = R.drawable.ic_ev_plug_iec_mennekes_t2, isAvailable = true
+        ),
+        Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = R.drawable.ic_ev_plug_j1772_t1, isAvailable = true
+        ),
+        Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = R.drawable.ic_ev_plug_tesla, isAvailable = true
+        )
+    )
+
+    init {
+        addChargers(chargers)
+    }
+
+    override fun addChargers(chargers: List<Charger>) {
+        chargers.forEach {
+            addCharger(it)
+        }
+    }
+
+    private fun addCharger(charger: Charger){
+        val id = UUID.randomUUID().toString()
+        fireStoreDb.collection("chargers").document(id)
+            .set(charger.copy(id = id).toMap())
+    }
 
 
-    override suspend fun submitReview(
+    override fun submitReview(
         stationId: String,
         review: Review
     ): Flow<ResultState<String>> = callbackFlow {
@@ -48,7 +80,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
     }
 
 
-    override suspend fun getCurrentUser(): Flow<ResultState<NewUser>> = callbackFlow{
+    override fun getCurrentUser(): Flow<ResultState<NewUser>> = callbackFlow{
         fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser?.uid!!)
             .get()
             .addOnCompleteListener { task ->
@@ -67,7 +99,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
 
     }
 
-    override suspend fun getChargingStationById(id: String): Flow<ResultState<NewChargingStation>> = callbackFlow{
+    override fun getChargingStationById(id: String): Flow<ResultState<NewChargingStation>> = callbackFlow{
         fireStoreDb.collection(CHARGING_STATIONS_COLLECTION_REF).whereEqualTo("id", id)
             .get()
             .addOnCompleteListener { task ->
@@ -90,7 +122,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
     }
 
 
-    override suspend fun getNearByStations(
+    override fun getNearByStations(
         latitude: Double,
         longitude: Double
     ): Flow<ResultState<List<NewChargingStation>>> = callbackFlow {

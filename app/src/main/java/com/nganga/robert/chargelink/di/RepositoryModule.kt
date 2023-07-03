@@ -30,4 +30,10 @@ abstract class RepositoryModule {
     abstract fun providesLocationRepository(
         repo: LocationRepositoryImpl
     ): LocationRepository
+
+    @Binds
+    @ViewModelScoped
+    abstract fun providesBookingRepository(
+        repo: BookingRepositoryImpl
+    ): BookingRepository
 }

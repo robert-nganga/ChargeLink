@@ -1,5 +1,6 @@
 package com.nganga.robert.chargelink.repository
 
+import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.models.Review
@@ -8,11 +9,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface ChargingStationRepository {
 
-    suspend fun submitReview(stationId: String, review: Review): Flow<ResultState<String>>
 
-    suspend fun getCurrentUser(): Flow<ResultState<NewUser>>
+    fun addChargers(chargers: List<Charger>)
 
-    suspend fun getChargingStationById(id: String): Flow<ResultState<NewChargingStation>>
+    fun submitReview(stationId: String, review: Review): Flow<ResultState<String>>
 
-    suspend fun getNearByStations(latitude: Double, longitude: Double): Flow<ResultState<List<NewChargingStation>>>
+    fun getCurrentUser(): Flow<ResultState<NewUser>>
+
+    fun getChargingStationById(id: String): Flow<ResultState<NewChargingStation>>
+
+    fun getNearByStations(latitude: Double, longitude: Double): Flow<ResultState<List<NewChargingStation>>>
 }
