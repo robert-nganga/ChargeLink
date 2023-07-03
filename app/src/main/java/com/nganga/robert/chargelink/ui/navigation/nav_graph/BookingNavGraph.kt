@@ -15,16 +15,23 @@ fun NavGraphBuilder.bookingNavGraph(
     navigation(
         startDestination = BookingScreen.SelectCharger.route,
         route = "$BOOKING_ROUTE/{id}",
-        arguments = listOf(navArgument("id") { type = NavType.StringType })
+        arguments = listOf(
+            navArgument("id") { type = NavType.StringType }
+//            navArgument("chargerId") {
+//                type = NavType.StringType
+//            }
+        )
     ){
         composable(
             route = BookingScreen.SelectCharger.route
         ){
             val parentEntry = remember(it) { navController.getBackStackEntry("$BOOKING_ROUTE/{id}") }
             val id = parentEntry.arguments?.getString("id")
+            //val chargerId = parentEntry.arguments?.getString("selectedIndex")
             SelectChargerScreen(
                 bookingViewModel = it.sharedViewModel(navController),
                 stationId = id,
+                //chargerId = chargerId,
                 onBackButtonClicked = {
                     navController.popBackStack()
                 },

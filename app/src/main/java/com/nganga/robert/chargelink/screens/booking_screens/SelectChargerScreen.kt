@@ -3,6 +3,7 @@ package com.nganga.robert.chargelink.screens.booking_screens
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,17 +19,24 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Charger
-import com.nganga.robert.chargelink.ui.components.TextColumn
 
 @Composable
 fun SelectChargerScreen(
     bookingViewModel: BookingViewModel,
     onBackButtonClicked: () -> Unit,
     onNextButtonClicked: () -> Unit,
-    stationId: String?
+    stationId: String?,
+    //chargerId: String?
 ){
-    var selectedIndex by remember { mutableStateOf(-1) }
-    //val chargers = bookingViewModel.chargers
+    var selectedId by remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = true){
+        stationId?.let {
+            bookingViewModel.getStation(it)
+        }
+    }
+
+    val chargers = bookingViewModel.station.chargers
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -47,22 +55,11 @@ fun SelectChargerScreen(
             ChargerList(
                 modifier = Modifier
                     .fillMaxHeight(),
-                chargers = listOf(
-                    Charger(plug = "CCS 1 DC", power = "360kW", image = R.drawable.ic_ev_plug_ccs2, isAvailable = true
-                    ),
-                    Charger(plug = "CCS 2 DC", power = "360kW", image = R.drawable.ic_ev_plug_ccs2_combo, isAvailable = true
-                    ),
-                    Charger(plug = "Mennekes (Type 2) AC", power = "22kW", image = R.drawable.ic_ev_plug_iec_mennekes_t2, isAvailable = true
-                    ),
-                    Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = R.drawable.ic_ev_plug_j1772_t1, isAvailable = true
-                    ),
-                    Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = R.drawable.ic_ev_plug_tesla, isAvailable = true
-                    )
-                ),
-                onChargerSelected ={ index, charger ->
-                    selectedIndex = index
+                chargers = chargers,
+                onChargerSelected ={ chargerId ->
+                    selectedId = chargerId
                 },
-                selectedIndex = selectedIndex,
+                selectedId = selectedId,
             )
             Spacer(modifier = Modifier.height(70.dp))
         }
@@ -75,7 +72,9 @@ fun SelectChargerScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             OutlinedButton(
-                onClick = {  },
+                onClick = {
+                    onBackButtonClicked.invoke()
+                },
                 shape = RoundedCornerShape(10.dp),
                 border = BorderStroke(
                     width = 1.dp,
@@ -88,7 +87,9 @@ fun SelectChargerScreen(
             }
 
             Button(
-                onClick = {  },
+                onClick = {
+                    onNextButtonClicked.invoke()
+                },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondary
@@ -139,20 +140,20 @@ fun SelectChargerScreenTopAppBar(
 fun ChargerList(
     chargers: List<Charger>,
     modifier: Modifier = Modifier,
-    onChargerSelected: (Int, Charger)->Unit,
-    selectedIndex: Int
+    onChargerSelected: (String)->Unit,
+    selectedId: String
 ){
     LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp)
     ){
-        items(chargers.size){ index ->
+        items(chargers){ charger ->
             ChargerListItem(
-                charger = chargers[index],
+                charger = charger,
                 modifier = Modifier.fillParentMaxWidth(),
-                selected = index == selectedIndex,
+                selected = selectedId == charger.id,
                 onChargerSelected = {
-                    onChargerSelected(index, chargers[index])
+                    onChargerSelected.invoke(charger.id)
                 }
             )
         }
@@ -165,7 +166,7 @@ fun ChargerListItem(
     charger: Charger,
     modifier: Modifier = Modifier,
     selected: Boolean = false,
-    onChargerSelected: (Charger)->Unit
+    onChargerSelected: ()->Unit
 ){
 
     Card(
@@ -187,7 +188,7 @@ fun ChargerListItem(
                 modifier = Modifier.weight(1f),
                 headerText = charger.plug,
                 trailingText = "",
-                icon = painterResource(id = charger.image),
+                icon = painterResource(id = R.drawable.ic_ev_plug_j1772_t1),
                 iconTint = MaterialTheme.colorScheme.primary
             )
             ChargerTextColumn(
@@ -199,7 +200,7 @@ fun ChargerListItem(
                 modifier = Modifier.weight(1f),
                 selected = selected,
                 onClick = {
-                    onChargerSelected(charger)
+                    onChargerSelected.invoke()
                 }
             )
         }

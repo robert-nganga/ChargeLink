@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.Flow
 interface ChargingStationRepository {
 
 
-    fun addChargers(chargers: List<Charger>)
-
     fun submitReview(stationId: String, review: Review): Flow<ResultState<String>>
 
     fun getCurrentUser(): Flow<ResultState<NewUser>>

@@ -29,35 +29,6 @@ class ChargingStationRepositoryImpl@Inject constructor(
     private val auth: FirebaseAuth,
     private val fireStoreDb: FirebaseFirestore): ChargingStationRepository {
 
-    val chargers = listOf(
-        Charger(plug = "CCS 1 DC", power = "360kW", image = R.drawable.ic_ev_plug_ccs2, isAvailable = true
-        ),
-        Charger(plug = "CCS 2 DC", power = "360kW", image = R.drawable.ic_ev_plug_ccs2_combo, isAvailable = true
-        ),
-        Charger(plug = "Mennekes (Type 2) AC", power = "22kW", image = R.drawable.ic_ev_plug_iec_mennekes_t2, isAvailable = true
-        ),
-        Charger(plug = "J1772 (Type 1) AC", power = "19.2kW", image = R.drawable.ic_ev_plug_j1772_t1, isAvailable = true
-        ),
-        Charger(plug = "Tesla NACS AC/DC", power = "250kW", image = R.drawable.ic_ev_plug_tesla, isAvailable = true
-        )
-    )
-
-    init {
-        addChargers(chargers)
-    }
-
-    override fun addChargers(chargers: List<Charger>) {
-        chargers.forEach {
-            addCharger(it)
-        }
-    }
-
-    private fun addCharger(charger: Charger){
-        val id = UUID.randomUUID().toString()
-        fireStoreDb.collection("chargers").document(id)
-            .set(charger.copy(id = id).toMap())
-    }
-
 
     override fun submitReview(
         stationId: String,

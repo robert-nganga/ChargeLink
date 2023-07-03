@@ -10,13 +10,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Charger
 
 @Composable
 fun ChargersItem(
     modifier: Modifier = Modifier,
-    charger: Charger
+    charger: Charger,
+    onBookChargerClicked: () -> Unit
 ){
    Card(
        border = null,
@@ -79,7 +82,7 @@ fun ChargersItem(
                    )
                    Spacer(modifier = Modifier.height(10.dp))
                    Icon(
-                       painter = painterResource(id = charger.image),
+                       painter = painterResource(id = R.drawable.ic_ev_plug_j1772_t1),
                        modifier = Modifier.size(40.dp),
                        contentDescription = null,
                    )
@@ -101,10 +104,10 @@ fun ChargersItem(
            }
            Spacer(modifier = Modifier.height(15.dp))
            Button(
-               onClick = { /*TODO*/ },
+               onClick = { onBookChargerClicked.invoke() },
                modifier = Modifier.fillMaxWidth(0.8f)
            ) {
-               Text(text = "Book")
+               Text(text = stringResource(id = R.string.book))
            }
        }
    }

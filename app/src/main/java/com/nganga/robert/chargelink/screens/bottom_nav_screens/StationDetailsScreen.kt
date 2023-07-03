@@ -42,7 +42,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun StationDetailsScreen(
     id: String?,
-    viewModel: HomeScreenViewModel
+    viewModel: HomeScreenViewModel,
+    onBookClicked: (chargerId: String?, stationId: String)-> Unit,
 ){
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
@@ -103,7 +104,8 @@ fun StationDetailsScreen(
                         .background(MaterialTheme.colorScheme.background),
                     name = chargingStation.name,
                     location = chargingStation.location,
-                    rating = 4
+                    rating = 4,
+                    onBookClicked = { onBookClicked(null, chargingStation.id) }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TabView(
@@ -119,8 +121,12 @@ fun StationDetailsScreen(
                         openDays = chargingStation.openDays,
                         amenities = chargingStation.amenities
                     )
-                    1 -> ChargerSection(chargers = chargingStation.chargers,
-                        modifier = Modifier.fillMaxSize()
+                    1 -> ChargerSection(
+                        chargers = chargingStation.chargers,
+                        modifier = Modifier.fillMaxSize(),
+                        onBookChargerClicked = { chargerId ->
+                            onBookClicked(chargerId, chargingStation.id)
+                        }
                     )
                     2 -> ReviewSection(
                         totalReviews = 120,
@@ -187,7 +193,8 @@ fun DescriptionSection(
     modifier: Modifier = Modifier,
     name: String,
     location: String,
-    rating: Int
+    rating: Int,
+    onBookClicked: () -> Unit
 ){
     Box(modifier = modifier) {
         Box(
@@ -262,7 +269,7 @@ fun DescriptionSection(
                 )
                 Box(modifier = Modifier.weight(1f))
                 Button(
-                    onClick = {  }
+                    onClick = { onBookClicked.invoke() }
                 ) {
                     Text(
                         text = "Book"
@@ -278,13 +285,21 @@ fun DescriptionSection(
 @Composable
 fun ChargerSection(
     modifier: Modifier = Modifier,
-    chargers: List<Charger>
+    chargers: List<Charger>,
+    onBookChargerClicked: (String)->Unit
 ){
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp)){
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = 10.dp, vertical = 10.dp)
+    ){
         items(chargers){ charger->
-            ChargersItem(charger = charger, modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 10.dp))
+            ChargersItem(
+                charger = charger,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                onBookChargerClicked = { onBookChargerClicked.invoke(charger.id) }
+            )
         }
     }
 }

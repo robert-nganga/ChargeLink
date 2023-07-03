@@ -7,6 +7,7 @@ import com.nganga.robert.chargelink.ui.navigation.BottomBarScreen
 import com.nganga.robert.chargelink.ui.navigation.BOTTOM_NAV_ROUTE
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.*
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen.MapScreen
+import com.nganga.robert.chargelink.ui.navigation.BOOKING_ROUTE
 
 fun NavGraphBuilder.bottomNavGraph(
     navController: NavHostController,
@@ -61,7 +62,12 @@ fun NavGraphBuilder.bottomNavGraph(
         ){ entry ->
             StationDetailsScreen(
                 id = entry.arguments?.getString("id"),
-                viewModel = entry.sharedViewModel(navController)
+                viewModel = entry.sharedViewModel(navController),
+                onBookClicked = {chargerId, stationId->
+                    navController.navigate("$BOOKING_ROUTE/$stationId"){
+                        launchSingleTop = true
+                    }
+                }
             )
         }
     }
