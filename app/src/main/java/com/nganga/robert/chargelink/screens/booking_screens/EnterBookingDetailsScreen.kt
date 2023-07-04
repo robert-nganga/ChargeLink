@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.TimeToLeave
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +28,9 @@ import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.maxkeppeler.sheets.clock.ClockDialog
+import com.maxkeppeler.sheets.clock.models.ClockConfig
+import com.maxkeppeler.sheets.clock.models.ClockSelection
 import com.nganga.robert.chargelink.R
 import java.time.format.DateTimeFormatter
 
@@ -39,17 +43,26 @@ fun EnterBookingDetailsScreen(
     bookingViewModel: BookingViewModel
 ){
 
-    val calendarState = rememberSheetState(
-        visible = true,
-        embedded = false
-    )
+    val calendarState = rememberSheetState()
+    val timeState = rememberSheetState()
     var bookingDate by remember {
         mutableStateOf("")
     }
-    var time by remember { mutableStateOf("") }
-    var timeFormat by remember { mutableStateOf("") }
+    var bookingTime by remember { mutableStateOf("") }
     var duration by remember { mutableStateOf("") }
     var durationFormat by remember { mutableStateOf("") }
+
+
+    ClockDialog(
+        state = timeState,
+        selection = ClockSelection.HoursMinutes{ hours, minutes ->
+            val selectedTime = "$hours:$minutes"
+            bookingTime = selectedTime
+        },
+        config = ClockConfig(
+            is24HourFormat = true
+        )
+    )
 
     CalendarDialog(
         state = calendarState,
@@ -125,18 +138,32 @@ fun EnterBookingDetailsScreen(
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Spacer(modifier = Modifier.height(5.dp))
-                    BookingSelector(
-                        modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(id = R.string.time),
-                        text = time,
-                        onTextChange = {
-                            time = it
-                        },
-                        selectionChanged = {
-                            timeFormat = it
-                        },
-                        suggestions = listOf("AM", "PM")
-                    )
+                    CompositionLocalProvider(
+                        LocalTextInputService provides null
+                    ) {
+                        OutlinedTextField(
+                            value = bookingTime,
+                            onValueChange = { bookingTime = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onFocusChanged {
+                                    if (it.isFocused) {
+                                        timeState.show()
+                                    }
+                                },
+                            label = { Text(text = stringResource(id = R.string.time)) },
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.TimeToLeave,
+                                    contentDescription = "Time Icon",
+                                    modifier = Modifier.clickable {
+                                        timeState.show()
+                                    }
+                                )
+                            },
+                            singleLine = true
+                        )
+                    }
                     Spacer(modifier = Modifier.height(15.dp))
                     Text(
                         text = stringResource(id = R.string.select_charging_duration),

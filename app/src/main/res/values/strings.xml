@@ -71,4 +71,8 @@
     <string name="date">Date</string>
     <string name="select_arrival_time">Select arrival time</string>
     <string name="select_charging_duration">Select charging duration</string>
+    <string name="select_payment_method">Select payment method</string>
+    <string name="card">Card</string>
+    <string name="pay_on_location">On location</string>
+    <string name="paypal">Paypal</string>
 </resources>
