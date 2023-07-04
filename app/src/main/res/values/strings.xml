@@ -75,4 +75,9 @@
     <string name="card">Card</string>
     <string name="pay_on_location">On location</string>
     <string name="paypal">Paypal</string>
+    <string name="card_number">Card Number</string>
+    <string name="expiry_date">MM/YY</string>
+    <string name="cvc">CVC</string>
+    <string name="card_information">Card Information</string>
+    <string name="country_or_region">Country or region</string>
 </resources>
