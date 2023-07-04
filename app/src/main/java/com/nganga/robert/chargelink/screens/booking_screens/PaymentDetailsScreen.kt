@@ -1,9 +1,10 @@
 package com.nganga.robert.chargelink.screens.booking_screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -26,22 +27,21 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.components.BooKingBottomBar
 
 
 @Composable
-fun PaymentDetailsScreen() {
-    var selectedTab by rememberSaveable{
+fun PaymentDetailsScreen(
+    onBackButtonClicked: () -> Unit,
+    onContinueClicked: () -> Unit
+) {
+    var selectedMethod by rememberSaveable{
         mutableStateOf("")
     }
-
-    val configuration = LocalConfiguration.current
-    val screenWidth = configuration.screenWidthDp.dp
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -51,13 +51,15 @@ fun PaymentDetailsScreen() {
         ) {
             PaymentDetailsTopBar(
                 modifier = Modifier.fillMaxWidth(),
-                onBackButtonClicked = {},
+                onBackButtonClicked = {
+                    onBackButtonClicked.invoke()
+                },
                 title = stringResource(id = R.string.select_payment_method)
             )
             Spacer(modifier = Modifier.height(20.dp))
-            PaymentMethodTabView(
-                modifier = Modifier.fillMaxWidth(),
-                tabs = listOf(
+
+            PaymentMethodsList(
+                methods = listOf(
                     PaymentMethod(
                         title = stringResource(id = R.string.card),
                         icon = Icons.Outlined.CreditCard
@@ -75,12 +77,25 @@ fun PaymentDetailsScreen() {
                         icon = Icons.Outlined.Payments
                     ),
                 ),
-                onTabSelected = { selectedTab = it },
-                selectedTab = selectedTab,
-                width = screenWidth * 0.245f
+                onMethodSelected = { method ->
+                    selectedMethod = method
+                },
+                selectedMethod = selectedMethod
             )
-
         }
+
+        BooKingBottomBar(
+            onBackButtonClicked = {
+                onBackButtonClicked.invoke()
+            },
+            onNextButtonClicked = {
+                onContinueClicked.invoke()
+            },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
+            isNextButtonEnabled = selectedMethod.isNotEmpty()
+        )
     }
 }
 
@@ -186,74 +201,86 @@ fun CardDetailsForm(
 
 
 @Composable
-fun PaymentMethodTabView(
+fun PaymentMethodsList(
     modifier: Modifier = Modifier,
-    tabs: List<PaymentMethod>,
-    onTabSelected: (String) -> Unit,
-    selectedTab: String,
-    width: Dp
+    methods: List<PaymentMethod>,
+    onMethodSelected: (String) -> Unit,
+    selectedMethod: String
 ){
 
-    Row(
-        modifier = modifier.padding(8.dp)
-    ){
-        tabs.forEach{tab->
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = 10.dp)
+    ) {
+        items(methods) { method ->
             PaymentMethodItem(
-                modifier = Modifier.width(width),
-                paymentMethod = tab,
-                isSelected = tab.title == selectedTab,
+                paymentMethod = method,
+                selected = selectedMethod == method.title,
                 onPaymentMethodSelected = {
-                    onTabSelected.invoke(tab.title)
+                    onMethodSelected.invoke(method.title)
                 }
             )
         }
     }
+
+
 }
 
 @Composable
 fun PaymentMethodItem(
     modifier: Modifier = Modifier,
     paymentMethod: PaymentMethod,
-    isSelected: Boolean,
+    selected: Boolean,
     onPaymentMethodSelected: () -> Unit
 ){
-    Column(
-        modifier = modifier
-            .padding(5.dp)
-            .border(
-                width = 1.dp,
-                color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .clickable {
-                onPaymentMethodSelected.invoke()
-            },
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        if (paymentMethod.icon != null) {
-            Icon(
-                imageVector = paymentMethod.icon,
-                contentDescription = paymentMethod.title,
-                modifier = modifier
-                    .size(50.dp)
-                    .padding(5.dp)
-            )
-        }
-        if (paymentMethod.image != null) {
-            Image(
-                painter = paymentMethod.image,
-                contentDescription = paymentMethod.title,
-                modifier = modifier
-                    .size(50.dp)
-                    .padding(5.dp)
-            )
-        }
-        Text(
-            text = paymentMethod.title,
-            style = MaterialTheme.typography.labelMedium,
-            modifier = modifier.padding(2.dp),
-            textAlign = TextAlign.Center
+    Card(
+        modifier = modifier.padding(bottom = 10.dp),
+        shape = RoundedCornerShape(15.dp),
+        elevation = CardDefaults.cardElevation(5.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
         )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ){
+            if (paymentMethod.icon != null) {
+                Icon(
+                    imageVector = paymentMethod.icon,
+                    contentDescription = paymentMethod.title,
+                    modifier = modifier
+                        .size(40.dp)
+                        .padding(5.dp)
+                )
+            }
+            if (paymentMethod.image != null) {
+                Image(
+                    painter = paymentMethod.image,
+                    contentDescription = paymentMethod.title,
+                    modifier = modifier
+                        .size(50.dp)
+                        .padding(5.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                text = paymentMethod.title,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = modifier
+                    .padding(2.dp),
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+            Box(modifier = Modifier.weight(1f))
+            RadioButton(
+                selected = selected,
+                onClick = { onPaymentMethodSelected.invoke() }
+            )
+        }
     }
 }
 

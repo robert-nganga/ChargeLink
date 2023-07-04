@@ -10,7 +10,9 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.TimeToLeave
+import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +33,12 @@ import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.maxkeppeler.sheets.clock.ClockDialog
 import com.maxkeppeler.sheets.clock.models.ClockConfig
 import com.maxkeppeler.sheets.clock.models.ClockSelection
+import com.maxkeppeler.sheets.duration.DurationDialog
+import com.maxkeppeler.sheets.duration.models.DurationConfig
+import com.maxkeppeler.sheets.duration.models.DurationFormat
+import com.maxkeppeler.sheets.duration.models.DurationSelection
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.ui.components.BooKingBottomBar
 import java.time.format.DateTimeFormatter
 
 
@@ -45,13 +52,24 @@ fun EnterBookingDetailsScreen(
 
     val calendarState = rememberSheetState()
     val timeState = rememberSheetState()
+    val durationState = rememberSheetState()
+
     var bookingDate by remember {
         mutableStateOf("")
     }
     var bookingTime by remember { mutableStateOf("") }
     var duration by remember { mutableStateOf("") }
-    var durationFormat by remember { mutableStateOf("") }
 
+    DurationDialog(
+        state = durationState,
+        selection = DurationSelection { time ->
+            duration = time.toString()
+        },
+        config = DurationConfig(
+            displayClearButton = true,
+            timeFormat = DurationFormat.HH_MM
+        )
+    )
 
     ClockDialog(
         state = timeState,
@@ -129,7 +147,8 @@ fun EnterBookingDetailsScreen(
                                     }
                                 )
                             },
-                            singleLine = true
+                            singleLine = true,
+                            shape = RoundedCornerShape(20.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(15.dp))
@@ -145,7 +164,7 @@ fun EnterBookingDetailsScreen(
                             value = bookingTime,
                             onValueChange = { bookingTime = it },
                             modifier = Modifier
-                                .fillMaxWidth()
+                                .fillMaxWidth(0.6f)
                                 .onFocusChanged {
                                     if (it.isFocused) {
                                         timeState.show()
@@ -154,14 +173,15 @@ fun EnterBookingDetailsScreen(
                             label = { Text(text = stringResource(id = R.string.time)) },
                             trailingIcon = {
                                 Icon(
-                                    imageVector = Icons.Outlined.TimeToLeave,
+                                    imageVector = Icons.Outlined.Schedule,
                                     contentDescription = "Time Icon",
                                     modifier = Modifier.clickable {
                                         timeState.show()
                                     }
                                 )
                             },
-                            singleLine = true
+                            singleLine = true,
+                            shape = RoundedCornerShape(20.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(15.dp))
@@ -170,59 +190,49 @@ fun EnterBookingDetailsScreen(
                         style = MaterialTheme.typography.titleMedium,
                     )
                     Spacer(modifier = Modifier.height(5.dp))
-                    BookingSelector(
-                        modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(id = R.string.duration),
-                        text = duration,
-                        onTextChange = {
-                            duration = it
-                        },
-                        selectionChanged = {
-                            durationFormat = it
-                        },
-                        suggestions = listOf("Hours", "Minutes")
-                    )
+                    CompositionLocalProvider(
+                        LocalTextInputService provides null
+                    ) {
+                        OutlinedTextField(
+                            value = duration,
+                            onValueChange = { duration = it },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .onFocusChanged {
+                                    if (it.isFocused) {
+                                        durationState.show()
+                                    }
+                                },
+                            label = { Text(text = stringResource(id = R.string.duration)) },
+                            trailingIcon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.Timer,
+                                    contentDescription = "Time Icon",
+                                    modifier = Modifier.clickable {
+                                        durationState.show()
+                                    }
+                                )
+                            },
+                            singleLine = true,
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                    }
                 }
             }
         }
-        Row(
+        BooKingBottomBar(
+            onBackButtonClicked = {
+                onBackButtonClicked.invoke()
+            },
+            onNextButtonClicked = {
+                onNextButtonClicked.invoke()
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 20.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            OutlinedButton(
-                onClick = {
-                    onBackButtonClicked.invoke()
-                },
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            ) {
-                Text(
-                    text = stringResource(id = R.string.back)
-                )
-            }
-
-            Button(
-                onClick = {
-                    onNextButtonClicked.invoke()
-                },
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            ) {
-                Text(
-                    text = stringResource(id = R.string.continues)
-                )
-            }
-        }
+                .fillMaxWidth(),
+            isNextButtonEnabled = bookingDate.isNotEmpty() &&
+                    bookingTime.isNotEmpty() && duration.isNotEmpty()
+        )
     }
 }
 
@@ -273,7 +283,8 @@ fun BookingSelector(
                         Modifier.clickable { expanded = !expanded })
                 }
 
-            }
+            },
+            shape = RoundedCornerShape(20.dp)
         )
 
         DropdownMenu(

@@ -5,6 +5,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.nganga.robert.chargelink.screens.booking_screens.EnterBookingDetailsScreen
+import com.nganga.robert.chargelink.screens.booking_screens.PaymentDetailsScreen
 import com.nganga.robert.chargelink.screens.booking_screens.SelectChargerScreen
 import com.nganga.robert.chargelink.ui.navigation.BOOKING_ROUTE
 import com.nganga.robert.chargelink.ui.navigation.BookingScreen
@@ -18,9 +19,6 @@ fun NavGraphBuilder.bookingNavGraph(
         route = "$BOOKING_ROUTE/{id}",
         arguments = listOf(
             navArgument("id") { type = NavType.StringType }
-//            navArgument("chargerId") {
-//                type = NavType.StringType
-//            }
         )
     ){
         composable(
@@ -31,7 +29,6 @@ fun NavGraphBuilder.bookingNavGraph(
             SelectChargerScreen(
                 bookingViewModel = it.sharedViewModel(navController),
                 stationId = id,
-                //chargerId = chargerId,
                 onBackButtonClicked = {
                     navController.popBackStack()
                 },
@@ -51,7 +48,20 @@ fun NavGraphBuilder.bookingNavGraph(
                 onBackButtonClicked = {
                     navController.popBackStack()
                 },
-                onNextButtonClicked = {}
+                onNextButtonClicked = {
+                    navController.navigate(BookingScreen.PaymentDetails.route){
+                        launchSingleTop = true
+                    }
+                }
+            )
+        }
+
+        composable(route = BookingScreen.PaymentDetails.route){
+            PaymentDetailsScreen(
+                onBackButtonClicked = {
+                    navController.popBackStack()
+                },
+                onContinueClicked = {  }
             )
         }
     }

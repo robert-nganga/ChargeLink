@@ -20,11 +20,11 @@ import com.nganga.robert.chargelink.R
 fun BooKingBottomBar(
     onBackButtonClicked: () -> Unit,
     onNextButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isNextButtonEnabled: Boolean
 ){
     Row(
         modifier = modifier
-            .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 20.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -52,7 +52,8 @@ fun BooKingBottomBar(
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.secondary
-            )
+            ),
+            enabled = isNextButtonEnabled
         ) {
             Text(
                 text = stringResource(id = R.string.continues)

@@ -65,13 +65,13 @@
     <string name="search_for_a_place">Search for a place</string>
     <string name="select_charger">Select Charger</string>
     <string name="back">Back</string>
-    <string name="enter_booking_details">Enter Booking Details</string>
+    <string name="enter_booking_details">Booking Details</string>
     <string name="select_date">Select date</string>
     <string name="time">Time</string>
     <string name="date">Date</string>
     <string name="select_arrival_time">Select arrival time</string>
     <string name="select_charging_duration">Select charging duration</string>
-    <string name="select_payment_method">Select payment method</string>
+    <string name="select_payment_method">Payment</string>
     <string name="card">Card</string>
     <string name="pay_on_location">On location</string>
     <string name="paypal">Paypal</string>

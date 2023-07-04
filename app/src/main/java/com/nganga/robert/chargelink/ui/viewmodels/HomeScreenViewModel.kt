@@ -38,13 +38,10 @@ class HomeScreenViewModel@Inject constructor(
         private set
 
 
-    private var _booking = mutableStateOf(emptyBooking)
+    private var _booking = mutableStateOf(Booking())
     val booking: State<Booking> get() = _booking
 
-    init {
-        getCurrentUser()
-        _booking.value = myBooking
-    }
+
 
     fun submitReview(stationId: String, rating:Int, message: String) = viewModelScope.launch{
         val current = LocalDateTime.now()
@@ -159,25 +156,4 @@ class HomeScreenViewModel@Inject constructor(
             }
         }
     }
-
-
-
 }
-
-val myBooking = Booking(
-    stationName = "EvGo Charger",
-    stationLocation = "Donholm, jogoo road",
-    date = "10 June 2023",
-    time = "2:00 PM",
-    duration = "1 Hour",
-    charger = Charger(plug = "CCS 1 DC", power = "360kW", image = R.drawable.ic_ev_plug_ccs2, isAvailable = true)
-)
-
-val emptyBooking = Booking(
-    stationName = "",
-    stationLocation = "",
-    date = "",
-    time = "",
-    duration = "",
-    charger = Charger(plug = "", power = "", image = R.drawable.ic_ev_plug_ccs2, isAvailable = true)
-)

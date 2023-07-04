@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Charger
+import com.nganga.robert.chargelink.ui.components.BooKingBottomBar
 import com.nganga.robert.chargelink.utils.IconUtils.getChargerIcon
 
 @Composable
@@ -34,9 +35,9 @@ fun SelectChargerScreen(
     LaunchedEffect(key1 = true){
         stationId?.let {
             val chargingStationId = it.substringBefore(",")
-            val chargerId = it.substringAfter(",")
+            //val chargerId = it.substringAfter(",")
             bookingViewModel.getStation(chargingStationId)
-            selectedId = chargerId
+            //selectedId = chargerId
         }
     }
 
@@ -69,44 +70,18 @@ fun SelectChargerScreen(
                 selectedId = selectedId,
             )
         }
-        Row(
+        BooKingBottomBar(
+            onBackButtonClicked = {
+                onBackButtonClicked.invoke()
+            },
+            onNextButtonClicked = {
+                onNextButtonClicked.invoke()
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(horizontal = 20.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            OutlinedButton(
-                onClick = {
-                    onBackButtonClicked.invoke()
-                },
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.secondary
-                )
-            ) {
-                Text(
-                    text = stringResource(id = R.string.back)
-                )
-            }
-
-            Button(
-                onClick = {
-                    onNextButtonClicked.invoke()
-                },
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            ) {
-                Text(
-                    text = stringResource(id = R.string.continues)
-                )
-            }
-        }
+                .fillMaxWidth(),
+            isNextButtonEnabled = selectedId.isNotEmpty()
+        )
     }
 
 
