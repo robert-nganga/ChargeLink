@@ -90,4 +90,5 @@
     <string name="selected_payment_method">Selected payment method</string>
     <string name="charger">Charger</string>
     <string name="confirm">Confirm</string>
+    <string name="booking_summary">Booking Summary</string>
 </resources>

@@ -38,8 +38,5 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun DefaultPreview() {
     ChargeLinkTheme {
-        BookingConfirmationScreen(onBackButtonClicked = {  }) {
-
-        }
     }
 }

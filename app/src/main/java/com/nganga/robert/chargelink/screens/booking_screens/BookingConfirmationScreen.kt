@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.PaymentMethod
 import com.nganga.robert.chargelink.ui.components.BooKingBottomBar
+import com.nganga.robert.chargelink.ui.components.HorizontalDivider
 import com.nganga.robert.chargelink.utils.IconUtils
 import com.nganga.robert.chargelink.utils.TimeUtils.getDurationString
 
@@ -32,65 +33,68 @@ fun BookingConfirmationScreen(
     bookingViewModel: BookingViewModel
 ) {
 
-    val bookingDetails = bookingViewModel.booking
+    val bookingDetails = bookingViewModel.bookingState
 
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
-        ){
-            stickyHeader {
-                BookingConfirmationScreenTopBar(
-                    modifier = Modifier.fillMaxWidth(),
-                    onBackButtonClicked = {
-                        onBackButtonClicked.invoke()
-                    }
-                )
+        BookingConfirmationScreenTopBar(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth(),
+            title = stringResource(id = R.string.booking_summary),
+            onBackButtonClicked = {
+                onBackButtonClicked.invoke()
             }
+        )
+        LazyColumn(
+            modifier = Modifier
+                .padding(top = 80.dp)
+                .fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 10.dp)
+        ){
             item{ Spacer(modifier = Modifier.height(10.dp)) }
             item{
                 ItemSlot(
                     title = stringResource(id = R.string.charging_station),
-                    modifier = Modifier.padding(horizontal = 10.dp)
                 ){
                     ChargingStationItem(
-                        name = bookingDetails.stationName,
-                        location = bookingDetails.stationLocation,
+                        name = bookingDetails.booking.stationName,
+                        location = bookingDetails.booking.stationLocation,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
             item{
                 ItemSlot (
-                    title = stringResource(id = R.string.charger),
-                    modifier = Modifier.padding(horizontal = 10.dp)
+                    modifier = Modifier,
+                    title = stringResource(id = R.string.charger)
                 ) {
                     ChargerItem(
-                        plug = bookingDetails.charger.plug,
-                        power = bookingDetails.charger.power,
+                        plug = bookingDetails.booking.charger.plug,
+                        power = bookingDetails.booking.charger.power,
                     )
 
                 }
             }
             item{
                 ItemSlot(
-                    modifier = Modifier.padding(horizontal = 10.dp)
+                    modifier = Modifier
                 ){
                     BookingDetailsItem(
-                        date = bookingDetails.date,
-                        arrivalTime = bookingDetails.time,
-                        chargingDuration = bookingDetails.duration.getDurationString(),
+                        date = bookingDetails.booking.date,
+                        arrivalTime = bookingDetails.booking.time,
+                        chargingDuration = bookingDetails.booking.duration.getDurationString(),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
             }
             item{
                 ItemSlot(
-                    modifier = Modifier.padding(horizontal = 10.dp)
+                    modifier = Modifier
                 ){
                     PriceDetailsItem(
-                        price = bookingDetails.totalPrice,
+                        price = bookingDetails.booking.totalPrice,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
@@ -98,18 +102,24 @@ fun BookingConfirmationScreen(
             item{
                 ItemSlot(
                     title = stringResource(id = R.string.selected_payment_method),
-                    modifier = Modifier.padding(horizontal = 10.dp)
+                    modifier = Modifier
                 ){
                     PaymentMethodItem(
                         paymentMethod = bookingViewModel.paymentMethod,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
                     )
                 }
+            }
+            item{
+                Box(modifier = Modifier.height(70.dp))
             }
 
         }
 
         BooKingBottomBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter),
             onBackButtonClicked = {
                 onBackButtonClicked.invoke()
             },
@@ -175,7 +185,7 @@ fun ItemSlot(
             Spacer(modifier = Modifier.height(10.dp))
         }
         Card(
-            modifier = modifier.padding(bottom = 10.dp),
+            modifier = modifier.padding(bottom = 15.dp),
             shape = RoundedCornerShape(15.dp),
             elevation = CardDefaults.cardElevation(5.dp),
             colors = CardDefaults.cardColors(
@@ -196,19 +206,20 @@ fun ChargerItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 20.dp),
+            .padding(horizontal = 15.dp, vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceAround
+        horizontalArrangement = Arrangement.SpaceBetween
     ){
         ChargerTextColumn(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier,
             headerText = plug,
             trailingText = "",
             icon = painterResource(id = IconUtils.getChargerIcon(plug)),
             iconTint = MaterialTheme.colorScheme.primary
         )
+        Box(modifier = Modifier.weight(1f))
         ChargerTextColumn(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier,
             headerText = stringResource(id = R.string.max_power),
             trailingText = power,
         )
@@ -225,18 +236,18 @@ fun BookingDetailsItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 15.dp),
+            .padding(horizontal = 15.dp, vertical = 20.dp),
     ) {
         RowItem(
             title = stringResource(id = R.string.booking_date),
             text = date
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(15.dp))
         RowItem(
             title = stringResource(id = R.string.time_of_arrival),
             text = arrivalTime
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(15.dp))
         RowItem(
             title = stringResource(id = R.string.charging_duration),
             text = chargingDuration
@@ -253,18 +264,20 @@ fun PriceDetailsItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 15.dp),
+            .padding(horizontal = 15.dp, vertical = 20.dp),
     ) {
         RowItem(
             title = stringResource(id = R.string.cost),
             text = "Ksh $price.00"
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(15.dp))
         RowItem(
             title = stringResource(id = R.string.tax),
             text = "Ksh 0.00"
         )
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(8.dp))
+        HorizontalDivider()
+        Spacer(modifier = Modifier.height(8.dp))
         RowItem(
             title = stringResource(id = R.string.total_amount),
             text = "Ksh $price.00"
@@ -280,7 +293,7 @@ fun PaymentMethodItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 20.dp),
+            .padding(horizontal = 10.dp, vertical = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
@@ -289,7 +302,7 @@ fun PaymentMethodItem(
                 imageVector = paymentMethod.icon,
                 contentDescription = paymentMethod.title,
                 modifier = modifier
-                    .size(40.dp)
+                    .size(50.dp)
                     .padding(5.dp)
             )
         }
@@ -298,7 +311,7 @@ fun PaymentMethodItem(
                 painter = paymentMethod.image,
                 contentDescription = paymentMethod.title,
                 modifier = modifier
-                    .size(50.dp)
+                    .size(70.dp)
                     .padding(5.dp)
             )
         }
@@ -323,7 +336,7 @@ fun RowItem(
 ){
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.Start,
     ) {
         Text(
             text = title,
@@ -333,6 +346,7 @@ fun RowItem(
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
+        Box(modifier = Modifier.weight(1f))
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium.copy(
@@ -353,7 +367,7 @@ fun ChargingStationItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 20.dp),
+            .padding(horizontal = 15.dp, vertical = 20.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
@@ -361,8 +375,9 @@ fun ChargingStationItem(
             imageVector = Icons.Outlined.EvStation,
             contentDescription = "Back",
             tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(50.dp)
         )
+        Spacer(modifier = Modifier.width(20.dp))
         Column(
             modifier = Modifier
                 .padding(start = 10.dp)

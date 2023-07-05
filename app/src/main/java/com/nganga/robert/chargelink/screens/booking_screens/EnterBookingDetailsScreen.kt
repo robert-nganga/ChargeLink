@@ -52,7 +52,7 @@ fun EnterBookingDetailsScreen(
     val timeState = rememberSheetState()
     val durationState = rememberSheetState()
 
-    val booking = bookingViewModel.booking
+    val booking = bookingViewModel.bookingState.booking
 
     var bookingDate by remember {
         mutableStateOf(booking.date)

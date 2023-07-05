@@ -29,7 +29,8 @@ fun SelectChargerScreen(
     stationId: String?
 ){
 
-    var selectedId by remember { mutableStateOf(bookingViewModel.booking.charger.id) }
+    val booking = bookingViewModel.bookingState.booking
+    var selectedId by remember { mutableStateOf(booking.charger.id) }
 
     LaunchedEffect(key1 = true){
         stationId?.let { chargingStationId ->
@@ -187,7 +188,6 @@ fun ChargerListItem(
             )
         }
     }
-
 }
 
 @Composable
