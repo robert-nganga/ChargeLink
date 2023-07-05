@@ -22,7 +22,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
@@ -31,6 +30,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.models.PaymentMethod
 import com.nganga.robert.chargelink.ui.components.BooKingBottomBar
 
 
@@ -41,8 +41,27 @@ fun PaymentDetailsScreen(
     bookingViewModel: BookingViewModel
 ) {
     var selectedMethod by rememberSaveable{
-        mutableStateOf("")
+        mutableStateOf(bookingViewModel.paymentMethod.title)
     }
+
+    val paymentMethods = listOf(
+        PaymentMethod(
+            title = stringResource(id = R.string.card),
+            icon = Icons.Outlined.CreditCard
+        ),
+        PaymentMethod(
+            title = stringResource(id = R.string.paypal),
+            image = painterResource(id = R.drawable.paypal)
+        ),
+        PaymentMethod(
+            title = "M-Pesa",
+            image = painterResource(id = R.drawable.mpesa)
+        ),
+        PaymentMethod(
+            title = stringResource(id = R.string.pay_on_location),
+            icon = Icons.Outlined.Payments
+        ),
+    )
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -60,24 +79,7 @@ fun PaymentDetailsScreen(
             Spacer(modifier = Modifier.height(20.dp))
 
             PaymentMethodsList(
-                methods = listOf(
-                    PaymentMethod(
-                        title = stringResource(id = R.string.card),
-                        icon = Icons.Outlined.CreditCard
-                    ),
-                    PaymentMethod(
-                        title = stringResource(id = R.string.paypal),
-                        image = painterResource(id = R.drawable.paypal)
-                    ),
-                    PaymentMethod(
-                        title = "M-Pesa",
-                        image = painterResource(id = R.drawable.mpesa)
-                    ),
-                    PaymentMethod(
-                        title = stringResource(id = R.string.pay_on_location),
-                        icon = Icons.Outlined.Payments
-                    ),
-                ),
+                methods = paymentMethods,
                 onMethodSelected = { method ->
                     selectedMethod = method
                 },
@@ -93,6 +95,9 @@ fun PaymentDetailsScreen(
                 val rand = (1..6).random()
                 bookingViewModel.setBookingPrice(
                     price = "${rand}000"
+                )
+                bookingViewModel.updatePaymentMethod(
+                    paymentMethods.find { it.title == selectedMethod }!!
                 )
                 onContinueClicked.invoke()
             },
@@ -293,7 +298,7 @@ fun PaymentMethodItem(
 @Composable
 fun PaymentDetailsTopBar(
     modifier: Modifier = Modifier,
-    title: String = "Payment Details",
+    title: String,
     onBackButtonClicked: () -> Unit
 ) {
     Row(
@@ -386,9 +391,3 @@ fun CountrySelector(
         }
     }
 }
-
-data class PaymentMethod(
-    val icon: ImageVector? = null,
-    val title: String,
-    val image: Painter? = null
-)

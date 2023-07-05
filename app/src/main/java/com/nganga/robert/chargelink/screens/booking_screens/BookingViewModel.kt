@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.nganga.robert.chargelink.models.Booking
 import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.NewChargingStation
+import com.nganga.robert.chargelink.models.PaymentMethod
 import com.nganga.robert.chargelink.repository.BookingRepository
 import com.nganga.robert.chargelink.repository.ChargingStationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +28,14 @@ class BookingViewModel@Inject constructor(
     var booking by mutableStateOf(Booking())
         private set
 
+    var paymentMethod by mutableStateOf(PaymentMethod())
+        private set
 
+
+
+    fun updatePaymentMethod(method: PaymentMethod){
+        paymentMethod = method
+    }
 
     fun setBookingPrice(price: String){
         booking = booking.copy(totalPrice = price)

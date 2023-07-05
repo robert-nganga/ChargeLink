@@ -71,7 +71,7 @@
     <string name="date">Date</string>
     <string name="select_arrival_time">Select arrival time</string>
     <string name="select_charging_duration">Select charging duration</string>
-    <string name="select_payment_method">Payment</string>
+    <string name="select_payment_method">Payment Method</string>
     <string name="card">Card</string>
     <string name="pay_on_location">On location</string>
     <string name="paypal">Paypal</string>
@@ -80,4 +80,14 @@
     <string name="cvc">CVC</string>
     <string name="card_information">Card Information</string>
     <string name="country_or_region">Country or region</string>
+    <string name="charging_station">Charging station</string>
+    <string name="booking_date">Booking date</string>
+    <string name="time_of_arrival">Time of arrival</string>
+    <string name="charging_duration">Charging duration</string>
+    <string name="cost">Cost</string>
+    <string name="tax">Tax</string>
+    <string name="total_amount">Total Amount</string>
+    <string name="selected_payment_method">Selected payment method</string>
+    <string name="charger">Charger</string>
+    <string name="confirm">Confirm</string>
 </resources>

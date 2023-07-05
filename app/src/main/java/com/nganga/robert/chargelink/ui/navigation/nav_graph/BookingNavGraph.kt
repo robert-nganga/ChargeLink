@@ -4,6 +4,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.nganga.robert.chargelink.screens.booking_screens.BookingConfirmationScreen
 import com.nganga.robert.chargelink.screens.booking_screens.EnterBookingDetailsScreen
 import com.nganga.robert.chargelink.screens.booking_screens.PaymentDetailsScreen
 import com.nganga.robert.chargelink.screens.booking_screens.SelectChargerScreen
@@ -61,7 +62,23 @@ fun NavGraphBuilder.bookingNavGraph(
                 onBackButtonClicked = {
                     navController.popBackStack()
                 },
-                onContinueClicked = {  },
+                onContinueClicked = {
+                    navController.navigate(BookingScreen.BookingConfirmation.route){
+                        launchSingleTop = true
+                    }
+                },
+                bookingViewModel = it.sharedViewModel(navController)
+            )
+        }
+
+        composable(route = BookingScreen.BookingConfirmation.route){
+            BookingConfirmationScreen(
+                onBackButtonClicked = {
+                    navController.popBackStack()
+                },
+                onConfirmButtonClicked = {
+
+                },
                 bookingViewModel = it.sharedViewModel(navController)
             )
         }

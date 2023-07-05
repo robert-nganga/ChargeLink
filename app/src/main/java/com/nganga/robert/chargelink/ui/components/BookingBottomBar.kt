@@ -21,14 +21,15 @@ fun BooKingBottomBar(
     onBackButtonClicked: () -> Unit,
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    isNextButtonEnabled: Boolean
+    isNextButtonEnabled: Boolean,
+    nextButtonText: String = stringResource(id = R.string.continues)
 ){
     Row(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface)
             .padding(horizontal = 20.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         OutlinedButton(
             onClick = {
@@ -56,7 +57,7 @@ fun BooKingBottomBar(
             enabled = isNextButtonEnabled
         ) {
             Text(
-                text = stringResource(id = R.string.continues)
+                text = nextButtonText,
             )
         }
     }
