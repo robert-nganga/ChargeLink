@@ -1,7 +1,5 @@
 package com.nganga.robert.chargelink.screens.booking_screens
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,14 +28,12 @@ fun SelectChargerScreen(
     onNextButtonClicked: () -> Unit,
     stationId: String?
 ){
-    var selectedId by remember { mutableStateOf("") }
+
+    var selectedId by remember { mutableStateOf(bookingViewModel.booking.charger.id) }
 
     LaunchedEffect(key1 = true){
-        stationId?.let {
-            val chargingStationId = it.substringBefore(",")
-            //val chargerId = it.substringAfter(",")
+        stationId?.let { chargingStationId ->
             bookingViewModel.getStation(chargingStationId)
-            //selectedId = chargerId
         }
     }
 
@@ -75,6 +71,7 @@ fun SelectChargerScreen(
                 onBackButtonClicked.invoke()
             },
             onNextButtonClicked = {
+                bookingViewModel.setBookingCharger(chargers.find { it.id == selectedId }!!)
                 onNextButtonClicked.invoke()
             },
             modifier = Modifier

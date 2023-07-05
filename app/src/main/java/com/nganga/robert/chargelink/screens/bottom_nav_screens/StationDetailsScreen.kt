@@ -43,7 +43,7 @@ import kotlinx.coroutines.launch
 fun StationDetailsScreen(
     id: String?,
     viewModel: HomeScreenViewModel,
-    onBookClicked: (chargerId: String?, stationId: String)-> Unit,
+    onBookClicked: (stationId: String)-> Unit,
 ){
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
@@ -105,7 +105,7 @@ fun StationDetailsScreen(
                     name = chargingStation.name,
                     location = chargingStation.location,
                     rating = 4,
-                    onBookClicked = { onBookClicked(null, chargingStation.id) }
+                    onBookClicked = { onBookClicked(chargingStation.id) }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 TabView(
@@ -124,8 +124,8 @@ fun StationDetailsScreen(
                     1 -> ChargerSection(
                         chargers = chargingStation.chargers,
                         modifier = Modifier.fillMaxSize(),
-                        onBookChargerClicked = { chargerId ->
-                            onBookClicked(chargerId, chargingStation.id)
+                        onBookChargerClicked = {
+                            onBookClicked(chargingStation.id)
                         }
                     )
                     2 -> ReviewSection(
@@ -286,7 +286,7 @@ fun DescriptionSection(
 fun ChargerSection(
     modifier: Modifier = Modifier,
     chargers: List<Charger>,
-    onBookChargerClicked: (String)->Unit
+    onBookChargerClicked: ()->Unit
 ){
     LazyColumn(
         modifier = modifier,
@@ -298,7 +298,7 @@ fun ChargerSection(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 10.dp),
-                onBookChargerClicked = { onBookChargerClicked.invoke(charger.id) }
+                onBookChargerClicked = { onBookChargerClicked.invoke() }
             )
         }
     }

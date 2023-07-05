@@ -61,7 +61,8 @@ fun NavGraphBuilder.bookingNavGraph(
                 onBackButtonClicked = {
                     navController.popBackStack()
                 },
-                onContinueClicked = {  }
+                onContinueClicked = {  },
+                bookingViewModel = it.sharedViewModel(navController)
             )
         }
     }

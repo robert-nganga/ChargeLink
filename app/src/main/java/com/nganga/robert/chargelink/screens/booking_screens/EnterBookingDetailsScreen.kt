@@ -1,7 +1,5 @@
 package com.nganga.robert.chargelink.screens.booking_screens
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,7 +9,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.TimeToLeave
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -39,6 +36,7 @@ import com.maxkeppeler.sheets.duration.models.DurationFormat
 import com.maxkeppeler.sheets.duration.models.DurationSelection
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.ui.components.BooKingBottomBar
+import com.nganga.robert.chargelink.utils.TimeUtils.getDurationString
 import java.time.format.DateTimeFormatter
 
 
@@ -54,16 +52,18 @@ fun EnterBookingDetailsScreen(
     val timeState = rememberSheetState()
     val durationState = rememberSheetState()
 
+    val booking = bookingViewModel.booking
+
     var bookingDate by remember {
-        mutableStateOf("")
+        mutableStateOf(booking.date)
     }
-    var bookingTime by remember { mutableStateOf("") }
-    var duration by remember { mutableStateOf("") }
+    var bookingTime by remember { mutableStateOf(booking.time) }
+    var duration by remember { mutableStateOf(booking.duration) }
 
     DurationDialog(
         state = durationState,
         selection = DurationSelection { time ->
-            duration = time.toString()
+            duration = time
         },
         config = DurationConfig(
             displayClearButton = true,
@@ -194,8 +194,8 @@ fun EnterBookingDetailsScreen(
                         LocalTextInputService provides null
                     ) {
                         OutlinedTextField(
-                            value = duration,
-                            onValueChange = { duration = it },
+                            value = duration.getDurationString(),
+                            onValueChange = {},
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onFocusChanged {
@@ -225,13 +225,18 @@ fun EnterBookingDetailsScreen(
                 onBackButtonClicked.invoke()
             },
             onNextButtonClicked = {
+                bookingViewModel.setBookingDetails(
+                    date = bookingDate,
+                    time = bookingTime,
+                    duration = duration
+                )
                 onNextButtonClicked.invoke()
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth(),
             isNextButtonEnabled = bookingDate.isNotEmpty() &&
-                    bookingTime.isNotEmpty() && duration.isNotEmpty()
+                    bookingTime.isNotEmpty() && duration != 0L
         )
     }
 }

@@ -37,7 +37,8 @@ import com.nganga.robert.chargelink.ui.components.BooKingBottomBar
 @Composable
 fun PaymentDetailsScreen(
     onBackButtonClicked: () -> Unit,
-    onContinueClicked: () -> Unit
+    onContinueClicked: () -> Unit,
+    bookingViewModel: BookingViewModel
 ) {
     var selectedMethod by rememberSaveable{
         mutableStateOf("")
@@ -89,6 +90,10 @@ fun PaymentDetailsScreen(
                 onBackButtonClicked.invoke()
             },
             onNextButtonClicked = {
+                val rand = (1..6).random()
+                bookingViewModel.setBookingPrice(
+                    price = "${rand}000"
+                )
                 onContinueClicked.invoke()
             },
             modifier = Modifier

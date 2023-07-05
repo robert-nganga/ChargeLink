@@ -8,7 +8,7 @@ data class Booking(
     val date: String,
     val time: String,
     val charger: Charger,
-    val duration: String,
+    val duration: Long,
     val userId: String,
     val totalPrice: String,
     val status: String
@@ -21,7 +21,7 @@ data class Booking(
         date = "",
         time = "",
         charger = Charger(),
-        duration = "",
+        duration = 0L,
         userId = "",
         totalPrice = "",
         status = ""
