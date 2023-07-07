@@ -21,6 +21,26 @@ class BookingRepositoryImpl@Inject constructor(
 
 
 
+    override fun getBookingById(id: String): Flow<ResultState<Booking>> = callbackFlow {
+        trySend(ResultState.loading())
+        fireStoreDb.collection(BOOKINGS_COLLECTION_REF).document(id)
+            .addSnapshotListener { value, error ->
+                if (error != null){
+                    trySend(ResultState.error(error.message ?: "Unknown Error occurred"))
+                    return@addSnapshotListener
+                }
+                val booking = value?.toObject(Booking::class.java)
+                if (booking != null){
+                    trySend(ResultState.success(booking))
+                }else{
+                    trySend(ResultState.error("Booking not found"))
+                }
+            }
+        awaitClose {
+            close()
+        }
+    }
+
     override fun addBookingToDatabase(booking: Booking): Flow<ResultState<String>> = callbackFlow {
         val newBooking = booking.copy(
             userId = auth.currentUser?.uid!!,

@@ -29,15 +29,16 @@ import com.nganga.robert.chargelink.utils.TimeUtils.getDurationString
 @Composable
 fun BookingItem(
     booking: Booking,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBookingClicked: () -> Unit
 ){
     var reminder by remember{
         mutableStateOf(false)
     }
     Card(
-        modifier = modifier.padding(horizontal = 10.dp),
+        modifier = modifier.padding(horizontal = 12.dp, vertical = 5.dp),
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(5.dp),
+        elevation = CardDefaults.cardElevation(10.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
@@ -70,10 +71,14 @@ fun BookingItem(
                     )
                 )
                 Spacer(modifier = Modifier.width(5.dp))
-                Switch(
-                    checked = reminder,
-                    onCheckedChange = { reminder = it }
-                )
+                if (booking.status == "Pending") {
+                    Switch(
+                        checked = reminder,
+                        onCheckedChange = {
+                            reminder = it
+                        }
+                    )
+                }
             }
             Spacer(modifier = Modifier.height(10.dp))
             HorizontalDivider(thickness = 0.5.dp)
@@ -152,7 +157,9 @@ fun BookingItem(
                 Spacer(modifier = Modifier.width(10.dp))
                 Button(
                     modifier = Modifier.weight(1f),
-                    onClick = {  }
+                    onClick = {
+                        onBookingClicked.invoke()
+                    }
                 ) {
                     Text(text = stringResource(id = R.string.view))
                 }

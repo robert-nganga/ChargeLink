@@ -8,6 +8,7 @@ import com.nganga.robert.chargelink.ui.navigation.BOTTOM_NAV_ROUTE
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.*
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen.MapScreen
 import com.nganga.robert.chargelink.ui.navigation.BOOKING_ROUTE
+import com.nganga.robert.chargelink.ui.navigation.BookingScreen
 
 fun NavGraphBuilder.bottomNavGraph(
     navController: NavHostController,
@@ -45,7 +46,12 @@ fun NavGraphBuilder.bottomNavGraph(
         composable(route = BottomBarScreen.Bookings.route){
             BookingsScreen(
                 onBackPressed = { navController.popBackStack() },
-                viewModel = it.sharedViewModel(navController)
+                viewModel = it.sharedViewModel(navController),
+                onBookingClicked = { bookingId ->
+                    navController.navigate(BookingScreen.BookingConfirmation.withArgs(bookingId)){
+                        launchSingleTop = true
+                    }
+                }
             )
         }
         composable(route = BottomBarScreen.Settings.route){

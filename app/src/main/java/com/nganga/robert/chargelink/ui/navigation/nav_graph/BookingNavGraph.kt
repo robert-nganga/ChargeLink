@@ -64,7 +64,8 @@ fun NavGraphBuilder.bookingNavGraph(
                     navController.popBackStack()
                 },
                 onContinueClicked = {
-                    navController.navigate(BookingScreen.BookingConfirmation.route){
+                    val id: String? = null
+                    navController.navigate(BookingScreen.BookingConfirmation.route+"/$id"){
                         launchSingleTop = true
                     }
                 },
@@ -72,18 +73,26 @@ fun NavGraphBuilder.bookingNavGraph(
             )
         }
 
-        composable(route = BookingScreen.BookingConfirmation.route){
+        composable(
+            route = BookingScreen.BookingConfirmation.route+"/{id}",
+            arguments = listOf(
+                navArgument("id"){
+                    type = NavType.StringType
+                    nullable =  true
+                }
+            )
+        ){
             BookingConfirmationScreen(
                 onBackButtonClicked = {
                     navController.popBackStack()
                 },
                 onConfirmButtonClicked = {
-                    navController.popBackStack()
-                    navController.popBackStack()
-                    navController.popBackStack()
-                    navController.popBackStack()
+                    (1..4).forEach { _ ->
+                        navController.popBackStack()
+                    }
                 },
-                bookingViewModel = it.sharedViewModel(navController)
+                bookingViewModel = it.sharedViewModel(navController),
+                bookingId = it.arguments?.getString("id")
             )
         }
     }

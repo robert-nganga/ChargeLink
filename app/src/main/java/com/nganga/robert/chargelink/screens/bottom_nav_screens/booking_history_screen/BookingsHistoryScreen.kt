@@ -25,14 +25,11 @@ import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 @Composable
 fun BookingsScreen(
     onBackPressed: () -> Unit,
-    viewModel: BookingHistoryViewModel
+    viewModel: BookingHistoryViewModel,
+    onBookingClicked: (String) -> Unit
 ){
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
-    }
-
-    var isReminder by rememberSaveable {
-        mutableStateOf(false)
     }
 
     val completedBookings = viewModel.completedBookings.collectAsState(
@@ -69,17 +66,20 @@ fun BookingsScreen(
         when (selectedTabIndex){
             0 -> {
                 BookingsListSection(
-                    bookings = pendingBookings.value.bookings
+                    bookings = pendingBookings.value.bookings,
+                    onBookingClicked = onBookingClicked
                 )
             }
             1 -> {
                 BookingsListSection(
-                    bookings = completedBookings.value.bookings
+                    bookings = completedBookings.value.bookings,
+                    onBookingClicked = onBookingClicked
                 )
             }
             else -> {
                 BookingsListSection(
-                    bookings = canceledBookings.value.bookings
+                    bookings = canceledBookings.value.bookings,
+                    onBookingClicked = onBookingClicked
                 )
             }
         }
@@ -89,7 +89,8 @@ fun BookingsScreen(
 @Composable
 fun BookingsListSection(
     bookings: List<Booking>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBookingClicked: (String) -> Unit
 ){
     LazyColumn(
         modifier = modifier
@@ -97,8 +98,10 @@ fun BookingsListSection(
         items(bookings){ booking ->
             BookingItem(
                 booking = booking,
-                reminder = false,
-                onReminderCheckChanged = {  }
+                modifier = Modifier.fillMaxWidth(),
+                onBookingClicked = {
+                    onBookingClicked(booking.bookingId)
+                }
             )
 
         }

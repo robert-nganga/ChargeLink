@@ -7,4 +7,12 @@ sealed class BookingScreen(val route: String) {
     object EnterBookingDetails: BookingScreen(route = "enterBookingDetails")
     object PaymentDetails: BookingScreen(route = "paymentDetails")
     object BookingConfirmation: BookingScreen(route = "bookingConfirmation")
+    fun withArgs(vararg args: String): String{
+        return buildString {
+            append(route)
+            args.forEach { arg ->
+                append("/$arg")
+            }
+        }
+    }
 }

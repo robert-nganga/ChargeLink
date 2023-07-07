@@ -57,6 +57,31 @@ class BookingViewModel@Inject constructor(
         bookingState = bookingState.copy(booking = booking)
     }
 
+    fun getBookingById(id: String) = viewModelScope.launch {
+        bookingRepo.getBookingById(id).collectLatest { result->
+            when (result.status){
+                ResultState.Status.SUCCESS -> {
+                    bookingState = bookingState.copy(
+                        booking = result.data!!,
+                        isLoading = false,
+                        errorMessage = ""
+                    )
+                }
+                ResultState.Status.ERROR -> {
+                    bookingState = bookingState.copy(
+                        errorMessage = result.message!!,
+                        isLoading = false
+                    )
+                }
+                ResultState.Status.LOADING -> {
+                    bookingState = bookingState.copy(
+                        isLoading = true
+                    )
+                }
+            }
+        }
+    }
+
     fun addBookingToDatabase() = viewModelScope.launch {
         bookingRepo.addBookingToDatabase(bookingState.booking).collectLatest { result->
             when (result.status){
