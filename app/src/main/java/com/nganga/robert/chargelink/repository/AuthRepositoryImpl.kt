@@ -21,6 +21,10 @@ class AuthRepositoryImpl @Inject constructor(
     override fun hasUser(): Boolean = auth.currentUser != null
 
 
+    override fun logout() {
+        auth.signOut()
+    }
+
 
     override fun addUserDetails(user: NewUser): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.loading())

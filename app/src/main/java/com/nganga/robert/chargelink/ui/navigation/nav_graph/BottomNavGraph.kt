@@ -3,12 +3,10 @@ package com.nganga.robert.chargelink.ui.navigation.nav_graph
 import android.app.Activity
 import androidx.navigation.*
 import androidx.navigation.compose.composable
-import com.nganga.robert.chargelink.ui.navigation.BottomBarScreen
-import com.nganga.robert.chargelink.ui.navigation.BOTTOM_NAV_ROUTE
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.*
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen.MapScreen
-import com.nganga.robert.chargelink.ui.navigation.BOOKING_ROUTE
-import com.nganga.robert.chargelink.ui.navigation.BookingScreen
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.profile_screens.ProfileScreen
+import com.nganga.robert.chargelink.ui.navigation.*
 
 fun NavGraphBuilder.bottomNavGraph(
     navController: NavHostController,
@@ -43,6 +41,15 @@ fun NavGraphBuilder.bottomNavGraph(
                 onSettingsClick = {
                     navController.navigate(BottomBarScreen.Settings.route){
                         //popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                },
+                profileViewModel = it.sharedViewModel(navController),
+                onLogOut = {
+                    navController.navigate(AUTHENTICATION_ROUTE){
+                        popUpTo(BOOKING_ROUTE){
+                            inclusive = true
+                        }
                         launchSingleTop = true
                     }
                 }

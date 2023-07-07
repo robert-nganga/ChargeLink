@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.screens.bottom_nav_screens
+package com.nganga.robert.chargelink.screens.bottom_nav_screens.profile_screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -27,7 +27,9 @@ import com.nganga.robert.chargelink.ui.components.IconText
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    profileViewModel: ProfileViewModel,
+    onLogOut: () -> Unit
 ){
     Scaffold(
         topBar = {
@@ -95,6 +97,14 @@ fun ProfileScreen(
                 leadingIcon = Icons.Outlined.Info,
                 text = stringResource(id = R.string.about_charge_link),
                 onCategoryClick = {}
+            )
+            ProfileCategoryItem(
+                leadingIcon = Icons.Outlined.Logout,
+                text = stringResource(id = R.string.logout),
+                onCategoryClick = {
+                    profileViewModel.logOut()
+                    onLogOut.invoke()
+                }
             )
             Spacer(modifier = Modifier.height(90.dp))
         }

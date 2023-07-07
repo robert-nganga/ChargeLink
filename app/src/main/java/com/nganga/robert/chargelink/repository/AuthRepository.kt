@@ -9,6 +9,8 @@ interface AuthRepository {
 
     fun hasUser():Boolean
 
+    fun logout()
+
     fun addUserDetails(user: NewUser): Flow<ResultState<String>>
 
     fun addUserCarDetails(car: Car): Flow<ResultState<String>>
