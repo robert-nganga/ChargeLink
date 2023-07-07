@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -41,9 +42,11 @@ fun BookingConfirmationScreen(
     val bookingDetails = bookingViewModel.bookingState
 
 
-    if (bookingId != null){
+    if (bookingId != "none"){
         LaunchedEffect(key1 = true){
-            bookingViewModel.getBookingById(bookingId)
+            bookingId?.let {
+                bookingViewModel.getBookingById(it)
+            }
         }
     }
     Box(
@@ -152,7 +155,7 @@ fun BookingConfirmationScreen(
             onNextButtonClicked = {
                 bookingViewModel.addBookingToDatabase()
             },
-            isNextButtonEnabled = bookingId == null,
+            isNextButtonEnabled = bookingId == "none",
             nextButtonText = stringResource(id = R.string.confirm)
         )
 
@@ -171,11 +174,13 @@ fun SuccessDialog(
     ) {
         Box(
             modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(24.dp)
+                .padding(20.dp)
         ) {
             Column(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
             ) {
@@ -197,7 +202,8 @@ fun SuccessDialog(
                 Text(
                     text = stringResource(id = R.string.booking_successful_message),
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(5.dp)
+                    modifier = Modifier.padding(5.dp),
+                    textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Button(
@@ -208,7 +214,7 @@ fun SuccessDialog(
                         containerColor = MaterialTheme.colorScheme.primary,
                     ),
                     modifier = Modifier
-                        .width(100.dp)
+                        .fillMaxWidth(0.8f)
                 ) {
                     Text(
                         text = stringResource(id = R.string.ok)

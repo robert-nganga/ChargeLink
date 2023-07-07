@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,10 +23,15 @@ import com.nganga.robert.chargelink.models.NewChargingStation
 @Composable
 fun ChargingStationItem(
     station: NewChargingStation,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onStationClicked: () -> Unit
 ){
     Card(
-        modifier = modifier.padding(horizontal = 10.dp),
+        modifier = modifier
+            .clickable {
+                onStationClicked.invoke()
+            }
+            .padding(horizontal = 10.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background

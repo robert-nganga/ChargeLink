@@ -66,18 +66,21 @@ fun BookingsScreen(
         when (selectedTabIndex){
             0 -> {
                 BookingsListSection(
+                    modifier = Modifier.fillMaxSize(),
                     bookings = pendingBookings.value.bookings,
                     onBookingClicked = onBookingClicked
                 )
             }
             1 -> {
                 BookingsListSection(
+                    modifier = Modifier.fillMaxSize(),
                     bookings = completedBookings.value.bookings,
                     onBookingClicked = onBookingClicked
                 )
             }
             else -> {
                 BookingsListSection(
+                    modifier = Modifier.fillMaxSize(),
                     bookings = canceledBookings.value.bookings,
                     onBookingClicked = onBookingClicked
                 )
@@ -103,7 +106,9 @@ fun BookingsListSection(
                     onBookingClicked(booking.bookingId)
                 }
             )
-
+        }
+        item{
+            Spacer(modifier = Modifier.height(70.dp))
         }
     }
 }

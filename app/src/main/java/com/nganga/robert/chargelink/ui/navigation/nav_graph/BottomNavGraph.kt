@@ -30,7 +30,12 @@ fun NavGraphBuilder.bottomNavGraph(
         composable(route = BottomBarScreen.Maps.route){
             MapScreen(
                 homeScreenViewModel = it.sharedViewModel(navController),
-                mapScreenViewModel = it.sharedViewModel(navController)
+                mapScreenViewModel = it.sharedViewModel(navController),
+                onStationClicked = { id ->
+                    navController.navigate(BottomBarScreen.Details.withArgs(id)){
+                        launchSingleTop = true
+                    }
+                }
             )
         }
         composable(route = BottomBarScreen.Profile.route){

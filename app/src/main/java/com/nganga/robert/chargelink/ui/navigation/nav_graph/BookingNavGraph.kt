@@ -64,8 +64,7 @@ fun NavGraphBuilder.bookingNavGraph(
                     navController.popBackStack()
                 },
                 onContinueClicked = {
-                    val id: String? = null
-                    navController.navigate(BookingScreen.BookingConfirmation.route+"/$id"){
+                    navController.navigate(BookingScreen.BookingConfirmation.route+"/none"){
                         launchSingleTop = true
                     }
                 },

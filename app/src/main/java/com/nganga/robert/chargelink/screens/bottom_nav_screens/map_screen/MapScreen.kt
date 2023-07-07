@@ -45,7 +45,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapScreen(
     homeScreenViewModel: HomeScreenViewModel,
-    mapScreenViewModel: MapScreenViewModel
+    mapScreenViewModel: MapScreenViewModel,
+    onStationClicked: (String) -> Unit,
 ){
 
     val homeScreenState = homeScreenViewModel.homeScreenState
@@ -93,7 +94,6 @@ fun MapScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-
     ) {
         if (nearbyStationsState.isLoading){
             ProgressDialog(text = stringResource(id = R.string.please_wait))
@@ -113,7 +113,6 @@ fun MapScreen(
                 mapScreenViewModel.clearLocation()
                 true
             }
-
             ) {
             chargingStations.forEachIndexed { index, station ->
                 Marker(
@@ -139,7 +138,10 @@ fun MapScreen(
             ChargingStationsSection(
                 stations = chargingStations,
                 width = screenWidth - 20.dp,
-                listState = listState
+                listState = listState,
+                onStationClicked = { stationId ->
+                    onStationClicked(stationId)
+                }
             )
         }
         if (isSearchViewFocused) {
@@ -251,7 +253,8 @@ fun ChargingStationsSection(
     stations: List<NewChargingStation>,
     modifier: Modifier = Modifier,
     listState: LazyListState,
-    width: Dp
+    width: Dp,
+    onStationClicked: (String)->Unit
 ){
     LazyRow(
         modifier = modifier,
@@ -261,7 +264,10 @@ fun ChargingStationsSection(
         items(stations){ station ->
             ChargingStationItem(
                 station = station,
-                modifier = Modifier.width(width)
+                modifier = Modifier.width(width),
+                onStationClicked = {
+                    onStationClicked(station.id)
+                }
             )
         }
     }

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Booking
+import com.nganga.robert.chargelink.utils.IconUtils.getChargerIcon
 import com.nganga.robert.chargelink.utils.TimeUtils.getDurationString
 
 @Composable
@@ -38,7 +39,7 @@ fun BookingItem(
     Card(
         modifier = modifier.padding(horizontal = 12.dp, vertical = 5.dp),
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(10.dp),
+        elevation = CardDefaults.cardElevation(14.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
@@ -64,14 +65,14 @@ fun BookingItem(
                     )
                 }
                 Box(modifier = Modifier.weight(1f))
-                Text(
-                    text = stringResource(id = R.string.remind_me),
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.outline
-                    )
-                )
-                Spacer(modifier = Modifier.width(5.dp))
                 if (booking.status == "Pending") {
+                    Text(
+                        text = stringResource(id = R.string.remind_me),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
                     Switch(
                         checked = reminder,
                         onCheckedChange = {
@@ -121,15 +122,18 @@ fun BookingItem(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     TextColumn(
+                        modifier = Modifier.weight(1f),
                         headerText = booking.charger.plug,
                         trailingText = "",
-                        icon = painterResource(id = R.drawable.ic_ev_plug_tesla)
+                        icon = painterResource(id = getChargerIcon(booking.charger.plug))
                     )
                     TextColumn(
+                        modifier = Modifier.weight(1f),
                         headerText = stringResource(id = R.string.max_power),
                         trailingText = booking.charger.power,
                     )
                     TextColumn(
+                        modifier = Modifier.weight(1f),
                         headerText = stringResource(id = R.string.duration),
                         trailingText = booking.duration.getDurationString(),
                     )
