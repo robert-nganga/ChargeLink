@@ -10,6 +10,7 @@ import com.nganga.robert.chargelink.screens.booking_screens.PaymentDetailsScreen
 import com.nganga.robert.chargelink.screens.booking_screens.SelectChargerScreen
 import com.nganga.robert.chargelink.ui.navigation.BOOKING_ROUTE
 import com.nganga.robert.chargelink.ui.navigation.BookingScreen
+import com.nganga.robert.chargelink.ui.navigation.BottomBarScreen
 
 
 fun NavGraphBuilder.bookingNavGraph(
@@ -77,7 +78,10 @@ fun NavGraphBuilder.bookingNavGraph(
                     navController.popBackStack()
                 },
                 onConfirmButtonClicked = {
-
+                    navController.popBackStack()
+                    navController.popBackStack()
+                    navController.popBackStack()
+                    navController.popBackStack()
                 },
                 bookingViewModel = it.sharedViewModel(navController)
             )

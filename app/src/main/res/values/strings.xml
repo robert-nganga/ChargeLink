@@ -91,4 +91,6 @@
     <string name="charger">Charger</string>
     <string name="confirm">Confirm</string>
     <string name="booking_summary">Booking Summary</string>
+    <string name="booking_successful">Booking Successful</string>
+    <string name="booking_successful_message">Your booking has been confirmed. You can view your booking details in the booking history section</string>
 </resources>

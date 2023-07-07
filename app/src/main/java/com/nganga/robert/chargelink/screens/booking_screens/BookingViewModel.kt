@@ -4,6 +4,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nganga.robert.chargelink.models.Booking
 import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.PaymentMethod
@@ -60,10 +61,24 @@ class BookingViewModel@Inject constructor(
         bookingRepo.addBookingToDatabase(bookingState.booking).collectLatest { result->
             when (result.status){
                 ResultState.Status.SUCCESS -> {
+                    bookingState = bookingState.copy(
+                        booking = Booking(),
+                        isLoading = false,
+                        errorMessage = "",
+                        isAddedToDbSuccessfully = true
+                    )
                 }
                 ResultState.Status.ERROR -> {
+                    bookingState = bookingState.copy(
+                        errorMessage = result.message!!,
+                        isLoading = false,
+                        isAddedToDbSuccessfully = false
+                    )
                 }
                 ResultState.Status.LOADING -> {
+                    bookingState = bookingState.copy(
+                        isLoading = true
+                    )
                 }
             }
         }

@@ -8,4 +8,6 @@ import kotlinx.coroutines.flow.Flow
 interface BookingRepository {
 
     fun addBookingToDatabase(booking: Booking): Flow<ResultState<String>>
+
+    fun getUserBookings(): Flow<ResultState<List<Booking>>>
 }

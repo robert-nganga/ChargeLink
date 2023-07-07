@@ -42,6 +42,9 @@ class HomeScreenViewModel@Inject constructor(
     val booking: State<Booking> get() = _booking
 
 
+    init {
+        getCurrentUser()
+    }
 
     fun submitReview(stationId: String, rating:Int, message: String) = viewModelScope.launch{
         val current = LocalDateTime.now()

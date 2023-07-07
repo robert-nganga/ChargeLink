@@ -1,6 +1,5 @@
 package com.nganga.robert.chargelink.models
 
-import java.util.*
 
 data class Booking(
     val bookingId: String,
@@ -36,7 +35,7 @@ data class Booking(
         "stationId" to stationId,
         "date" to date,
         "time" to time,
-        "charger" to charger,
+        "charger" to charger.toMap(),
         "duration" to duration,
         "userId" to userId,
         "totalPrice" to totalPrice,

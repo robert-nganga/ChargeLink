@@ -1,6 +1,8 @@
 package com.nganga.robert.chargelink.screens.bottom_nav_screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Search
@@ -8,14 +10,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.nganga.robert.chargelink.models.Booking
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.booking_history_screen.BookingHistoryState
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.booking_history_screen.BookingHistoryViewModel
 import com.nganga.robert.chargelink.ui.components.BookingItem
 import com.nganga.robert.chargelink.ui.components.TabView
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
@@ -23,7 +25,7 @@ import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 @Composable
 fun BookingsScreen(
     onBackPressed: () -> Unit,
-    viewModel: HomeScreenViewModel
+    viewModel: BookingHistoryViewModel
 ){
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
@@ -33,7 +35,20 @@ fun BookingsScreen(
         mutableStateOf(false)
     }
 
-    val booking = viewModel.booking
+    val completedBookings = viewModel.completedBookings.collectAsState(
+        initial = BookingHistoryState()
+    )
+    val pendingBookings = viewModel.pendingBookings.collectAsState(
+        initial = BookingHistoryState()
+    )
+    val canceledBookings = viewModel.canceledBookings.collectAsState(
+        initial = BookingHistoryState()
+    )
+
+    LaunchedEffect(key1 = true){
+        viewModel.getUserBookings()
+    }
+
     
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -46,18 +61,48 @@ fun BookingsScreen(
         )
         Spacer(modifier = Modifier.height(10.dp))
         TabView(
-            tabTitles = listOf("Upcoming", "Completed", "Canceled"),
+            tabTitles = listOf("Pending", "Completed", "Canceled"),
             onTabSelected = { selectedTabIndex = it },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(10.dp))
-        BookingItem(
-            booking = booking.value,
-            reminder = isReminder,
-            onReminderCheckChanged = {  isReminder = it }
-        )
+        when (selectedTabIndex){
+            0 -> {
+                BookingsListSection(
+                    bookings = pendingBookings.value.bookings
+                )
+            }
+            1 -> {
+                BookingsListSection(
+                    bookings = completedBookings.value.bookings
+                )
+            }
+            else -> {
+                BookingsListSection(
+                    bookings = canceledBookings.value.bookings
+                )
+            }
+        }
     }
+}
 
+@Composable
+fun BookingsListSection(
+    bookings: List<Booking>,
+    modifier: Modifier = Modifier
+){
+    LazyColumn(
+        modifier = modifier
+    ){
+        items(bookings){ booking ->
+            BookingItem(
+                booking = booking,
+                reminder = false,
+                onReminderCheckChanged = {  }
+            )
+
+        }
+    }
 }
 
 @Composable

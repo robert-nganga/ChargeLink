@@ -2,6 +2,7 @@ package com.nganga.robert.chargelink.screens.booking_screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,15 +13,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.PaymentMethod
 import com.nganga.robert.chargelink.ui.components.BooKingBottomBar
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
+import com.nganga.robert.chargelink.ui.components.ProgressDialog
 import com.nganga.robert.chargelink.utils.IconUtils
 import com.nganga.robert.chargelink.utils.TimeUtils.getDurationString
 
@@ -32,12 +36,25 @@ fun BookingConfirmationScreen(
     onConfirmButtonClicked: () -> Unit,
     bookingViewModel: BookingViewModel
 ) {
-
     val bookingDetails = bookingViewModel.bookingState
-
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
+        if (bookingDetails.isLoading){
+            ProgressDialog(
+                text = stringResource(id = R.string.please_wait)
+            )
+        }
+        if (bookingDetails.isAddedToDbSuccessfully){
+            SuccessDialog(
+                onDismissRequest = {
+                    onConfirmButtonClicked.invoke()
+                },
+                onConfirmButtonClicked = {
+                    onConfirmButtonClicked.invoke()
+                }
+            )
+        }
         BookingConfirmationScreenTopBar(
             modifier = Modifier
                 .align(Alignment.TopCenter)
@@ -124,14 +141,73 @@ fun BookingConfirmationScreen(
                 onBackButtonClicked.invoke()
             },
             onNextButtonClicked = {
-                onConfirmButtonClicked.invoke()
+                bookingViewModel.addBookingToDatabase()
             },
             isNextButtonEnabled = true,
             nextButtonText = stringResource(id = R.string.confirm)
         )
 
     }
+}
 
+@Composable
+fun SuccessDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmButtonClicked: () -> Unit
+){
+    Dialog(
+        onDismissRequest = {
+            onDismissRequest.invoke()
+        }
+    ) {
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.background)
+                .padding(24.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Top,
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_check_mark),
+                    contentDescription ="check mark",
+                    modifier = Modifier
+                        .size(60.dp)
+                        .padding(8.dp),
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = stringResource(id = R.string.booking_successful),
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    modifier = Modifier.padding(4.dp)
+                )
+                Text(
+                    text = stringResource(id = R.string.booking_successful_message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(5.dp)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Button(
+                    onClick = {
+                        onConfirmButtonClicked.invoke()
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
+                    modifier = Modifier
+                        .width(100.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.ok)
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable

@@ -5,7 +5,6 @@ import com.nganga.robert.chargelink.models.Booking
 data class BookingState(
     val booking: Booking = Booking(),
     val isLoading: Boolean = false,
-    val isError: Boolean = false,
     val errorMessage: String = "",
     val isAddedToDbSuccessfully: Boolean = false,
 )

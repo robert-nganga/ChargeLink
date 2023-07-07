@@ -10,6 +10,7 @@ import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import ulid.ULID
 import java.util.*
 import javax.inject.Inject
 
@@ -21,13 +22,34 @@ class BookingRepositoryImpl@Inject constructor(
 
 
     override fun addBookingToDatabase(booking: Booking): Flow<ResultState<String>> = callbackFlow {
-        fireStoreDb.collection(BOOKINGS_COLLECTION_REF).document(booking.bookingId)
-            .set(booking.copy(userId = auth.currentUser?.uid!!).toMap())
+        val newBooking = booking.copy(
+            userId = auth.currentUser?.uid!!,
+            status = "Pending",
+            bookingId = ULID.randomULID()
+        )
+        fireStoreDb.collection(BOOKINGS_COLLECTION_REF).document(newBooking.bookingId)
+            .set(newBooking.toMap())
             .addOnSuccessListener {
                 trySend(ResultState.success("Booking added successfully"))
             }
             .addOnFailureListener {
                 trySend(ResultState.error(it.message ?: "Booking failed"))
+            }
+        awaitClose {
+            close()
+        }
+    }
+
+    override fun getUserBookings(): Flow<ResultState<List<Booking>>> = callbackFlow {
+        fireStoreDb.collection(BOOKINGS_COLLECTION_REF)
+            .whereEqualTo("userId", auth.currentUser?.uid)
+            .addSnapshotListener { value, error ->
+                if (error != null){
+                    trySend(ResultState.error(error.message ?: "Unknown Error occurred"))
+                    return@addSnapshotListener
+                }
+                val bookings = value?.toObjects(Booking::class.java) ?: emptyList()
+                trySend(ResultState.success(bookings))
             }
         awaitClose {
             close()

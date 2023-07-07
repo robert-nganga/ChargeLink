@@ -9,6 +9,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Navigation
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,10 +29,11 @@ import com.nganga.robert.chargelink.utils.TimeUtils.getDurationString
 @Composable
 fun BookingItem(
     booking: Booking,
-    reminder: Boolean,
-    onReminderCheckChanged: (Boolean)->Unit,
     modifier: Modifier = Modifier
 ){
+    var reminder by remember{
+        mutableStateOf(false)
+    }
     Card(
         modifier = modifier.padding(horizontal = 10.dp),
         shape = RoundedCornerShape(20.dp),
@@ -68,7 +72,7 @@ fun BookingItem(
                 Spacer(modifier = Modifier.width(5.dp))
                 Switch(
                     checked = reminder,
-                    onCheckedChange = { onReminderCheckChanged(it) }
+                    onCheckedChange = { reminder = it }
                 )
             }
             Spacer(modifier = Modifier.height(10.dp))
@@ -174,7 +178,9 @@ fun TextColumn(
             text = headerText,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.outline
-            )
+            ),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
         )
         if (icon != null){
             Icon(
