@@ -38,6 +38,14 @@ fun NavGraphBuilder.authNavGraph(
                     navController.navigate(route = AuthScreen.SingUp.route){
                         launchSingleTop = true
                     }
+                },
+                onLoginSuccessful = {
+                    navController.navigate(route = BOTTOM_NAV_ROUTE){
+                        launchSingleTop = true
+                        popUpTo(AUTHENTICATION_ROUTE){
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }

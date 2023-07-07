@@ -34,7 +34,6 @@ import com.maxkeppeler.sheets.calendar.models.CalendarConfig
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.ui.components.ProgressDialog
-import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)

@@ -26,9 +26,9 @@ fun ProgressDialog(
     ) {
         Row(
             modifier = Modifier
-                .padding(25.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colorScheme.outline),
+                .background(MaterialTheme.colorScheme.background)
+                .padding(30.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start
         ) {

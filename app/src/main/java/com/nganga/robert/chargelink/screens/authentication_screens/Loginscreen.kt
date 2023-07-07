@@ -25,14 +25,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.ui.components.ProgressDialog
-import com.nganga.robert.chargelink.ui.viewmodels.AuthenticationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     viewModel: AuthenticationViewModel,
     onSubmitClicked:()->Unit,
-    onNavigateToSignUp: ()->Unit
+    onNavigateToSignUp: ()->Unit,
+    onLoginSuccessful: () -> Unit
 ){
 
     val state = viewModel.loginState
@@ -44,6 +44,12 @@ fun LoginScreen(
     }
     var passwordVisible by remember {
         mutableStateOf(false)
+    }
+
+    LaunchedEffect(key1 =state.isLoginSuccessful){
+        if(state.isLoginSuccessful){
+            onLoginSuccessful()
+        }
     }
     Box(modifier = Modifier.fillMaxSize()) {
         LoginScreenTopAppBar(
@@ -172,13 +178,12 @@ fun LoginScreen(
                         Text(text = stringResource(id = R.string.submit))
                     }
                 }
-
             }
         }
 
         LaunchedEffect(key1 = viewModel.hasUser){
             if (viewModel.hasUser){
-                onSubmitClicked.invoke()
+                onLoginSuccessful()
             }
         }
     }

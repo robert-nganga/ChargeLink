@@ -11,7 +11,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +31,10 @@ fun ProfileScreen(
     profileViewModel: ProfileViewModel,
     onLogOut: () -> Unit
 ){
+
+    var logOut by remember{
+        mutableStateOf(false)
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,6 +70,17 @@ fun ProfileScreen(
                 .padding(contentPadding)
                 .verticalScroll(rememberScrollState())
         ) {
+            if (logOut){
+                ConfirmLogOutDialog(
+                    onDismiss = {
+                        logOut = false
+                    },
+                    onConfirm = {
+                        profileViewModel.logOut()
+                        onLogOut.invoke()
+                    }
+                )
+            }
             Spacer(modifier = Modifier.height(10.dp))
             ProfileSection(
                 name = "Suzzie Mutiambai",
@@ -102,13 +117,52 @@ fun ProfileScreen(
                 leadingIcon = Icons.Outlined.Logout,
                 text = stringResource(id = R.string.logout),
                 onCategoryClick = {
-                    profileViewModel.logOut()
-                    onLogOut.invoke()
+                    logOut = true
                 }
             )
             Spacer(modifier = Modifier.height(90.dp))
         }
     }
+}
+
+@Composable
+fun ConfirmLogOutDialog(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+){
+AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(id = R.string.log_out),
+                style = MaterialTheme.typography.titleMedium
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(id = R.string.are_you_sure_you_want_to_logout),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm
+            ) {
+                Text(
+                    text = stringResource(id = R.string.yes)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss
+            ) {
+                Text(
+                    text = stringResource(id = R.string.no)
+                )
+            }
+        }
+    )
 }
 
 @Composable
@@ -167,7 +221,9 @@ fun ProfileSection(
             iconTint = MaterialTheme.colorScheme.outline
         )
         Spacer(modifier = Modifier.height(10.dp))
-        HorizontalDivider(modifier = Modifier.align(Alignment.CenterHorizontally).fillMaxWidth(0.9f))
+        HorizontalDivider(modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .fillMaxWidth(0.9f))
     }
 }
 

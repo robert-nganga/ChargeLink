@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.ui.viewmodels
+package com.nganga.robert.chargelink.screens.authentication_screens
 
 import android.util.Patterns
 import androidx.compose.runtime.getValue

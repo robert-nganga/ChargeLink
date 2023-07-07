@@ -18,7 +18,7 @@ fun MainNavGraph(
 
    NavHost(
        navController = navController,
-       startDestination = BOTTOM_NAV_ROUTE,
+       startDestination = AUTHENTICATION_ROUTE,
        modifier = Modifier,
        route = "root"
    ){

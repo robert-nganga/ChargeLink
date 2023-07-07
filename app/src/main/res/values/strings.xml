@@ -94,4 +94,8 @@
     <string name="booking_successful">Booking Successful</string>
     <string name="booking_successful_message">Your booking has been confirmed. You can view your booking details in the booking history section</string>
     <string name="logout">Logout</string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="log_out">Log out</string>
 </resources>
