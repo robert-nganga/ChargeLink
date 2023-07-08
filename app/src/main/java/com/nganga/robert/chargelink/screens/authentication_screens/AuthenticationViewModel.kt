@@ -1,5 +1,6 @@
 package com.nganga.robert.chargelink.screens.authentication_screens
 
+import android.net.Uri
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,10 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.nganga.robert.chargelink.models.Car
 import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.repository.AuthRepository
-import com.nganga.robert.chargelink.screens.models.AddCarDetailsState
-import com.nganga.robert.chargelink.screens.models.AddUserDetailsState
-import com.nganga.robert.chargelink.screens.models.LoginState
-import com.nganga.robert.chargelink.screens.models.SignUpState
+import com.nganga.robert.chargelink.screens.models.*
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +39,12 @@ class AuthenticationViewModel @Inject constructor(
     var signUpState by mutableStateOf(SignUpState())
         private set
 
+    var profilePhotoState by mutableStateOf(ProfilePhotoState())
+        private set
+
+
+    fun uploadProfilePhoto(uri: Uri){
+    }
 
     fun onSubmitCarDetailsClicked(
         manufacturer: String,

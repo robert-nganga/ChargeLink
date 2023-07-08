@@ -4,7 +4,6 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -22,7 +21,8 @@ fun BooKingBottomBar(
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier,
     isNextButtonEnabled: Boolean,
-    nextButtonText: String = stringResource(id = R.string.continues)
+    nextButtonText: String = stringResource(id = R.string.continues),
+    backButtonText: String = stringResource(id = R.string.back)
 ){
     Row(
         modifier = modifier
@@ -42,7 +42,7 @@ fun BooKingBottomBar(
             )
         ) {
             Text(
-                text = stringResource(id = R.string.back)
+                text = backButtonText,
             )
         }
 
