@@ -1,8 +1,10 @@
 package com.nganga.robert.chargelink.repository
 
+import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.nganga.robert.chargelink.models.Car
 import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.utils.Constants.USERS_COLLECTION_REF
@@ -14,9 +16,39 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
+    private val storageRef: FirebaseStorage,
     private val fireStoreDb: FirebaseFirestore,
     private val auth: FirebaseAuth): AuthRepository {
 
+
+    override fun uploadProfileImage(imageUri: Uri): Flow<ResultState<String>> = callbackFlow {
+        trySend(ResultState.loading())
+        val imageRef = storageRef.reference.child("profile_images").child(auth.currentUser?.uid!!)
+        imageRef.putFile(imageUri)
+            .addOnCompleteListener { task->
+
+                if (task.isSuccessful) {
+                    imageRef.downloadUrl.addOnSuccessListener { uri->
+
+                        fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser?.uid!!)
+                            .update("imageUrl", uri.toString())
+                            .addOnCompleteListener { updateTask->
+                                if (updateTask.isSuccessful) {
+                                    trySend(ResultState.success("Image uploaded successfully"))
+                                }else{
+                                    trySend(ResultState.error(updateTask.exception?.message?: "Unknown error"))
+                                }
+                            }
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                trySend(ResultState.error(exception.message?: "Unknown error"))
+            }
+        awaitClose {
+            close()
+        }
+    }
 
     override fun hasUser(): Boolean = auth.currentUser != null
 
@@ -24,7 +56,6 @@ class AuthRepositoryImpl @Inject constructor(
     override fun logout() {
         auth.signOut()
     }
-
 
     override fun addUserDetails(user: NewUser): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.loading())
