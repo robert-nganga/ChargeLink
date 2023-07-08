@@ -130,7 +130,7 @@ fun ConfirmLogOutDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit
 ){
-AlertDialog(
+androidx.compose.material.AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
