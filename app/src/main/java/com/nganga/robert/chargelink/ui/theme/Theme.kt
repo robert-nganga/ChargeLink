@@ -7,6 +7,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.nganga.robert.chargelink.models.UserPreferences
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -74,24 +75,14 @@ private val DarkColors = darkColorScheme(
 )
 
 @Composable
-fun ChargeLinkTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-
-    val userPreferencesViewModel = hiltViewModel<UserPreferencesViewModel>()
-    val preferences = userPreferencesViewModel.userPreferences.observeAsState()
-    val useSystemSettings = preferences.value?.useSystemSettings ?: true
-    val isDarkMode = preferences.value?.isDarkMode ?: false
-    val colors = if (useSystemSettings) {
-        if (darkTheme) {
-            DarkColors
-        } else {
-            LightColors
-        }
-    }else{
-        if (isDarkMode) {
-            DarkColors
-        } else {
-            LightColors
-        }
+fun ChargeLinkTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
+    val colors = if (darkTheme) {
+        DarkColors
+    } else {
+        LightColors
     }
 
     MaterialTheme(

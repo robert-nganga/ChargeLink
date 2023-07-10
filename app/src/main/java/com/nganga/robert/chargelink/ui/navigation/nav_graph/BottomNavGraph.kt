@@ -67,7 +67,12 @@ fun NavGraphBuilder.bottomNavGraph(
             )
         }
         composable(route = BottomBarScreen.Settings.route){
-            SettingsScreen()
+            SettingsScreen(
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                userPreferencesViewModel = it.sharedViewModel(navController)
+            )
         }
         composable(
             route = BottomBarScreen.Details.route + "/{id}",

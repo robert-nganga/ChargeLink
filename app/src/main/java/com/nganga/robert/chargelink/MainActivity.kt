@@ -3,8 +3,10 @@ package com.nganga.robert.chargelink
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -13,6 +15,7 @@ import com.nganga.robert.chargelink.screens.booking_screens.EnterBookingDetailsS
 import com.nganga.robert.chargelink.screens.booking_screens.PaymentDetailsScreen
 import com.nganga.robert.chargelink.ui.theme.ChargeLinkTheme
 import com.nganga.robert.chargelink.ui.theme.UserPreferencesViewModel
+import com.nganga.robert.chargelink.utils.ThemeSelection
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -23,7 +26,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ChargeLinkTheme {
+            val userPreferencesViewModel = hiltViewModel<UserPreferencesViewModel>()
+            val preferences = userPreferencesViewModel.userPreferences.observeAsState()
+
+            ChargeLinkTheme(
+                darkTheme = when (preferences.value!!.appTheme){
+                    ThemeSelection.DARK_MODE -> true
+                    ThemeSelection.LIGHT_MODE -> false
+                    ThemeSelection.USE_SYSTEM_SETTINGS -> isSystemInDarkTheme()
+                    else -> isSystemInDarkTheme()
+                }
+            ) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     tonalElevation = 5.dp,
@@ -40,6 +53,5 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    ChargeLinkTheme {
-    }
+
 }

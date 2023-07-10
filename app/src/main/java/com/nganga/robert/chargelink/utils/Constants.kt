@@ -8,6 +8,5 @@ object Constants {
     const val CHARGERS_COLLECTION_REF = "chargers"
     const val PREFERENCES_NAME = "chargeLinkPreferences"
     const val RADIUS_PREFERENCE_KEY = "radius"
-    const val IS_DARK_MODE_PREFERENCE_KEY = "isDarkMode"
-    const val USE_SYSTEM_SETTINGS_PREFERENCE_KEY = "useSystemSettings"
+    const val APP_THEME_PREFERENCE = "app_theme"
 }

@@ -107,4 +107,9 @@
     <string name="welcome_to_charge_link">Welcome to ChargeLink</string>
     <string name="welcome_back">Welcome back</string>
     <string name="skip">Skip</string>
+    <string name="change_app_theme">Change app theme</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="light_mode">Light mode</string>
+    <string name="system_default">System default</string>
+    <string name="cancel">Cancel</string>
 </resources>
