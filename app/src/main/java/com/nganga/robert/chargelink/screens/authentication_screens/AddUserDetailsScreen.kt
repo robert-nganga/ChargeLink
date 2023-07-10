@@ -3,7 +3,6 @@ package com.nganga.robert.chargelink.screens.authentication_screens
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,7 +23,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalTextInputService
 import androidx.compose.ui.res.painterResource
@@ -33,8 +31,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.maxkeppeker.sheets.core.models.base.rememberSheetState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarConfig
@@ -50,7 +48,6 @@ fun RegisterUserScreen(
     viewModel: AuthenticationViewModel,
     onContinueClicked: ()->Unit
 ){
-
     val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -115,7 +112,8 @@ fun RegisterUserScreen(
                 onEditProfilePhotoClicked = {
                     galleryLauncher.launch("image/*")
                 },
-                isLoading = viewModel.profilePhotoState.isLoading
+                isLoading = viewModel.profilePhotoState.isLoading,
+                imageUrl = viewModel.profilePhotoState.profileUrl
             )
             if (state.isLoading) {
                 ProgressDialog(
@@ -205,13 +203,15 @@ fun RegisterUserScreen(
 
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ProfilePhotoSection(
     modifier: Modifier = Modifier,
-    imageUrl: String? = null,
+    imageUrl: String?,
     onEditProfilePhotoClicked: ()->Unit,
     isLoading: Boolean = false
 ){
+
     Box(
         modifier = modifier.size(120.dp)
     ) {
@@ -229,19 +229,27 @@ fun ProfilePhotoSection(
                 )
             }
         }
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
-            placeholder = painterResource(R.drawable.profile),
-            contentDescription = "profile photo",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxSize(0.9f)
-                .aspectRatio(1f, matchHeightConstraintsFirst = true)
-                .clip(CircleShape)
-        )
+        if (imageUrl != null){
+            GlideImage(
+                model = imageUrl,
+                contentDescription = "profile photo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize(0.9f)
+                    .aspectRatio(1f, matchHeightConstraintsFirst = true)
+                    .clip(CircleShape)
+            )
+        }else {
+            Image(
+                painter = painterResource(id = R.drawable.profile),
+                contentDescription = "profile photo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize(0.9f)
+                    .aspectRatio(1f, matchHeightConstraintsFirst = true)
+                    .clip(CircleShape)
+            )
+        }
         Box(
             modifier = Modifier
                 .align(Alignment.CenterEnd)

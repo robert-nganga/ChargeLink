@@ -8,8 +8,8 @@ import com.nganga.robert.chargelink.models.Booking
 import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.PaymentMethod
-import com.nganga.robert.chargelink.repository.BookingRepository
-import com.nganga.robert.chargelink.repository.ChargingStationRepository
+import com.nganga.robert.chargelink.data.repository.BookingRepository
+import com.nganga.robert.chargelink.data.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest

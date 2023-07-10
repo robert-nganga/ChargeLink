@@ -2,7 +2,7 @@ package com.nganga.robert.chargelink.screens.bottom_nav_screens.booking_history_
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.nganga.robert.chargelink.repository.BookingRepository
+import com.nganga.robert.chargelink.data.repository.BookingRepository
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

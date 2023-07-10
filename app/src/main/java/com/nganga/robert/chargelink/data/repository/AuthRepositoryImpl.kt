@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.repository
+package com.nganga.robert.chargelink.data.repository
 
 import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
@@ -12,7 +12,6 @@ import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -29,16 +28,7 @@ class AuthRepositoryImpl @Inject constructor(
 
                 if (task.isSuccessful) {
                     imageRef.downloadUrl.addOnSuccessListener { uri->
-
-                        fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser?.uid!!)
-                            .update("imageUrl", uri.toString())
-                            .addOnCompleteListener { updateTask->
-                                if (updateTask.isSuccessful) {
-                                    trySend(ResultState.success("Image uploaded successfully"))
-                                }else{
-                                    trySend(ResultState.error(updateTask.exception?.message?: "Unknown error"))
-                                }
-                            }
+                        trySend(ResultState.success(uri.toString()))
                     }
                 }
             }

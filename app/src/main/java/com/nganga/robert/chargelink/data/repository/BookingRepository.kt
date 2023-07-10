@@ -1,7 +1,6 @@
-package com.nganga.robert.chargelink.repository
+package com.nganga.robert.chargelink.data.repository
 
 import com.nganga.robert.chargelink.models.Booking
-import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.flow.Flow
 

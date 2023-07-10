@@ -97,7 +97,15 @@ dependencies {
     //ULID
     implementation "com.aallam.ulid:ulid-kotlin:1.0.0"
 
-    //Coil
-    implementation "io.coil-kt:coil-compose:2.2.2"
+    //Glide
+    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
+
+    //Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    //LiveData
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 
 }

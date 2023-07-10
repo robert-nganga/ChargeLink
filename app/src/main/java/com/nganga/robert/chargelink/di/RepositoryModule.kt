@@ -1,6 +1,6 @@
 package com.nganga.robert.chargelink.di
 
-import com.nganga.robert.chargelink.repository.*
+import com.nganga.robert.chargelink.data.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -36,4 +36,6 @@ abstract class RepositoryModule {
     abstract fun providesBookingRepository(
         repo: BookingRepositoryImpl
     ): BookingRepository
+
+
 }

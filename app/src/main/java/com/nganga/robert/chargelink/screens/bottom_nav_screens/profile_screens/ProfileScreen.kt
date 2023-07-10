@@ -131,6 +131,7 @@ fun ConfirmLogOutDialog(
     onConfirm: () -> Unit
 ){
 androidx.compose.material.AlertDialog(
+        backgroundColor = MaterialTheme.colorScheme.background,
         onDismissRequest = onDismiss,
         title = {
             Text(

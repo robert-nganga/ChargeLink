@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.repository
+package com.nganga.robert.chargelink.data.repository
 
 import android.location.Location
 import com.google.android.gms.maps.model.LatLng

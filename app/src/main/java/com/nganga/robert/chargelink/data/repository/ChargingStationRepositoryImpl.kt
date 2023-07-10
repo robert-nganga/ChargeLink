@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.repository
+package com.nganga.robert.chargelink.data.repository
 
 import android.util.Log
 import com.firebase.geofire.GeoFireUtils
@@ -9,8 +9,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.models.Review
@@ -18,10 +16,8 @@ import com.nganga.robert.chargelink.utils.Constants.CHARGING_STATIONS_COLLECTION
 import com.nganga.robert.chargelink.utils.Constants.USERS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 

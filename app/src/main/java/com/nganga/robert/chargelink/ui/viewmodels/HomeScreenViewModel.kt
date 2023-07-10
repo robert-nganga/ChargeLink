@@ -9,12 +9,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.*
-import com.nganga.robert.chargelink.repository.ChargingStationRepository
-import com.nganga.robert.chargelink.repository.LocationRepository
+import com.nganga.robert.chargelink.data.repository.ChargingStationRepository
+import com.nganga.robert.chargelink.data.repository.LocationRepository
 import com.nganga.robert.chargelink.screens.models.HomeScreenState
-import com.nganga.robert.chargelink.screens.models.PlaceSuggestionsState
 import com.nganga.robert.chargelink.screens.models.StationDetailsState
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nganga.robert.chargelink.models.Car
 import com.nganga.robert.chargelink.models.NewUser
-import com.nganga.robert.chargelink.repository.AuthRepository
+import com.nganga.robert.chargelink.data.repository.AuthRepository
 import com.nganga.robert.chargelink.screens.models.*
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,7 +43,32 @@ class AuthenticationViewModel @Inject constructor(
         private set
 
 
-    fun uploadProfilePhoto(uri: Uri){
+    fun uploadProfilePhoto(uri: Uri) =  viewModelScope.launch {
+        withContext(Dispatchers.IO){
+            repository.uploadProfileImage(uri).collect{ result->
+                when(result.status){
+                    ResultState.Status.LOADING -> {
+                        profilePhotoState = profilePhotoState.copy(isLoading = true)
+                    }
+                    ResultState.Status.SUCCESS -> {
+                        result.data?.let {
+                            profilePhotoState = profilePhotoState.copy(
+                                isLoading = false,
+                                isPhotoUploaded = true,
+                                isError = false,
+                                errorMsg = "",
+                                profileUrl = it
+                            )
+                        }
+                    }
+                    ResultState.Status.ERROR -> {
+                        result.message?.let {
+                            profilePhotoState = profilePhotoState.copy(isLoading = false, isPhotoUploaded = false, isError = true, errorMsg = it)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun onSubmitCarDetailsClicked(
@@ -82,7 +107,7 @@ class AuthenticationViewModel @Inject constructor(
             addUserDetailsState = addUserDetailsState.copy(isError = true, errorMsg = validate)
         }else{
             addUserDetailsState = addUserDetailsState.copy(isError = false, errorMsg = "")
-            val user = NewUser(name = name, phone = phone, email = "", gender = gender, dob = dob, imageUrl = "", cars = emptyList())
+            val user = NewUser(name = name, phone = phone, email = "", gender = gender, dob = dob, imageUrl = profilePhotoState.profileUrl ?: "", cars = emptyList())
             addUserToDatabase(user)
         }
 

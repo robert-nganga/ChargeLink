@@ -1,17 +1,14 @@
-package com.nganga.robert.chargelink.repository
+package com.nganga.robert.chargelink.data.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nganga.robert.chargelink.models.Booking
-import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.utils.Constants.BOOKINGS_COLLECTION_REF
-import com.nganga.robert.chargelink.utils.Constants.CHARGERS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import ulid.ULID
-import java.util.*
 import javax.inject.Inject
 
 class BookingRepositoryImpl@Inject constructor(

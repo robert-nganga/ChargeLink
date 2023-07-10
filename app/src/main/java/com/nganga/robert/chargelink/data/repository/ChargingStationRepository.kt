@@ -1,6 +1,5 @@
-package com.nganga.robert.chargelink.repository
+package com.nganga.robert.chargelink.data.repository
 
-import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.NewChargingStation
 import com.nganga.robert.chargelink.models.NewUser
 import com.nganga.robert.chargelink.models.Review

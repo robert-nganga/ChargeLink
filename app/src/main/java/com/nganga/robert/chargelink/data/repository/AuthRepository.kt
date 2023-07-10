@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.repository
+package com.nganga.robert.chargelink.data.repository
 
 import android.net.Uri
 import com.nganga.robert.chargelink.models.Car
