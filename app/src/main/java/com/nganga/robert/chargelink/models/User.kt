@@ -1,6 +1,6 @@
 package com.nganga.robert.chargelink.models
 
-data class NewUser(
+data class User(
     val name: String,
     val email: String,
     val phone: String,

@@ -9,8 +9,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.nganga.robert.chargelink.models.NewChargingStation
-import com.nganga.robert.chargelink.models.NewUser
+import com.nganga.robert.chargelink.models.ChargingStation
+import com.nganga.robert.chargelink.models.User
 import com.nganga.robert.chargelink.models.Review
 import com.nganga.robert.chargelink.utils.Constants.CHARGING_STATIONS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.Constants.USERS_COLLECTION_REF
@@ -47,12 +47,12 @@ class ChargingStationRepositoryImpl@Inject constructor(
     }
 
 
-    override fun getCurrentUser(): Flow<ResultState<NewUser>> = callbackFlow{
+    override fun getCurrentUser(): Flow<ResultState<User>> = callbackFlow{
         fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser?.uid!!)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val user = task.result?.toObject(NewUser::class.java)
+                    val user = task.result?.toObject(User::class.java)
                     trySend(ResultState.success(user!!))
                 }
             }
@@ -66,14 +66,14 @@ class ChargingStationRepositoryImpl@Inject constructor(
 
     }
 
-    override fun getChargingStationById(id: String): Flow<ResultState<NewChargingStation>> = callbackFlow{
+    override fun getChargingStationById(id: String): Flow<ResultState<ChargingStation>> = callbackFlow{
         fireStoreDb.collection(CHARGING_STATIONS_COLLECTION_REF).whereEqualTo("id", id)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
                         Log.i("ChargingStationRepositoryImpl", "Fetch station with id $id successful with name${document.getString("name")}")
-                        val chargingStation = document.toObject(NewChargingStation::class.java)
+                        val chargingStation = document.toObject(ChargingStation::class.java)
                         trySend(ResultState.success(chargingStation))
                     }
                 }
@@ -92,7 +92,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
     override fun getNearByStations(
         latitude: Double,
         longitude: Double
-    ): Flow<ResultState<List<NewChargingStation>>> = callbackFlow {
+    ): Flow<ResultState<List<ChargingStation>>> = callbackFlow {
 
         trySend(ResultState.loading())
         val center = GeoLocation(latitude, longitude)
@@ -113,7 +113,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
         Log.i("ChargingStationRepositoryImpl", "initial tasks size: ${tasks.size}")
         Tasks.whenAllComplete(tasks)
             .addOnCompleteListener {
-                val matchingDocs: MutableList<NewChargingStation> = ArrayList()
+                val matchingDocs: MutableList<ChargingStation> = ArrayList()
                 for (task in tasks) {
                     val snap = task.result
                     for (doc in snap!!.documents) {
@@ -122,7 +122,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
                         val docLocation = GeoLocation(lat, lng)
                         val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
                         if (distanceInM <= radiusInM) {
-                            val chargingStation = doc.toObject(NewChargingStation::class.java)
+                            val chargingStation = doc.toObject(ChargingStation::class.java)
                             matchingDocs.add(chargingStation!!)
                         }
                     }

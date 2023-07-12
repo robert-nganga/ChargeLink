@@ -32,11 +32,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.NewChargingStation
+import com.nganga.robert.chargelink.models.ChargingStation
 
 @Composable
 fun NearbyListItem(
-    chargingStation: NewChargingStation,
+    chargingStation: ChargingStation,
     modifier: Modifier = Modifier,
     onNearByItemClick: (String)->Unit
 ){

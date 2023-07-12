@@ -33,7 +33,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.NewChargingStation
+import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.models.PlaceSuggestion
 import com.nganga.robert.chargelink.ui.components.ChargingStationItem
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
@@ -65,7 +65,7 @@ fun MapScreen(
     val placeSuggestionsState = mapScreenViewModel.placeSuggestionsState
     val nearbyStationsState = mapScreenViewModel.nearbyStationsState
     var chargingStations by remember{
-        mutableStateOf(listOf<NewChargingStation>())
+        mutableStateOf(listOf<ChargingStation>())
     }
 
     LaunchedEffect(key1 = nearbyStationsState.location){
@@ -250,7 +250,7 @@ fun MapScreen(
 
 @Composable
 fun ChargingStationsSection(
-    stations: List<NewChargingStation>,
+    stations: List<ChargingStation>,
     modifier: Modifier = Modifier,
     listState: LazyListState,
     width: Dp,

@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nganga.robert.chargelink.models.Car
-import com.nganga.robert.chargelink.models.NewUser
+import com.nganga.robert.chargelink.models.User
 import com.nganga.robert.chargelink.data.repository.AuthRepository
 import com.nganga.robert.chargelink.screens.models.*
 import com.nganga.robert.chargelink.utils.ResultState
@@ -107,7 +107,7 @@ class AuthenticationViewModel @Inject constructor(
             addUserDetailsState = addUserDetailsState.copy(isError = true, errorMsg = validate)
         }else{
             addUserDetailsState = addUserDetailsState.copy(isError = false, errorMsg = "")
-            val user = NewUser(name = name, phone = phone, email = "", gender = gender, dob = dob, imageUrl = profilePhotoState.profileUrl ?: "", cars = emptyList())
+            val user = User(name = name, phone = phone, email = "", gender = gender, dob = dob, imageUrl = profilePhotoState.profileUrl ?: "", cars = emptyList())
             addUserToDatabase(user)
         }
 
@@ -153,7 +153,7 @@ class AuthenticationViewModel @Inject constructor(
         }
     }
 
-    private fun addUserToDatabase(user: NewUser) = viewModelScope.launch {
+    private fun addUserToDatabase(user: User) = viewModelScope.launch {
         withContext(Dispatchers.IO){
             repository.addUserDetails(user).collect{ result->
                 when(result.status){

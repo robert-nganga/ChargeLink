@@ -13,13 +13,9 @@ import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Bookmark
-import androidx.compose.material.icons.outlined.LocationOn
-import androidx.compose.material.icons.outlined.NearMe
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -34,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.Review
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.station_details_screen.StationDetailsViewModel
 import com.nganga.robert.chargelink.ui.components.*
 import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 import kotlinx.coroutines.launch
@@ -42,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun StationDetailsScreen(
     id: String?,
-    viewModel: HomeScreenViewModel,
+    viewModel: StationDetailsViewModel,
     onBookClicked: (stationId: String)-> Unit,
 ){
     var selectedTabIndex by rememberSaveable {
@@ -96,7 +93,7 @@ fun StationDetailsScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Spacer(modifier = Modifier.fillMaxHeight(0.25f))
+                Spacer(modifier = Modifier.fillMaxHeight(0.22f))
                 DescriptionSection(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -104,7 +101,8 @@ fun StationDetailsScreen(
                         .background(MaterialTheme.colorScheme.background),
                     name = chargingStation.name,
                     location = chargingStation.location,
-                    rating = 4,
+                    rating = 3,
+                    totalReviews = chargingStation.reviews.size,
                     onBookClicked = { onBookClicked(chargingStation.id) }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
@@ -148,7 +146,7 @@ fun StationDetailsScreen(
 }
 
 @Composable
-fun ImageHeaderSection(
+fun  ImageHeaderSection(
     modifier: Modifier = Modifier,
     image: Painter
 ){
@@ -166,24 +164,33 @@ fun ImageHeaderSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            BoxIcon(
-                icon = Icons.Default.ArrowBack,
-                iconSize = 25.dp,
-                iconTint = Color.White,
-                background = Color(0x4DF2F2F2),
-                modifier = Modifier
-                    .size(40.dp)
-                    .aspectRatio(1f)
-            )
-            BoxIcon(
-                icon = Icons.Outlined.Bookmark,
-                iconSize = 25.dp,
-                iconTint = Color.White,
-                background = Color(0x4DF2F2F2),
-                modifier = Modifier
-                    .size(40.dp)
-                    .aspectRatio(1f)
-            )
+            FilledIconButton(
+                onClick = {
+
+                },
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = Color(0x4D8B5000)
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ArrowBack,
+                    contentDescription = "back"
+                )
+            }
+
+            FilledIconButton(
+                onClick = {
+
+                },
+                colors = IconButtonDefaults.filledIconButtonColors(
+                    containerColor = Color(0x4D8B5000)
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.FavoriteBorder,
+                    contentDescription = "favorites"
+                )
+            }
         }
     }
 }
@@ -194,6 +201,7 @@ fun DescriptionSection(
     name: String,
     location: String,
     rating: Int,
+    totalReviews: Int,
     onBookClicked: () -> Unit
 ){
     Box(modifier = modifier) {
@@ -246,7 +254,7 @@ fun DescriptionSection(
                 )
                 Spacer(modifier = Modifier.width(3.dp))
                 Text(
-                    text = "(23 reviews)",
+                    text = "($totalReviews reviews)",
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

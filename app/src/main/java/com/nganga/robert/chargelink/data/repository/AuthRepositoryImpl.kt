@@ -6,7 +6,7 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.nganga.robert.chargelink.models.Car
-import com.nganga.robert.chargelink.models.NewUser
+import com.nganga.robert.chargelink.models.User
 import com.nganga.robert.chargelink.utils.Constants.USERS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.ResultState
 import kotlinx.coroutines.channels.awaitClose
@@ -47,7 +47,7 @@ class AuthRepositoryImpl @Inject constructor(
         auth.signOut()
     }
 
-    override fun addUserDetails(user: NewUser): Flow<ResultState<String>> = callbackFlow {
+    override fun addUserDetails(user: User): Flow<ResultState<String>> = callbackFlow {
         trySend(ResultState.loading())
             fireStoreDb.collection(USERS_COLLECTION_REF).document(auth.currentUser?.uid!!)
                 .set(user.copy(email = auth.currentUser?.email!!).toMap())

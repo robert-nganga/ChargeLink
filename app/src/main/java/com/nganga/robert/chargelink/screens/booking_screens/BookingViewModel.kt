@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nganga.robert.chargelink.models.Booking
 import com.nganga.robert.chargelink.models.Charger
-import com.nganga.robert.chargelink.models.NewChargingStation
+import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.models.PaymentMethod
 import com.nganga.robert.chargelink.data.repository.BookingRepository
 import com.nganga.robert.chargelink.data.repository.ChargingStationRepository
@@ -23,7 +23,7 @@ class BookingViewModel@Inject constructor(
     private val chargingStationRepo: ChargingStationRepository
 ): ViewModel() {
 
-    var station by mutableStateOf(NewChargingStation())
+    var station by mutableStateOf(ChargingStation())
         private set
 
     var bookingState by mutableStateOf(BookingState())

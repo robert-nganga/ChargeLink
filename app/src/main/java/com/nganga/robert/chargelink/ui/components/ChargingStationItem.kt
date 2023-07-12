@@ -17,12 +17,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.NewChargingStation
+import com.nganga.robert.chargelink.models.ChargingStation
 
 
 @Composable
 fun ChargingStationItem(
-    station: NewChargingStation,
+    station: ChargingStation,
     modifier: Modifier = Modifier,
     onStationClicked: () -> Unit
 ){

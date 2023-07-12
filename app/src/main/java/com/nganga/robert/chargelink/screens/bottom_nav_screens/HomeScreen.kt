@@ -35,7 +35,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.nganga.robert.chargelink.R
-import com.nganga.robert.chargelink.models.NewChargingStation
+import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
 import com.nganga.robert.chargelink.ui.components.NearbyShimmerListItem
 import com.nganga.robert.chargelink.ui.components.PermissionDialog
@@ -267,7 +267,7 @@ fun SearchSection(
 @Composable
 fun NearbySection(
     modifier: Modifier = Modifier,
-    stations: List<NewChargingStation>,
+    stations: List<ChargingStation>,
     onNearByItemClick: (String) -> Unit,
     isLoading: Boolean
 ){

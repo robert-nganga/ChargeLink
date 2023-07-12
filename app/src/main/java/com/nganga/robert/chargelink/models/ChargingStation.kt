@@ -1,6 +1,6 @@
 package com.nganga.robert.chargelink.models
 
-data class NewChargingStation(
+data class ChargingStation(
     val id: String,
     val name: String,
     val lat: String,

@@ -32,8 +32,6 @@ class HomeScreenViewModel@Inject constructor(
     var homeScreenState by mutableStateOf(HomeScreenState())
         private set
 
-    var stationDetailsScreenState by mutableStateOf(StationDetailsState())
-        private set
 
 
     private var _booking = mutableStateOf(Booking())
@@ -44,30 +42,7 @@ class HomeScreenViewModel@Inject constructor(
         getCurrentUser()
     }
 
-    fun submitReview(stationId: String, rating:Int, message: String) = viewModelScope.launch{
-        val current = LocalDateTime.now()
-        val review = Review(
-            userName = homeScreenState.currentUser.name,
-            userImage = 0,
-            date = current.format(DateTimeFormatter.ofPattern("MM/dd/yy")),
-            time = current.format(DateTimeFormatter.ofPattern("hh:mm a")),
-            message = message,
-            rating = rating
-        )
-        Log.i("HomeScreenViewModel", "Review: ${review.userName}")
-        chargingStationRepo.submitReview(stationId, review).collect{ result->
-            when(result.status){
-                ResultState.Status.SUCCESS -> {
-                    Log.i("HomeScreenViewModel", "Review submitted successfully")
-                }
-                ResultState.Status.ERROR -> {
-                    Log.i("HomeScreenViewModel", "Error submitting review: ${result.message}")
-                }
-                ResultState.Status.LOADING -> {
-                }
-            }
-        }
-    }
+
 
     fun fetchNearbyStations(){
         locationRepo.getLocationOnce { location ->
@@ -78,28 +53,6 @@ class HomeScreenViewModel@Inject constructor(
         }
     }
 
-    fun getStationById(id: String) = viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            chargingStationRepo.getChargingStationById(id).collect{ result->
-                when(result.status){
-                    ResultState.Status.SUCCESS -> {
-                        val station = result.data
-                        station?.let {
-                            stationDetailsScreenState = stationDetailsScreenState.copy(
-                                chargingStation = it,
-                            )
-                            Log.i("HomeScreenViewModel", "Station id: ${it.id}")
-                        }
-                    }
-                    ResultState.Status.ERROR -> {
-                        Log.i("HomeScreenViewModel", "Error getting station: ${result.message}")
-                    }
-                    ResultState.Status.LOADING -> {
-                    }
-                }
-            }
-        }
-    }
 
 
     private fun getCurrentUser() = viewModelScope.launch {
