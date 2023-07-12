@@ -1,5 +1,6 @@
-package com.nganga.robert.chargelink.ui.viewmodels
+package com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen
 
+import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.State
@@ -13,14 +14,12 @@ import com.nganga.robert.chargelink.models.*
 import com.nganga.robert.chargelink.data.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.data.repository.LocationRepository
 import com.nganga.robert.chargelink.screens.models.HomeScreenState
-import com.nganga.robert.chargelink.screens.models.StationDetailsState
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
@@ -31,6 +30,14 @@ class HomeScreenViewModel@Inject constructor(
 
     var homeScreenState by mutableStateOf(HomeScreenState())
         private set
+
+    private val currentLocation = locationRepo.requestLocationUpdates()
+
+    val userAddress = currentLocation.map {
+        it?.let { location ->
+            locationRepo.getAddressFromLatLng(LatLng(location.latitude, location.longitude))
+        }?: ""
+    }
 
 
 

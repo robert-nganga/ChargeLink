@@ -1,4 +1,4 @@
-package com.nganga.robert.chargelink.screens.bottom_nav_screens
+package com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen
 
 import android.Manifest
 import android.app.Activity
@@ -39,21 +39,22 @@ import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
 import com.nganga.robert.chargelink.ui.components.NearbyShimmerListItem
 import com.nganga.robert.chargelink.ui.components.PermissionDialog
-import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 @Composable
 fun HomeScreen(
-    activity: Activity,
     modifier: Modifier = Modifier,
     viewModel: HomeScreenViewModel,
     onNearByItemClick: (String) -> Unit
 ){
 
 
+    val userAddress = viewModel.userAddress.collectAsState(initial = "")
     val context = LocalContext.current
+
     var shouldShowPermissionDialog by remember {
         mutableStateOf(false)
     }
+
     val locationPermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted->
@@ -142,7 +143,7 @@ fun HomeScreen(
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = "Nairobi Kenya",
+            text = userAddress.value,
             style = MaterialTheme.typography.bodyMedium.copy(
                 color = MaterialTheme.colorScheme.outline
             )
@@ -153,8 +154,6 @@ fun HomeScreen(
             onNearByItemClick = { onNearByItemClick(it) },
             isLoading = state.isNearByStationsLoading
         )
-
-
     }
 }
 

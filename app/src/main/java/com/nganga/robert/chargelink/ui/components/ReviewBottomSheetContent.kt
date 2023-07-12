@@ -18,16 +18,12 @@ import com.nganga.robert.chargelink.R
 @Composable
 fun ReviewBottomSheetContent(
     modifier: Modifier = Modifier,
-    onRatingChanged: (Int, String)->Unit,
+    message: String,
+    onMessageChange: (String)->Unit,
+    onRatingChanged: (Int)->Unit,
+    onSubmitClicked: ()->Unit,
     rating: Int
 ){
-    var message by rememberSaveable{
-        mutableStateOf("")
-    }
-    var newRating by remember{
-        mutableStateOf(rating)
-    }
-
     Box(
         modifier = modifier.clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)),
         contentAlignment = Alignment.TopCenter
@@ -53,11 +49,11 @@ fun ReviewBottomSheetContent(
             )
             Spacer(modifier = Modifier.height(20.dp))
             Ratings(
-                rating = newRating,
+                rating = rating,
                 starSize = 40.dp,
                 starColor = MaterialTheme.colorScheme.primary,
                 onRatingChanged = {
-                    newRating = it
+                    onRatingChanged(it)
                 }
             )
             Spacer(modifier = Modifier.height(10.dp))
@@ -72,7 +68,7 @@ fun ReviewBottomSheetContent(
             TextField(
                 value = message,
                 onValueChange = { comment-> 
-                    message = comment
+                    onMessageChange(comment)
                 },
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent
@@ -83,7 +79,7 @@ fun ReviewBottomSheetContent(
             Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
-                    onRatingChanged(newRating, message)
+                    onSubmitClicked.invoke()
                 },
                 modifier = Modifier.fillMaxWidth(0.8f)
             ) {

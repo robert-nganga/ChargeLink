@@ -8,6 +8,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocationRepository {
 
+    fun getAddressFromLatLng(latLng: LatLng): String?
+
+    fun requestLocationUpdates(): Flow<Location?>
+
     fun getLocationOnce(location: (Location)->Unit)
 
     fun getLatLngFromPlaceId(placeId: String, latLng: (LatLng)->Unit)

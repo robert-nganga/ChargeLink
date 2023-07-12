@@ -12,7 +12,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.*
@@ -32,7 +31,6 @@ import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.Review
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.station_details_screen.StationDetailsViewModel
 import com.nganga.robert.chargelink.ui.components.*
-import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -45,7 +43,14 @@ fun StationDetailsScreen(
     var selectedTabIndex by rememberSaveable {
         mutableStateOf(0)
     }
-    var rating = 0
+
+    var message by remember{
+        mutableStateOf("")
+    }
+
+    var rating by remember{
+        mutableStateOf(0)
+    }
 
     LaunchedEffect(key1 = true){
         id?.let {
@@ -63,15 +68,22 @@ fun StationDetailsScreen(
         sheetShape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp),
         sheetContent = {
             ReviewBottomSheetContent(
-                onRatingChanged = { rating, message ->
+                onRatingChanged = {
+                    rating = it
+                },
+                rating = rating,
+                modifier = Modifier.fillMaxWidth(),
+                onMessageChange = {
+                    message = it
+                },
+                onSubmitClicked = {
                     scope.launch { bottomState.hide() }
-                    Log.i("StationDetailsScreen", "Rating: $rating, Message: $message, id ${chargingStation.id}")
                     viewModel.submitReview(chargingStation.id, rating, message)
+
                     // Refresh the station details screen to reflect the new review
                     viewModel.getStationById(chargingStation.id)
                 },
-                rating = rating,
-                modifier = Modifier.fillMaxWidth()
+                message = message
             )
         }
     ) {
@@ -101,7 +113,7 @@ fun StationDetailsScreen(
                         .background(MaterialTheme.colorScheme.background),
                     name = chargingStation.name,
                     location = chargingStation.location,
-                    rating = 3,
+                    rating = chargingStation.reviews.averageRating(),
                     totalReviews = chargingStation.reviews.size,
                     onBookClicked = { onBookClicked(chargingStation.id) }
                 )
@@ -479,4 +491,8 @@ fun SortReviewsSection(
             modifier = Modifier.fillMaxWidth()
         )
     }
+}
+
+fun List<Review>.averageRating(): Int{
+    return this.sumOf { it.rating } / this.size
 }

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.averageRating
 
 @Composable
 fun NearbyListItem(
@@ -84,7 +85,11 @@ fun NearbyListItem(
                     )
                 )
                 Spacer(modifier = Modifier.height(6.dp))
-                IconText(icon = Icons.Filled.Star, text = chargingStation.averageRating)
+                Ratings(
+                    rating = chargingStation.reviews.averageRating(),
+                    starSize = 20.dp,
+                    starColor = MaterialTheme.colorScheme.primary
+                )
 
             }
         }

@@ -20,7 +20,6 @@ import com.nganga.robert.chargelink.screens.bottom_nav_screens.booking_history_s
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.booking_history_screen.BookingHistoryViewModel
 import com.nganga.robert.chargelink.ui.components.BookingItem
 import com.nganga.robert.chargelink.ui.components.TabView
-import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
 
 @Composable
 fun BookingsScreen(

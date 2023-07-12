@@ -4,13 +4,13 @@ import android.app.Activity
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.*
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen.HomeScreen
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen.MapScreen
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.profile_screens.ProfileScreen
 import com.nganga.robert.chargelink.ui.navigation.*
 
 fun NavGraphBuilder.bottomNavGraph(
-    navController: NavHostController,
-    activity: Activity
+    navController: NavHostController
 ) {
     navigation(
         startDestination = BottomBarScreen.Home.route,
@@ -21,8 +21,7 @@ fun NavGraphBuilder.bottomNavGraph(
                 viewModel = it.sharedViewModel(navController),
                 onNearByItemClick = { id ->
                     navController.navigate(BottomBarScreen.Details.withArgs(id))
-                },
-                activity = activity
+                }
             )
         }
         composable(route = BottomBarScreen.Maps.route){

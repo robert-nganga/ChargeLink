@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     tonalElevation = 5.dp,
                 ) {
-                    MainScreen(this)
+                    MainScreen()
                 }
             }
         }

@@ -38,7 +38,7 @@ import com.nganga.robert.chargelink.models.PlaceSuggestion
 import com.nganga.robert.chargelink.ui.components.ChargingStationItem
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
 import com.nganga.robert.chargelink.ui.components.ProgressDialog
-import com.nganga.robert.chargelink.ui.viewmodels.HomeScreenViewModel
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen.HomeScreenViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -106,7 +106,7 @@ fun MapScreen(
             ),
             cameraPositionState = cameraPositionState,
             contentPadding = PaddingValues(
-                bottom = screenHeight * 0.48f,
+                bottom = screenHeight * 0.4f,
                 top = 70.dp,
             ),
             onMyLocationButtonClick = {

@@ -92,13 +92,6 @@ fun ChargingStationItem(
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
-            Button(
-                modifier = Modifier.fillMaxWidth(0.8f),
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = stringResource(id = R.string.book))
-            }
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 
