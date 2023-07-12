@@ -28,9 +28,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             val userPreferencesViewModel = hiltViewModel<UserPreferencesViewModel>()
             val preferences = userPreferencesViewModel.userPreferences.observeAsState()
-
+            val appTheme = preferences.value?.appTheme ?: ThemeSelection.USE_SYSTEM_SETTINGS
             ChargeLinkTheme(
-                darkTheme = when (preferences.value!!.appTheme){
+                darkTheme = when (appTheme){
                     ThemeSelection.DARK_MODE -> true
                     ThemeSelection.LIGHT_MODE -> false
                     ThemeSelection.USE_SYSTEM_SETTINGS -> isSystemInDarkTheme()

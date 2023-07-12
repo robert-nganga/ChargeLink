@@ -38,7 +38,7 @@ fun SettingsScreen(
         if (isThemeDialogVisible){
             ThemeSelectionDialog(
                 choices = ThemeSelection.selections,
-                selected = preferences.value!!.appTheme,
+                selected = preferences.value?.appTheme ?: ThemeSelection.USE_SYSTEM_SETTINGS,
                 onDismiss = {
                    isThemeDialogVisible = false
                 },

@@ -99,6 +99,7 @@ fun RowScope.AddItem(
     val isSelected = currentDestination?.hierarchy?.any {
         it.route == screen.route
     } == true
+
     BottomNavigationItem(
         icon = {
             Icon(
@@ -111,7 +112,7 @@ fun RowScope.AddItem(
         selected = isSelected,
         onClick = {
             navController.navigate(screen.route){
-                popUpTo(navController.graph.findStartDestination().id)
+                popUpTo(BottomBarScreen.Home.route)
                 launchSingleTop = true
             }
         },
@@ -119,4 +120,5 @@ fun RowScope.AddItem(
         selectedContentColor = MaterialTheme.colorScheme.primary,
         unselectedContentColor = MaterialTheme.colorScheme.outline
     )
+
 }
