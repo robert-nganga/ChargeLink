@@ -33,6 +33,7 @@ class LocationRepositoryImpl@Inject constructor(
     private val autocompleteSessionToken: AutocompleteSessionToken = AutocompleteSessionToken.newInstance()
 
 
+
     override fun getAddressFromLatLng(latLng: LatLng): String? {
         val geocoder = Geocoder(context)
         val address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
@@ -54,8 +55,7 @@ class LocationRepositoryImpl@Inject constructor(
             }
         }
         val locationRequest = LocationRequest.create().apply {
-            interval = 10000
-            fastestInterval = 5000
+            interval = 1000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 

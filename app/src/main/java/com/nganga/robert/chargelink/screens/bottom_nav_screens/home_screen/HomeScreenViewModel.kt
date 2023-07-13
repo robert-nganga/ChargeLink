@@ -8,6 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.nganga.robert.chargelink.models.*
@@ -31,12 +33,12 @@ class HomeScreenViewModel@Inject constructor(
     var homeScreenState by mutableStateOf(HomeScreenState())
         private set
 
-    private val currentLocation = locationRepo.requestLocationUpdates()
+    private val currentLocation = locationRepo.requestLocationUpdates().asLiveData()
 
     val userAddress = currentLocation.map {
         it?.let { location ->
             locationRepo.getAddressFromLatLng(LatLng(location.latitude, location.longitude))
-        }?: ""
+        } ?: ""
     }
 
 

@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,7 +49,7 @@ fun HomeScreen(
 ){
 
 
-    val userAddress = viewModel.userAddress.collectAsState(initial = "")
+    val userAddress = viewModel.userAddress.observeAsState("")
     val context = LocalContext.current
 
     var shouldShowPermissionDialog by remember {
