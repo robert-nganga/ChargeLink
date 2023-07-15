@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Card
+import androidx.compose.material.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,10 +47,12 @@ fun NearbyListItem(
             .clickable {
                 onNearByItemClick(chargingStation.id)
             },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+        backgroundColor = MaterialTheme.colorScheme.background,
+//        colors = CardDefaults.cardColors(
+//            containerColor = MaterialTheme.colorScheme.background,
+//        ),
+        shape = RoundedCornerShape(16.dp),
+        elevation = 10.dp //CardDefaults.cardElevation(defaultElevation = 5.dp)
     ) {
         Row(modifier = Modifier
             .fillMaxSize()
@@ -101,9 +103,10 @@ fun NearbyShimmerListItem(){
     Card(
         modifier = Modifier
             .padding(bottom = 10.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        )
+        backgroundColor = MaterialTheme.colorScheme.background,
+//        colors = CardDefaults.cardColors(
+//            containerColor = MaterialTheme.colorScheme.background
+//        )
     ) {
         Row(modifier = Modifier
             .fillMaxSize()

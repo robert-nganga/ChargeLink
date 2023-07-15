@@ -2,6 +2,7 @@
 <resources>
 
     <style name="Theme.ChargeLink" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/purple_700</item>
+        //Transparent Status Bar
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>

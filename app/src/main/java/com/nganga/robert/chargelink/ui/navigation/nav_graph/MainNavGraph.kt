@@ -1,6 +1,8 @@
 package com.nganga.robert.chargelink.ui.navigation.nav_graph
 
 import android.app.Activity
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -10,13 +12,14 @@ import com.nganga.robert.chargelink.ui.navigation.AUTHENTICATION_ROUTE
 
 @Composable
 fun MainNavGraph(
-    navController: NavHostController
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ){
 
    NavHost(
        navController = navController,
        startDestination = AUTHENTICATION_ROUTE,
-       modifier = Modifier,
+       modifier = modifier,
        route = "root"
    ){
        authNavGraph(navController)

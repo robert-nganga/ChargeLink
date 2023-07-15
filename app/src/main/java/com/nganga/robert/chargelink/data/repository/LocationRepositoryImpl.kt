@@ -55,7 +55,7 @@ class LocationRepositoryImpl@Inject constructor(
             }
         }
         val locationRequest = LocationRequest.create().apply {
-            interval = 1000
+            interval = 60000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 

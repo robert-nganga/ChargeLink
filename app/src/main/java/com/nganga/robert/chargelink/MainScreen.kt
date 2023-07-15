@@ -1,9 +1,7 @@
 package com.nganga.robert.chargelink
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -22,6 +20,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.nganga.robert.chargelink.ui.components.HorizontalDivider
 import com.nganga.robert.chargelink.ui.navigation.BottomBarScreen
 import com.nganga.robert.chargelink.ui.navigation.nav_graph.MainNavGraph
 
@@ -41,17 +40,27 @@ fun MainScreen(
         BottomBarScreen.Profile.route -> true
         else -> false
     }
+
+    val enableSystemBarPadding = when(navBackStackEntry?.destination?.route?.substringBefore("/")){
+        BottomBarScreen.Maps.route -> false
+        else -> true
+    }
     Scaffold(
         bottomBar = {
             if (showBottomBar){
                 BottomBar(
                     navController = navController,
-                    navBackStackEntry = navBackStackEntry
+                    navBackStackEntry = navBackStackEntry,
+                    modifier = Modifier
+                        .navigationBarsPadding()
                 )
             }
         }
     ) { contentPadding ->
         MainNavGraph(
+            modifier = if (enableSystemBarPadding)
+                Modifier.navigationBarsPadding().statusBarsPadding()
+                else Modifier.navigationBarsPadding(),
             navController = navController
         )
     }
@@ -60,7 +69,8 @@ fun MainScreen(
 @Composable
 fun BottomBar(
     navController: NavHostController,
-    navBackStackEntry: NavBackStackEntry?
+    navBackStackEntry: NavBackStackEntry?,
+    modifier: Modifier = Modifier
 ){
     val screens = listOf(
         BottomBarScreen.Home,
@@ -71,10 +81,8 @@ fun BottomBar(
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
-        backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
-        modifier = Modifier
-            .padding(horizontal = 10.dp, vertical = 10.dp)
-            .clip(RoundedCornerShape(20.dp)),
+        modifier = modifier,
+        backgroundColor = MaterialTheme.colorScheme.background,
         elevation = 5.dp
     ){
         screens.forEach { screen ->

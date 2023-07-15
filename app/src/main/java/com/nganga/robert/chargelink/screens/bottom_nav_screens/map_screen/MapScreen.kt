@@ -94,6 +94,7 @@ fun MapScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding()
     ) {
         if (nearbyStationsState.isLoading){
             ProgressDialog(text = stringResource(id = R.string.please_wait))
@@ -107,7 +108,7 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             contentPadding = PaddingValues(
                 bottom = screenHeight * 0.4f,
-                top = 70.dp,
+                top = 100.dp,
             ),
             onMyLocationButtonClick = {
                 mapScreenViewModel.clearLocation()
@@ -168,7 +169,7 @@ fun MapScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 10.dp, horizontal = 10.dp)
+                .padding(top = 50.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

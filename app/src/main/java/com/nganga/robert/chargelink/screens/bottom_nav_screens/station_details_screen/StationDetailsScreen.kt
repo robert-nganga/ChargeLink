@@ -105,7 +105,7 @@ fun StationDetailsScreen(
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
-                Spacer(modifier = Modifier.fillMaxHeight(0.22f))
+                Spacer(modifier = Modifier.fillMaxHeight(0.25f))
                 DescriptionSection(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -176,17 +176,18 @@ fun  ImageHeaderSection(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            FilledIconButton(
+            IconButton(
                 onClick = {
 
                 },
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = Color(0x4D8B5000)
+                    containerColor = Color.Transparent
                 )
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ArrowBack,
-                    contentDescription = "back"
+                    contentDescription = "back",
+                    tint = Color.White
                 )
             }
 
@@ -195,12 +196,13 @@ fun  ImageHeaderSection(
 
                 },
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = Color(0x4D8B5000)
+                    containerColor = Color.Transparent
                 )
             ) {
                 Icon(
                     imageVector = Icons.Outlined.FavoriteBorder,
-                    contentDescription = "favorites"
+                    contentDescription = "favorites",
+                    tint = Color.White
                 )
             }
         }

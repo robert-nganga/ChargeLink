@@ -272,6 +272,11 @@ fun NearbySection(
     isLoading: Boolean
 ){
     LazyColumn(modifier = modifier){
+
+        item {
+            Spacer(modifier = Modifier.height(10.dp))
+        }
+
         if (isLoading && stations.isEmpty()){
             items(5){
                 NearbyShimmerListItem()

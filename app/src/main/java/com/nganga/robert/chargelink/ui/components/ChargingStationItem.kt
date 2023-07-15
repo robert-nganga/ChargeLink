@@ -26,17 +26,18 @@ fun ChargingStationItem(
     modifier: Modifier = Modifier,
     onStationClicked: () -> Unit
 ){
-    Card(
+    androidx.compose.material.Card(
         modifier = modifier
             .clickable {
                 onStationClicked.invoke()
             }
             .padding(horizontal = 10.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-        shape = RoundedCornerShape(20.dp)
+        elevation = 10.dp, //CardDefaults.cardElevation(defaultElevation = 10.dp),
+//        colors = CardDefaults.cardColors(
+//            containerColor = MaterialTheme.colorScheme.background
+//        ),
+        shape = RoundedCornerShape(20.dp),
+        backgroundColor = MaterialTheme.colorScheme.background
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
