@@ -112,6 +112,7 @@ fun StationDetailsScreen(
                         .clip(RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp))
                         .background(MaterialTheme.colorScheme.background),
                     name = chargingStation.name,
+                    distance = chargingStation.distance,
                     location = chargingStation.location,
                     rating = chargingStation.reviews.averageRating(),
                     totalReviews = chargingStation.reviews.size,
@@ -216,6 +217,7 @@ fun DescriptionSection(
     location: String,
     rating: Int,
     totalReviews: Int,
+    distance: String,
     onBookClicked: () -> Unit
 ){
     Box(modifier = modifier) {
@@ -282,7 +284,7 @@ fun DescriptionSection(
 
                 IconText(
                     icon = Icons.Outlined.LocationOn,
-                    text = "4.2km"
+                    text = distance
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 IconText(

@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.nganga.robert.chargelink.R
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen.HomeScreenViewModel
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
 import com.nganga.robert.chargelink.ui.components.IconText
 
@@ -29,9 +31,11 @@ import com.nganga.robert.chargelink.ui.components.IconText
 fun ProfileScreen(
     onSettingsClick: () -> Unit,
     profileViewModel: ProfileViewModel,
+    homeScreenViewModel: HomeScreenViewModel,
     onLogOut: () -> Unit
 ){
 
+    val user = homeScreenViewModel.homeScreenState.currentUser
     var logOut by remember{
         mutableStateOf(false)
     }
@@ -83,10 +87,10 @@ fun ProfileScreen(
             }
             Spacer(modifier = Modifier.height(10.dp))
             ProfileSection(
-                name = "Suzzie Mutiambai",
-                email = "suzziemut@gmail.com",
-                phone ="+254797044599",
-                location = "Westlands, Nairobi",
+                name = user.name,
+                email = user.email,
+                phone = user.phone,
+                location = homeScreenViewModel.userAddress.observeAsState().value ?: "",
                 image = painterResource(
                     id = R.drawable.user5
                 )

@@ -87,7 +87,7 @@ fun ChargingStationItem(
                     Spacer(modifier = Modifier.height(5.dp))
                     IconText(
                         icon = Icons.Default.AssistantDirection,
-                        text = "2.5km/10 min",
+                        text = "${station.distance}km/${(station.distance.toInt()/80)*60}min",
                         iconSize = 30.dp
                     )
                 }

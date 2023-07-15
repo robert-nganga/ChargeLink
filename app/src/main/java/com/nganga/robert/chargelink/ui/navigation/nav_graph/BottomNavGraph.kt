@@ -51,7 +51,8 @@ fun NavGraphBuilder.bottomNavGraph(
                         }
                         launchSingleTop = true
                     }
-                }
+                },
+                homeScreenViewModel = it.sharedViewModel(navController)
             )
         }
         composable(route = BottomBarScreen.Bookings.route){

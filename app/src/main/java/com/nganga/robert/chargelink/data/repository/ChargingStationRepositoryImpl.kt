@@ -123,7 +123,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
                         val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
                         if (distanceInM <= radiusInM) {
                             val chargingStation = doc.toObject(ChargingStation::class.java)
-                            matchingDocs.add(chargingStation!!)
+                            matchingDocs.add(chargingStation!!.copy(distance = "${(distanceInM/1000).toInt()}"))
                         }
                     }
                 }

@@ -1,6 +1,5 @@
 package com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen
 
-import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.State
@@ -19,7 +18,6 @@ import com.nganga.robert.chargelink.screens.models.HomeScreenState
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -35,12 +33,20 @@ class HomeScreenViewModel@Inject constructor(
 
     private val currentLocation = locationRepo.requestLocationUpdates().asLiveData()
 
-    val userAddress = currentLocation.map {
-        it?.let { location ->
-            locationRepo.getAddressFromLatLng(LatLng(location.latitude, location.longitude))
-        } ?: ""
+    val userAddress = currentLocation.map { location ->
+        getAddressFromLatLng(location)
     }
 
+    private fun getAddressFromLatLng(location: Location?): String {
+        if (location != null){
+            return locationRepo.getAddressFromLatLng(LatLng(location.latitude, location.longitude)) ?: ""
+        }
+        var address: String? = null
+        locationRepo.getLocationOnce {
+            address = locationRepo.getAddressFromLatLng(LatLng(it.latitude, it.longitude))
+        }
+        return address ?: ""
+    }
 
 
     private var _booking = mutableStateOf(Booking())
@@ -65,9 +71,9 @@ class HomeScreenViewModel@Inject constructor(
 
 
     private fun getCurrentUser() = viewModelScope.launch {
-        withContext(Dispatchers.IO){
-            chargingStationRepo.getCurrentUser().collect{ result->
-                when(result.status){
+        withContext(Dispatchers.IO) {
+            chargingStationRepo.getCurrentUser().collect { result ->
+                when (result.status) {
                     ResultState.Status.SUCCESS -> {
                         val user = result.data
                         user?.let {
