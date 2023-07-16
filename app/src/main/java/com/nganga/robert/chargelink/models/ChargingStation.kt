@@ -17,7 +17,7 @@ data class ChargingStation(
     val reviews: List<Review>,
     val openDays: List<OpenDay>,
     val amenities: Amenities,
-    val distance: String
+    val distance: Int
 ){
     constructor():this(
         "",
@@ -36,7 +36,7 @@ data class ChargingStation(
         listOf(Review()),
         listOf(OpenDay()),
         Amenities(),
-    ""
+    0
     )
     fun toMap() = hashMapOf(
         "id" to id,

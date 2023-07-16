@@ -217,7 +217,7 @@ fun DescriptionSection(
     location: String,
     rating: Int,
     totalReviews: Int,
-    distance: String,
+    distance: Int,
     onBookClicked: () -> Unit
 ){
     Box(modifier = modifier) {
@@ -284,12 +284,12 @@ fun DescriptionSection(
 
                 IconText(
                     icon = Icons.Outlined.LocationOn,
-                    text = distance
+                    text = distance.toString()
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 IconText(
                     icon = Icons.Outlined.NearMe,
-                    text = "2 min"
+                    text = "${(distance * 1.2).toInt()} min"
                 )
                 Box(modifier = Modifier.weight(1f))
                 Button(

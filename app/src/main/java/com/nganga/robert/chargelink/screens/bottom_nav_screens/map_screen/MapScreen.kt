@@ -149,8 +149,8 @@ fun MapScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(top = 70.dp, start = 10.dp, end = 10.dp, bottom = 65.dp)
+                    .background(MaterialTheme.colorScheme.background)
+                    .padding(top = 100.dp, start = 10.dp, end = 10.dp, bottom = 65.dp)
 
             ) {
                 PlaceSuggestionsSection(
@@ -188,9 +188,7 @@ fun MapScreen(
                     value = placeSuggestionsState.query,
                     onValueChange = mapScreenViewModel::onQueryChange,
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = MaterialTheme.colorScheme.surface.copy(
-                            alpha = 1.0f
-                        ),
+                        containerColor = MaterialTheme.colorScheme.background,
                         focusedIndicatorColor = MaterialTheme.colorScheme.primary,
                         unfocusedIndicatorColor = Color.Transparent,
                     ),

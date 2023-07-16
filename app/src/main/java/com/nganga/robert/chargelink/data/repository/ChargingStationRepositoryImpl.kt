@@ -1,8 +1,10 @@
 package com.nganga.robert.chargelink.data.repository
 
+import android.location.Location
 import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
@@ -10,8 +12,8 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.nganga.robert.chargelink.models.ChargingStation
-import com.nganga.robert.chargelink.models.User
 import com.nganga.robert.chargelink.models.Review
+import com.nganga.robert.chargelink.models.User
 import com.nganga.robert.chargelink.utils.Constants.CHARGING_STATIONS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.Constants.USERS_COLLECTION_REF
 import com.nganga.robert.chargelink.utils.ResultState
@@ -19,11 +21,23 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
+@Suppress("MissingPermission")
 class ChargingStationRepositoryImpl@Inject constructor(
     private val auth: FirebaseAuth,
+    private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val fireStoreDb: FirebaseFirestore): ChargingStationRepository {
+
+    private var currentLocation: Location? = null
+
+    private fun updateLocation(){
+        fusedLocationProviderClient.lastLocation
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result != null) {
+                    currentLocation = task.result
+                }
+            }
+    }
 
 
     override fun submitReview(
@@ -67,14 +81,22 @@ class ChargingStationRepositoryImpl@Inject constructor(
     }
 
     override fun getChargingStationById(id: String): Flow<ResultState<ChargingStation>> = callbackFlow{
+        updateLocation()
+
         fireStoreDb.collection(CHARGING_STATIONS_COLLECTION_REF).whereEqualTo("id", id)
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     for (document in task.result) {
-                        Log.i("ChargingStationRepositoryImpl", "Fetch station with id $id successful with name${document.getString("name")}")
+                        val center = GeoLocation(currentLocation!!.latitude, currentLocation!!.longitude)
+
+                        val lat = document.getString("lat")!!.toDouble()
+                        val lng = document.getString("long")!!.toDouble()
+                        val docLocation = GeoLocation(lat, lng)
+
+                        val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
                         val chargingStation = document.toObject(ChargingStation::class.java)
-                        trySend(ResultState.success(chargingStation))
+                        trySend(ResultState.success(chargingStation.copy(distance = (distanceInM/1000).toInt())))
                     }
                 }
             }
@@ -123,7 +145,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
                         val distanceInM = GeoFireUtils.getDistanceBetween(docLocation, center)
                         if (distanceInM <= radiusInM) {
                             val chargingStation = doc.toObject(ChargingStation::class.java)
-                            matchingDocs.add(chargingStation!!.copy(distance = "${(distanceInM/1000).toInt()}"))
+                            matchingDocs.add(chargingStation!!.copy(distance = (distanceInM/1000).toInt()))
                         }
                     }
                 }
