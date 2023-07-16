@@ -33,7 +33,6 @@ class LocationRepositoryImpl@Inject constructor(
     private val autocompleteSessionToken: AutocompleteSessionToken = AutocompleteSessionToken.newInstance()
 
 
-
     override fun getAddressFromLatLng(latLng: LatLng): String? {
         val geocoder = Geocoder(context)
         val address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
@@ -46,6 +45,14 @@ class LocationRepositoryImpl@Inject constructor(
 
 
     override fun requestLocationUpdates(): Flow<Location?> = callbackFlow{
+
+        fusedLocationProviderClient.lastLocation
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful && task.result != null) {
+                    trySend(task.result)
+                }
+            }
+
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)

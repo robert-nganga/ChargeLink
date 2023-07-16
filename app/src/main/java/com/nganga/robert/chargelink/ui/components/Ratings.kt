@@ -29,9 +29,6 @@ fun Ratings(
     starColor: Color,
     onRatingChanged: ((rating: Int) -> Unit)? = null
 ){
-    var selectedRating by remember {
-        mutableStateOf(rating)
-    }
     Row(
         modifier = modifier.padding(3.dp),
         horizontalArrangement = Arrangement.Start,
@@ -39,13 +36,12 @@ fun Ratings(
     ) {
         for(x in 1 .. 5){
             Icon(
-                imageVector = if (x <= selectedRating) Icons.Rounded.StarRate else Icons.Rounded.StarOutline,
+                imageVector = if (x <= rating) Icons.Rounded.StarRate else Icons.Rounded.StarOutline,
                 contentDescription = null,
                 modifier = Modifier
                     .size(starSize)
                     .clickable {
                            if (onRatingChanged != null){
-                               selectedRating = x
                                onRatingChanged(x)
                            }
                     },

@@ -34,18 +34,9 @@ class HomeScreenViewModel@Inject constructor(
     private val currentLocation = locationRepo.requestLocationUpdates().asLiveData()
 
     val userAddress = currentLocation.map { location ->
-        getAddressFromLatLng(location)
-    }
-
-    private fun getAddressFromLatLng(location: Location?): String {
-        if (location != null){
-            return locationRepo.getAddressFromLatLng(LatLng(location.latitude, location.longitude)) ?: ""
-        }
-        var address: String? = null
-        locationRepo.getLocationOnce {
-            address = locationRepo.getAddressFromLatLng(LatLng(it.latitude, it.longitude))
-        }
-        return address ?: ""
+        location?.let {
+            locationRepo.getAddressFromLatLng(LatLng(it.latitude, it.longitude))
+        } ?: ""
     }
 
 

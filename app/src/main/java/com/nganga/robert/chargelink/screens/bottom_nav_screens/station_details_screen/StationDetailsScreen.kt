@@ -284,7 +284,7 @@ fun DescriptionSection(
 
                 IconText(
                     icon = Icons.Outlined.LocationOn,
-                    text = distance.toString()
+                    text = "${distance} km"
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 IconText(
@@ -331,8 +331,7 @@ fun ChargerSection(
 @Composable
 fun ReviewHeaderSection(
     modifier: Modifier = Modifier,
-    totalReviews: Int,
-    averageRating: Float
+    reviews: List<Review>
 ){
     Row(modifier = modifier.padding(vertical = 10.dp)) {
         Column(
@@ -341,20 +340,20 @@ fun ReviewHeaderSection(
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = averageRating.toString(),
+                text = "${reviews.averageRating().toString()}.0",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontSize = 30.sp
                 )
             )
             Spacer(modifier = Modifier.height(5.dp))
             Ratings(
-                rating = averageRating.toInt(),
+                rating = reviews.averageRating(),
                 starSize = 27.dp,
                 starColor = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text = "(${totalReviews}) reviews",
+                text = "(${reviews.size}) reviews",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -365,17 +364,41 @@ fun ReviewHeaderSection(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.Top
         ) {
-            RatingBar(value = 0.8f, modifier = Modifier.fillMaxWidth(), number = 5)
+            RatingBar(
+                value = reviews.numberOfReviews(5).toFloat() / reviews.size,
+                modifier = Modifier.fillMaxWidth(),
+                number = 5
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            RatingBar(value = 0.7f, modifier = Modifier.fillMaxWidth(), number = 4)
+            RatingBar(
+                value = reviews.numberOfReviews(4).toFloat() / reviews.size,
+                modifier = Modifier.fillMaxWidth(),
+                number = 4
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            RatingBar(value = 0.5f, modifier = Modifier.fillMaxWidth(), number = 3)
+            RatingBar(
+                value = reviews.numberOfReviews(3).toFloat() / reviews.size,
+                modifier = Modifier.fillMaxWidth(),
+                number = 3
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            RatingBar(value = 0.35f, modifier = Modifier.fillMaxWidth(), number = 2)
+            RatingBar(
+                value = reviews.numberOfReviews(2).toFloat() / reviews.size,
+                modifier = Modifier.fillMaxWidth(),
+                number = 2
+            )
             Spacer(modifier = Modifier.height(5.dp))
-            RatingBar(value = 0.2f, modifier = Modifier.fillMaxWidth(), number = 1)
+            RatingBar(
+                value = reviews.numberOfReviews(1).toFloat() / reviews.size,
+                modifier = Modifier.fillMaxWidth(),
+                number = 1
+            )
         }
     }
+}
+
+fun List<Review>.numberOfReviews(rating: Int): Int{
+    return this.filter { it.rating == rating }.size
 }
 
 @Composable
@@ -392,7 +415,7 @@ fun ReviewSection(
 
     LazyColumn(modifier = modifier, contentPadding = PaddingValues(horizontal = 10.dp)){
         item {
-            ReviewHeaderSection(totalReviews = totalReviews, averageRating = averageRating)
+            ReviewHeaderSection(reviews = reviews)
         }
         item {
             HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 0.8.dp)
