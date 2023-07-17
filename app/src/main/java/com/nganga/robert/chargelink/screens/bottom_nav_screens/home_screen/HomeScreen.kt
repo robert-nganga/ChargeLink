@@ -48,6 +48,8 @@ fun HomeScreen(
     onNearByItemClick: (String) -> Unit
 ){
 
+    val preferences = viewModel.radiusPreference.observeAsState()
+
 
     val userAddress = viewModel.userAddress.observeAsState("")
     val context = LocalContext.current
@@ -61,14 +63,11 @@ fun HomeScreen(
         onResult = { isGranted->
             Log.i("HomeScreen", "Permission result: $isGranted")
             if (isGranted){
-                viewModel.fetchNearbyStations()
+                viewModel.fetchNearbyStations(preferences.value ?: 15.0f)
             }
 
         }
     )
-
-
-
 
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(
@@ -83,7 +82,7 @@ fun HomeScreen(
                         Manifest.permission.ACCESS_FINE_LOCATION
                     ) == PackageManager.PERMISSION_GRANTED -> {
                         Log.i("HomeScreen", "Permission granted")
-                        viewModel.fetchNearbyStations()
+                        viewModel.fetchNearbyStations(preferences.value ?: 15.0f)
                     }
                     ActivityCompat.shouldShowRequestPermissionRationale(
                         context as Activity,

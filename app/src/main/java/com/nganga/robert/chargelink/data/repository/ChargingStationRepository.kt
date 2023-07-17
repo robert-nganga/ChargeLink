@@ -1,5 +1,6 @@
 package com.nganga.robert.chargelink.data.repository
 
+import android.location.Location
 import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.models.User
 import com.nganga.robert.chargelink.models.Review
@@ -15,5 +16,5 @@ interface ChargingStationRepository {
 
     fun getChargingStationById(id: String): Flow<ResultState<ChargingStation>>
 
-    fun getNearByStations(latitude: Double, longitude: Double): Flow<ResultState<List<ChargingStation>>>
+    fun getNearByStations(location: Location, radius: Float): Flow<ResultState<List<ChargingStation>>>
 }

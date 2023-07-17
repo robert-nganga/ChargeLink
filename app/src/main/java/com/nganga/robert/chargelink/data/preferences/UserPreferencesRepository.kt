@@ -19,6 +19,10 @@ class UserPreferencesRepository @Inject constructor(
         val APP_THEME = stringPreferencesKey(APP_THEME_PREFERENCE)
     }
 
+    val radius = dataStore.data.map { preferences->
+        preferences[PreferenceKeys.RADIUS] ?: 15.0f
+    }
+
     val userPreferences = dataStore.data
         .catch { exception->
             if(exception is IOException){

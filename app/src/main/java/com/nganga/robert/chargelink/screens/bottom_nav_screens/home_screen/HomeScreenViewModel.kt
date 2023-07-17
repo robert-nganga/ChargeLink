@@ -11,9 +11,10 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import com.nganga.robert.chargelink.models.*
+import com.nganga.robert.chargelink.data.preferences.UserPreferencesRepository
 import com.nganga.robert.chargelink.data.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.data.repository.LocationRepository
+import com.nganga.robert.chargelink.models.Booking
 import com.nganga.robert.chargelink.screens.models.HomeScreenState
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +27,10 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel@Inject constructor(
     private val locationRepo: LocationRepository,
+    userPreferencesRepository: UserPreferencesRepository,
     private val chargingStationRepo: ChargingStationRepository):ViewModel() {
+
+    val radiusPreference = userPreferencesRepository.radius.asLiveData()
 
     var homeScreenState by mutableStateOf(HomeScreenState())
         private set
@@ -46,16 +50,21 @@ class HomeScreenViewModel@Inject constructor(
 
     init {
         getCurrentUser()
+
+        //Updates the list of stations when the radius preference changes
+        radiusPreference.map {
+            fetchNearbyStations(it)
+        }
     }
 
 
 
-    fun fetchNearbyStations(){
+    fun fetchNearbyStations(radius: Float){
         locationRepo.getLocationOnce { location ->
             homeScreenState = homeScreenState.copy(
                 currentLocation = LatLng(location.latitude, location.longitude)
             )
-            getNearbyStations(location)
+            getNearbyStations(location, radius)
         }
     }
 
@@ -84,10 +93,10 @@ class HomeScreenViewModel@Inject constructor(
         }
     }
 
-    private fun getNearbyStations(location: Location) = viewModelScope.launch {
+    private fun getNearbyStations(location: Location, radius: Float) = viewModelScope.launch {
         Log.i("HomeScreenViewModel", "My Location: ${location.latitude}, ${location.longitude}")
         withContext(Dispatchers.IO){
-            chargingStationRepo.getNearByStations(location.latitude, location.longitude).collect{ result->
+            chargingStationRepo.getNearByStations(location, radius).collect{ result->
                 when(result.status){
                     ResultState.Status.SUCCESS -> {
                         val stations = result.data

@@ -49,10 +49,6 @@ fun SettingsScreen(
         mutableStateOf(false)
     }
 
-    var radius by remember {
-        mutableStateOf("${preferences.value?.radius ?: 18} km")
-    }
-
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -78,11 +74,10 @@ fun SettingsScreen(
                 onDismiss = {
                     isRadiusDialogVisible = false
                 },
-                radius = radius,
+                radius = "${preferences.value?.radius ?: 15.0} km",
                 onConfirmClicked = { selectedRadius ->
                     val radiusF = selectedRadius.substringBefore("km").trim().toFloat()
                     userPreferencesViewModel.changeRadius(radiusF)
-                    radius = selectedRadius
                     isRadiusDialogVisible = false
                 }
             )
@@ -114,7 +109,7 @@ fun SettingsScreen(
         SettingsItem(
             icon = Icons.Outlined.ShareLocation,
             headerText = stringResource(id = R.string.nearby_radius),
-            trailingText = radius,
+            trailingText = "${preferences.value?.radius ?: 15.0} km",
             onItemClick = {
                 isRadiusDialogVisible = true
             }
@@ -385,7 +380,7 @@ fun RadiusSelector(
     onRadiusSelectionChanged: (String)->Unit
 ){
     var expanded by remember { mutableStateOf(false) }
-    val suggestions = listOf("5 km", "10 km", "15 km", "20km", "25km", "30km")
+    val suggestions = listOf("5 km", "10 km", "15 km", "20 km", "25 km", "30 km", "60 km")
 
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 

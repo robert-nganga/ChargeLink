@@ -111,15 +111,12 @@ class ChargingStationRepositoryImpl@Inject constructor(
     }
 
 
-    override fun getNearByStations(
-        latitude: Double,
-        longitude: Double
-    ): Flow<ResultState<List<ChargingStation>>> = callbackFlow {
+    override fun getNearByStations(location: Location, radius: Float): Flow<ResultState<List<ChargingStation>>> = callbackFlow {
 
         trySend(ResultState.loading())
-        val center = GeoLocation(latitude, longitude)
+        val center = GeoLocation(location.latitude, location.longitude)
         //Radius of 15km
-        val radiusInM = 15.0 * 1000.0
+        val radiusInM = radius.toDouble() * 1000.0
 
         val bounds = GeoFireUtils.getGeoHashQueryBounds(center, radiusInM)
         val tasks: MutableList<Task<QuerySnapshot>> = ArrayList()
