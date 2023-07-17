@@ -1,6 +1,5 @@
 package com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen
 
-import android.location.Location
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -43,7 +42,6 @@ class HomeScreenViewModel@Inject constructor(
         } ?: ""
     }
 
-
     private var _booking = mutableStateOf(Booking())
     val booking: State<Booking> get() = _booking
 
@@ -64,7 +62,7 @@ class HomeScreenViewModel@Inject constructor(
             homeScreenState = homeScreenState.copy(
                 currentLocation = LatLng(location.latitude, location.longitude)
             )
-            getNearbyStations(location, radius)
+            getNearbyStations(LatLng(location.latitude, location.longitude), radius)
         }
     }
 
@@ -93,7 +91,7 @@ class HomeScreenViewModel@Inject constructor(
         }
     }
 
-    private fun getNearbyStations(location: Location, radius: Float) = viewModelScope.launch {
+    private fun getNearbyStations(location: LatLng, radius: Float) = viewModelScope.launch {
         Log.i("HomeScreenViewModel", "My Location: ${location.latitude}, ${location.longitude}")
         withContext(Dispatchers.IO){
             chargingStationRepo.getNearByStations(location, radius).collect{ result->

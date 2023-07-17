@@ -16,10 +16,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
 
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ChargingStationItem(
     station: ChargingStation,
@@ -48,8 +51,8 @@ fun ChargingStationItem(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.station3),
+                GlideImage(
+                    model = station.imageUrl,
                     contentDescription = null,
                     modifier = Modifier
                         .height(100.dp)

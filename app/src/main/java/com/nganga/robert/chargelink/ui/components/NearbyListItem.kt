@@ -31,10 +31,13 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.averageRating
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun NearbyListItem(
     chargingStation: ChargingStation,
@@ -60,8 +63,8 @@ fun NearbyListItem(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.station2),
+            GlideImage(
+                model = chargingStation.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxHeight(0.9f)

@@ -5,8 +5,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.nganga.robert.chargelink.data.preferences.UserPreferencesRepository
 import com.nganga.robert.chargelink.data.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.data.repository.LocationRepository
 import com.nganga.robert.chargelink.screens.models.PlaceSuggestionsState
@@ -20,8 +22,11 @@ import javax.inject.Inject
 @HiltViewModel
 class MapScreenViewModel@Inject constructor(
     private val locationRepo: LocationRepository,
+    userPreferencesRepository: UserPreferencesRepository,
     private val chargingStationRepo: ChargingStationRepository
 ): ViewModel() {
+
+    private val radiusPreference = userPreferencesRepository.radius.asLiveData()
 
     var placeSuggestionsState by mutableStateOf(PlaceSuggestionsState())
         private set
@@ -64,7 +69,7 @@ class MapScreenViewModel@Inject constructor(
 
     private fun updateNearbyStations(location: LatLng) = viewModelScope.launch {
         withContext(Dispatchers.IO){
-            chargingStationRepo.getNearByStations(location.latitude, location.longitude).collect{ result->
+            chargingStationRepo.getNearByStations(location, radiusPreference.value ?: 15.0f).collect{ result->
                 when (result.status){
                     ResultState.Status.SUCCESS -> {
                         result.data?.let {

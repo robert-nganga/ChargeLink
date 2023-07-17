@@ -5,6 +5,7 @@ import android.util.Log
 import com.firebase.geofire.GeoFireUtils
 import com.firebase.geofire.GeoLocation
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
@@ -111,7 +112,7 @@ class ChargingStationRepositoryImpl@Inject constructor(
     }
 
 
-    override fun getNearByStations(location: Location, radius: Float): Flow<ResultState<List<ChargingStation>>> = callbackFlow {
+    override fun getNearByStations(location: LatLng, radius: Float): Flow<ResultState<List<ChargingStation>>> = callbackFlow {
 
         trySend(ResultState.loading())
         val center = GeoLocation(location.latitude, location.longitude)

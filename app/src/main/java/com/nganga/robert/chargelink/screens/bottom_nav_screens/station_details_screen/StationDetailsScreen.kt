@@ -26,6 +26,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.Charger
 import com.nganga.robert.chargelink.models.Review
@@ -94,7 +96,7 @@ fun StationDetailsScreen(
             contentAlignment = Alignment.TopCenter
         ) {
             ImageHeaderSection(
-                image = painterResource(id = R.drawable.station3),
+                imageUrl = chargingStation.imageUrl,
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.35f)
@@ -158,14 +160,15 @@ fun StationDetailsScreen(
 
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun  ImageHeaderSection(
     modifier: Modifier = Modifier,
-    image: Painter
+    imageUrl: String
 ){
     Box(modifier = modifier) {
-        Image(
-            painter = image,
+        GlideImage(
+            model = imageUrl,
             contentDescription = "Station Image",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop

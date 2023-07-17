@@ -1,6 +1,5 @@
 package com.nganga.robert.chargelink.screens.bottom_nav_screens.profile_screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,11 +15,11 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen.HomeScreenViewModel
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
@@ -91,9 +90,7 @@ fun ProfileScreen(
                 email = user.email,
                 phone = user.phone,
                 location = homeScreenViewModel.userAddress.observeAsState().value ?: "",
-                image = painterResource(
-                    id = R.drawable.user5
-                )
+                image = user.imageUrl
             )
             Spacer(modifier = Modifier.height(20.dp))
             ProfileCategoryItem(
@@ -176,7 +173,7 @@ fun ProfileSection(
     email: String,
     phone: String,
     location: String,
-    image: Painter,
+    image: String,
     modifier: Modifier = Modifier
 ){
     Column(
@@ -232,13 +229,14 @@ fun ProfileSection(
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun RoundProfileImage(
-    image: Painter,
+    image: String,
     modifier: Modifier = Modifier
 ){
-    Image(
-        painter = image,
+    GlideImage(
+        model = image,
         contentDescription = null,
         modifier = modifier
             .aspectRatio(1f, matchHeightConstraintsFirst = true)

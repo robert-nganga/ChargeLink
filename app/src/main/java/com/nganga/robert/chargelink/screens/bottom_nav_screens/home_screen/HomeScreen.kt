@@ -35,6 +35,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
 import com.nganga.robert.chargelink.ui.components.NearbyListItem
@@ -131,7 +133,7 @@ fun HomeScreen(
     ) {
         TopAppBar(
             name = state.currentUser.name,
-            profile = painterResource(id = R.drawable.user2),
+            image = state.currentUser.imageUrl,
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(15.dp))
@@ -160,7 +162,7 @@ fun HomeScreen(
 @Composable
 fun TopAppBar(
     name: String,
-    profile: Painter,
+    image: String,
     modifier: Modifier = Modifier
 ){
     Row(
@@ -185,19 +187,20 @@ fun TopAppBar(
         }
 
         RoundImage(
-            image = profile,
+            image = image,
             modifier = Modifier.size(70.dp)
         )
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun RoundImage(
-    image: Painter,
+    image: String,
     modifier: Modifier = Modifier
 ){
-    Image(
-        painter = image,
+    GlideImage(
+        model = image,
         contentDescription = null,
         modifier = modifier
             .aspectRatio(1f, matchHeightConstraintsFirst = true)
