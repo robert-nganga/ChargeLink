@@ -7,6 +7,7 @@ import com.nganga.robert.chargelink.screens.bottom_nav_screens.*
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen.HomeScreen
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen.MapScreen
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.profile_screens.ProfileScreen
+import com.nganga.robert.chargelink.screens.bottom_nav_screens.route_screen.RouteScreen
 import com.nganga.robert.chargelink.ui.navigation.*
 
 fun NavGraphBuilder.bottomNavGraph(
@@ -73,6 +74,9 @@ fun NavGraphBuilder.bottomNavGraph(
                 },
                 userPreferencesViewModel = it.sharedViewModel(navController)
             )
+        }
+        composable(route = BottomBarScreen.Route.route){
+            RouteScreen()
         }
         composable(
             route = BottomBarScreen.Details.route + "/{id}",

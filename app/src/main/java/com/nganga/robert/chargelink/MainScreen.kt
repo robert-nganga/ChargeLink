@@ -43,6 +43,7 @@ fun MainScreen(
 
     val enableSystemBarPadding = when(navBackStackEntry?.destination?.route?.substringBefore("/")){
         BottomBarScreen.Maps.route -> false
+        BottomBarScreen.Route.route -> false
         else -> true
     }
     Scaffold(
@@ -77,6 +78,7 @@ fun BottomBar(
         BottomBarScreen.Maps,
         BottomBarScreen.Bookings,
         BottomBarScreen.Profile,
+        BottomBarScreen.Route
     )
     val currentDestination = navBackStackEntry?.destination
 

@@ -50,6 +50,12 @@ sealed class BottomBarScreen(
         selectedIcon = Icons.Filled.Info,
         unselectedIcon = Icons.Outlined.Info
     )
+    object Route: BottomBarScreen(
+        title = "Route",
+        route = "route",
+        selectedIcon = Icons.Filled.Route,
+        unselectedIcon = Icons.Outlined.Route
+    )
 
     fun withArgs(vararg args: String): String{
         return buildString {
