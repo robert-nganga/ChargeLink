@@ -15,23 +15,50 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.nganga.robert.chargelink.data.remote.DirectionService
+import com.nganga.robert.chargelink.models.DirectionDetails
 import com.nganga.robert.chargelink.models.PlaceSuggestion
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 @Suppress("MissingPermission")
 class LocationRepositoryImpl@Inject constructor(
     private val placesClient: PlacesClient,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
+    private val directionService: DirectionService,
     @ApplicationContext private val context: Context
 ): LocationRepository {
 
     private val autocompleteSessionToken: AutocompleteSessionToken = AutocompleteSessionToken.newInstance()
 
+
+    override fun getDirections(
+        start: LatLng,
+        end: LatLng
+    ): Flow<ResultState<DirectionDetails>> = flow {
+        emit(ResultState.loading())
+        val startLatLng = "${start.latitude},${start.longitude}"
+        val endLatLng = "${end.latitude},${end.longitude}"
+
+        try {
+            val response = directionService.getDirection(startLatLng, endLatLng)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    emit(ResultState.success(body.toDirectionDetails()))
+                } else {
+                    emit(ResultState.error("An unknown error occurred"))
+                }
+            }
+        } catch (e: Exception) {
+            emit(ResultState.error(e.message ?: "An unknown error occurred"))
+        }
+    }
 
     override fun getAddressFromLatLng(latLng: LatLng): String? {
         val geocoder = Geocoder(context)

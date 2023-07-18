@@ -9,4 +9,5 @@ object Constants {
     const val PREFERENCES_NAME = "chargeLinkPreferences"
     const val RADIUS_PREFERENCE_KEY = "radius"
     const val APP_THEME_PREFERENCE = "app_theme"
+    const val DIRECTION_BASE_URL = "https://maps.googleapis.com/"
 }

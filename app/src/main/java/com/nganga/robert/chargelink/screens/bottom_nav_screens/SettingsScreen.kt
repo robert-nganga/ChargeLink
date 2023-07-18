@@ -101,7 +101,7 @@ fun SettingsScreen(
         SettingsItem(
             icon = Icons.Outlined.Palette,
             headerText = stringResource(id = R.string.theme),
-            trailingText = "Dark Mode",
+            trailingText = preferences.value?.appTheme ?: ThemeSelection.USE_SYSTEM_SETTINGS,
             onItemClick = {
                 isThemeDialogVisible = true
             }
@@ -380,7 +380,7 @@ fun RadiusSelector(
     onRadiusSelectionChanged: (String)->Unit
 ){
     var expanded by remember { mutableStateOf(false) }
-    val suggestions = listOf("5 km", "10 km", "15 km", "20 km", "25 km", "30 km", "60 km")
+    val suggestions = listOf("5 km", "10 km", "15 km", "20 km", "25 km", "30 km")
 
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 

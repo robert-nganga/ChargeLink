@@ -111,6 +111,14 @@ dependencies {
     //System Ui Controller
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.23.1"
 
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
+
+    // Utilities for Maps SDK for Android (requires Google Play Services)
+    implementation 'com.google.maps.android:android-maps-utils:3.4.0'
+
 
 
 }

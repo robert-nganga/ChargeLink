@@ -20,12 +20,15 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -120,7 +123,11 @@ fun MapScreen(
                     state = MarkerState(
                         position = LatLng(station.lat.toDouble(), station.long.toDouble()),
                     ),
-                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN),
+                    icon = bitmapFromVector(
+                        context = LocalContext.current,
+                        vectorResId = R.drawable.ic_station,
+                        color = MaterialTheme.colorScheme.primary.toArgb()
+                    ),
                     title = station.name,
                     onClick = {
                         scope.launch {
@@ -332,10 +339,13 @@ fun SuggestionItem(
     }
 }
 
-fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
+fun bitmapFromVector(context: Context, vectorResId: Int, color: Int): BitmapDescriptor {
     val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
 
-    vectorDrawable!!.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
+    val tintedDrawable = DrawableCompat.wrap(vectorDrawable!!)
+    DrawableCompat.setTint(tintedDrawable, color)
+
+    vectorDrawable.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
     val bitmap = Bitmap.createBitmap(
         vectorDrawable.intrinsicWidth,
         vectorDrawable.intrinsicHeight,
@@ -343,7 +353,8 @@ fun bitmapFromVector(context: Context, vectorResId: Int): BitmapDescriptor {
     )
 
     val canvas = Canvas(bitmap)
-    vectorDrawable.draw(canvas)
+    tintedDrawable.setBounds(0, 0, canvas.width, canvas.height)
+    tintedDrawable.draw(canvas)
 
     return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
