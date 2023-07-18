@@ -25,11 +25,6 @@ abstract class RepositoryModule {
         repo: ChargingStationRepositoryImpl
     ): ChargingStationRepository
 
-    @Binds
-    @ViewModelScoped
-    abstract fun providesLocationRepository(
-        repo: LocationRepositoryImpl
-    ): LocationRepository
 
     @Binds
     @ViewModelScoped

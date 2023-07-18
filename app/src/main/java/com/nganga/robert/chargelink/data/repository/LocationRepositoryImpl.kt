@@ -31,7 +31,7 @@ class LocationRepositoryImpl@Inject constructor(
     private val placesClient: PlacesClient,
     private val fusedLocationProviderClient: FusedLocationProviderClient,
     private val directionService: DirectionService,
-    @ApplicationContext private val context: Context
+    private val geocoder: Geocoder
 ): LocationRepository {
 
     private val autocompleteSessionToken: AutocompleteSessionToken = AutocompleteSessionToken.newInstance()
@@ -61,7 +61,6 @@ class LocationRepositoryImpl@Inject constructor(
     }
 
     override fun getAddressFromLatLng(latLng: LatLng): String? {
-        val geocoder = Geocoder(context)
         val address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
         return if (address != null && address.isNotEmpty()){
             address[0].getAddressLine(0)
