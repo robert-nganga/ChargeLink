@@ -16,7 +16,9 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,6 +30,9 @@ import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen.PlaceSuggestionsSection
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
 import com.nganga.robert.chargelink.ui.components.ProgressDialog
+import com.nganga.robert.chargelink.utils.IconUtils
+import com.nganga.robert.chargelink.utils.LocationUtils.toLatLng
+import com.nganga.robert.chargelink.utils.LocationUtils.toLatLngBounds
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,23 +45,31 @@ fun RouteScreen(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
 
-    val polylineState = routeViewModel.routeScreenState
+    val routeScreenState = routeViewModel.routeScreenState
 
     val currentLocation = routeViewModel.currentLocation.observeAsState()
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(-1.286389,36.817223), 15f)
+        position = CameraPosition.fromLatLngZoom(currentLocation.value?.toLatLng() ?: LatLng(-1.286389,36.817223), 15f)
     }
 
 
-    LaunchedEffect(key1 = currentLocation.value){
-        currentLocation.value?.let {
+    LaunchedEffect(key1 = routeScreenState.polyLinePointsState.points){
+        if (routeScreenState.polyLinePointsState.points.isNotEmpty()){
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngBounds(
+                    routeScreenState.polyLinePointsState.points.toLatLngBounds(),
+                    100
+                )
+            )
+        }else {
             cameraPositionState.animate(
                 CameraUpdateFactory.newLatLngZoom(
-                    LatLng(it.latitude, it.longitude),
-                    15f
+                    currentLocation.value?.toLatLng() ?: LatLng(-1.286389,36.817223),
+                    12f
                 )
             )
         }
+
     }
 
     var isStartQueryFocused by remember { mutableStateOf(false) }
@@ -66,7 +79,7 @@ fun RouteScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        if (polylineState.isLoading){
+        if (routeScreenState.polyLinePointsState.isLoading){
             ProgressDialog(text = stringResource(id = R.string.please_wait))
         }
         GoogleMap(
@@ -82,11 +95,34 @@ fun RouteScreen(
             )
         ){
             Polyline(
-                points = polylineState.points,
-                color = MaterialTheme.colorScheme.primary,
-                width = 4.0f
+                points = routeScreenState.polyLinePointsState.points,
+                color = MaterialTheme.colorScheme.surfaceTint,
+                width = 8.0f
+            )
+            Marker(
+                state = MarkerState(
+                    position = routeScreenState.startLocation,
+                ),
+                icon = IconUtils.bitmapFromVector(
+                    context = LocalContext.current,
+                    vectorResId = R.drawable.ic_location_person_filled,
+                    color = MaterialTheme.colorScheme.surfaceTint.toArgb()
+                ),
+                title = stringResource(id = R.string.start)
+            )
+            Marker(
+                state = MarkerState(
+                    position = routeScreenState.endLocation,
+                ),
+                icon = IconUtils.bitmapFromVector(
+                    context = LocalContext.current,
+                    vectorResId = R.drawable.ic_destination_flag,
+                    color = MaterialTheme.colorScheme.surfaceTint.toArgb()
+                ),
+                title = stringResource(id = R.string.end)
             )
         }
+
 
         if (isEndQueryFocused || isStartQueryFocused){
             Box(
@@ -98,17 +134,18 @@ fun RouteScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(top = 10.dp)
                 ) {
                     HorizontalDivider()
                     PlaceSuggestionsSection(
                         modifier = Modifier.padding(horizontal = 10.dp),
                         suggestions = routeViewModel.placeSuggestions,
-                        onItemClick = { id->
+                        onItemClick = {name, id->
                             if (isStartQueryFocused){
-                                routeViewModel.updateStartLocation(id)
+                                routeViewModel.updateStartLocation(placeName = name, placeId = id)
                             }
                             if (isEndQueryFocused){
-                                routeViewModel.updateEndLocation(id)
+                                routeViewModel.updateEndLocation(placeName = name, placeId = id)
                             }
                             isEndQueryFocused = false
                             isStartQueryFocused = false
@@ -123,16 +160,20 @@ fun RouteScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(
+                    color = if (routeScreenState.isRouteActive) MaterialTheme.colorScheme.background else Color.Transparent,
+                )
                 .padding(top = 40.dp, end = 10.dp),
             verticalAlignment = Alignment.Top,
 
         ) {
-            if (isStartQueryFocused || isEndQueryFocused) {
+            if (isStartQueryFocused || isEndQueryFocused || routeScreenState.isRouteActive){
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
                         isStartQueryFocused = false
                         isEndQueryFocused = false
+                        routeViewModel.clearRoute()
                     }
                 ) {
                     Icon(
@@ -209,6 +250,7 @@ fun RouteScreen(
                     ),
                     shape = RoundedCornerShape(20.dp)
                 )
+                Spacer(modifier = Modifier.height(10.dp))
             }
         }
 

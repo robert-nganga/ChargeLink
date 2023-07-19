@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.nganga.robert.chargelink.data.repository.LocationRepository
@@ -24,7 +23,6 @@ class RouteViewModel@Inject constructor(
 ): ViewModel() {
 
     val currentLocation = locationRepo.requestLocationUpdates().asLiveData()
-
 
     var routeScreenState by mutableStateOf(RouteScreenState())
         private set
@@ -52,30 +50,46 @@ class RouteViewModel@Inject constructor(
         searchPlaces(query)
     }
 
-    fun updateStartLocation(placeId: String){
+    fun updateStartLocation(placeName: String, placeId: String){
         locationRepo.getLatLngFromPlaceId(placeId){ latLng ->
+            startQuery = placeName
             routeScreenState = routeScreenState.copy(
                 startLocation = latLng
             )
         }
     }
 
-    fun updateEndLocation(placeId: String){
+    fun clearRoute(){
+        routeScreenState = routeScreenState.copy(
+            isRouteActive = false,
+            startLocation = LatLng(0.0, 0.0),
+            endLocation = LatLng(0.0, 0.0),
+            polyLinePointsState = PolyLinePointsState()
+        )
+        startQuery = ""
+        endQuery = ""
+        placeSuggestions = emptyList()
+    }
+
+    fun updateEndLocation(placeName: String, placeId: String){
         locationRepo.getLatLngFromPlaceId(placeId){ latLng ->
+            endQuery = placeName
             routeScreenState = routeScreenState.copy(
                 endLocation = latLng,
                 isRouteActive = true
             )
             if (startQuery.isEmpty()){
                 locationRepo.getLocationOnce { currentLocation ->
+                    routeScreenState = routeScreenState.copy(
+                        startLocation = currentLocation.toLatLng()
+                    )
                     getDirections(currentLocation.toLatLng(), latLng)
+                    Log.i("RouteViewModel", "called getDirections with start:: ${currentLocation.toLatLng()} and end:: $latLng")
                 }
             }else{
                 getDirections(routeScreenState.startLocation, latLng)
+                Log.i("RouteViewModel", "called getDirections with start:: ${routeScreenState.startLocation} and end:: $latLng")
             }
-            val startLocation =if (startQuery.isNotEmpty()) routeScreenState.startLocation else routeScreenState.startLocation
-            Log.i("RouteViewModel", "getDirections called with start location: $startLocation and end location: $latLng")
-            getDirections(startLocation, latLng)
         }
     }
 

@@ -30,10 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptor
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.*
 import com.google.maps.android.compose.*
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.models.ChargingStation
@@ -42,6 +39,7 @@ import com.nganga.robert.chargelink.ui.components.ChargingStationItem
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
 import com.nganga.robert.chargelink.ui.components.ProgressDialog
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.home_screen.HomeScreenViewModel
+import com.nganga.robert.chargelink.utils.IconUtils.bitmapFromVector
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,6 +57,8 @@ fun MapScreen(
 
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
+
+
 
     //Initial camera state is Nairobi
     val cameraPositionState = rememberCameraPositionState {
@@ -78,7 +78,7 @@ fun MapScreen(
         cameraPositionState.animate(
             CameraUpdateFactory.newLatLngZoom(
                 nearbyStationsState.location ?: homeScreenState.currentLocation,
-                15f
+                12f
             )
         )
     }
@@ -111,7 +111,7 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             contentPadding = PaddingValues(
                 bottom = screenHeight * 0.4f,
-                top = 110.dp,
+                top = if (mapScreenViewModel.isSearchLocationActive) 130.dp else 110.dp,
             ),
             onMyLocationButtonClick = {
                 mapScreenViewModel.clearLocation()
@@ -126,7 +126,9 @@ fun MapScreen(
                     icon = bitmapFromVector(
                         context = LocalContext.current,
                         vectorResId = R.drawable.ic_station,
-                        color = MaterialTheme.colorScheme.primary.toArgb()
+                        color = if (listState.firstVisibleItemIndex == index) MaterialTheme.colorScheme.surfaceTint.toArgb() else MaterialTheme.colorScheme.primary.toArgb(),
+                        width = 70,
+                        height = 70
                     ),
                     title = station.name,
                     onClick = {
@@ -162,9 +164,10 @@ fun MapScreen(
             ) {
                 PlaceSuggestionsSection(
                     suggestions = placeSuggestionsState.suggestions,
-                    onItemClick = { id->
+                    onItemClick = { name, id->
                         isSearchViewFocused = false
                         focusManager.clearFocus()
+                        mapScreenViewModel.getCoordinatesFromPlaceId(name, id)
                     }
                 )
             }
@@ -173,10 +176,18 @@ fun MapScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(
+                    color = if (mapScreenViewModel.isSearchLocationActive) {
+                        MaterialTheme.colorScheme.background
+                    } else {
+                        Color.Transparent
+                    }
+                )
                 .padding(top = 50.dp, start = 10.dp, end = 10.dp, bottom = 10.dp)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -196,18 +207,19 @@ fun MapScreen(
                         focusedIndicatorColor = MaterialTheme.colorScheme.primary,
                         unfocusedIndicatorColor = Color.Transparent,
                     ),
-                    label = {
-                        if (!isSearchViewFocused){
-                            Text(
-                                text = stringResource(id = R.string.search_for_a_place),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.search_for_a_place),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     },
                     trailingIcon = {
                         if (placeSuggestionsState.query.isNotEmpty()) {
                             IconButton(
                                 onClick = {
+                                    if (mapScreenViewModel.isSearchLocationActive){
+                                        mapScreenViewModel.clearSearchLocation()
+                                    }
                                     mapScreenViewModel.onQueryChange("")
                                 }
                             ) {
@@ -223,10 +235,12 @@ fun MapScreen(
                         if (isSearchViewFocused) {
                             IconButton(
                                 onClick = {
+                                    if (mapScreenViewModel.isSearchLocationActive){
+                                        mapScreenViewModel.clearSearchLocation()
+                                    }
                                     isSearchViewFocused = false
-                                    mapScreenViewModel.onQueryChange("")
+                                    mapScreenViewModel.clearSearchLocation()
                                     focusManager.clearFocus()
-                                    mapScreenViewModel.clearSuggestions()
                                 }
                             ) {
                                 Icon(
@@ -280,14 +294,14 @@ fun ChargingStationsSection(
 fun PlaceSuggestionsSection(
     modifier: Modifier = Modifier,
     suggestions: List<PlaceSuggestion>,
-    onItemClick: (String)->Unit
+    onItemClick: (placeName: String, placeId: String)->Unit
 ){
     LazyColumn(modifier = modifier){
         items(suggestions){ suggestion ->
             SuggestionItem(
                 suggestion = suggestion,
-                onItemClick = { id ->
-                    onItemClick(id)
+                onItemClick = {
+                    onItemClick(suggestion.primaryText, suggestion.placeId)
                 }
             )
         }
@@ -298,14 +312,14 @@ fun PlaceSuggestionsSection(
 fun SuggestionItem(
     suggestion: PlaceSuggestion,
     modifier: Modifier = Modifier,
-    onItemClick: (String)->Unit
+    onItemClick: ()->Unit
 ){
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 15.dp)
             .clickable {
-                onItemClick(suggestion.placeId)
+                onItemClick()
             },
         horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
@@ -334,25 +348,5 @@ fun SuggestionItem(
             HorizontalDivider()
         }
     }
-}
-
-fun bitmapFromVector(context: Context, vectorResId: Int, color: Int): BitmapDescriptor {
-    val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
-
-    val tintedDrawable = DrawableCompat.wrap(vectorDrawable!!)
-    DrawableCompat.setTint(tintedDrawable, color)
-
-    vectorDrawable.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
-    val bitmap = Bitmap.createBitmap(
-        vectorDrawable.intrinsicWidth,
-        vectorDrawable.intrinsicHeight,
-        Bitmap.Config.ARGB_8888
-    )
-
-    val canvas = Canvas(bitmap)
-    tintedDrawable.setBounds(0, 0, canvas.width, canvas.height)
-    tintedDrawable.draw(canvas)
-
-    return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
 

@@ -12,6 +12,7 @@ import com.nganga.robert.chargelink.data.preferences.UserPreferencesRepository
 import com.nganga.robert.chargelink.data.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.data.repository.LocationRepository
 import com.nganga.robert.chargelink.screens.models.PlaceSuggestionsState
+import com.nganga.robert.chargelink.utils.LocationUtils.toLatLng
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +35,17 @@ class MapScreenViewModel@Inject constructor(
     var nearbyStationsState by mutableStateOf(NearbyStationsState())
         private set
 
+    var isSearchLocationActive by mutableStateOf(false)
+        private set
 
+
+    fun clearSearchLocation(){
+        isSearchLocationActive = false
+        placeSuggestionsState = PlaceSuggestionsState()
+        nearbyStationsState = nearbyStationsState.copy(
+            location = null
+        )
+    }
 
     fun onQueryChange(query: String){
         placeSuggestionsState = placeSuggestionsState.copy(
@@ -45,20 +56,18 @@ class MapScreenViewModel@Inject constructor(
         }
     }
 
-    fun clearSuggestions(){
-        placeSuggestionsState = placeSuggestionsState.copy(
-            suggestions =  emptyList()
-        )
-    }
-
     fun clearLocation(){
         nearbyStationsState = nearbyStationsState.copy(
             location = null
         )
     }
 
-    fun getCoordinatesFromPlaceId(placeId: String){
+    fun getCoordinatesFromPlaceId(placeName: String, placeId: String){
         locationRepo.getLatLngFromPlaceId(placeId){ latLng->
+            placeSuggestionsState = placeSuggestionsState.copy(
+                query = placeName
+            )
+            isSearchLocationActive = true
             nearbyStationsState = nearbyStationsState.copy(
                 location = latLng
             )

@@ -115,4 +115,6 @@
     <string name="change_radius">Change radius</string>
     <string name="your_location">Your location</string>
     <string name="enter_destination">Enter Destination</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
 </resources>
