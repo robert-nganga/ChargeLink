@@ -1,6 +1,5 @@
 package com.nganga.robert.chargelink.models.directions
 
-import com.google.android.gms.maps.model.Polyline
 import com.google.maps.android.PolyUtil
 import com.nganga.robert.chargelink.models.DirectionDetails
 

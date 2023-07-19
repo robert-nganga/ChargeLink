@@ -62,7 +62,7 @@ fun MapScreen(
 
     //Initial camera state is Nairobi
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(homeScreenState.currentLocation, 10f)
+        position = CameraPosition.fromLatLngZoom(homeScreenState.currentLocation, 15f)
     }
 
     val placeSuggestionsState = mapScreenViewModel.placeSuggestionsState
@@ -78,7 +78,7 @@ fun MapScreen(
         cameraPositionState.animate(
             CameraUpdateFactory.newLatLngZoom(
                 nearbyStationsState.location ?: homeScreenState.currentLocation,
-                20f
+                15f
             )
         )
     }
@@ -111,7 +111,7 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             contentPadding = PaddingValues(
                 bottom = screenHeight * 0.4f,
-                top = 100.dp,
+                top = 110.dp,
             ),
             onMyLocationButtonClick = {
                 mapScreenViewModel.clearLocation()
@@ -157,17 +157,14 @@ fun MapScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(top = 100.dp, start = 10.dp, end = 10.dp, bottom = 65.dp)
+                    .padding(top = 110.dp, start = 10.dp, end = 10.dp, bottom = 65.dp)
 
             ) {
                 PlaceSuggestionsSection(
                     suggestions = placeSuggestionsState.suggestions,
                     onItemClick = { id->
                         isSearchViewFocused = false
-                        mapScreenViewModel.onQueryChange("")
                         focusManager.clearFocus()
-                        mapScreenViewModel.clearSuggestions()
-                        mapScreenViewModel.getCoordinatesFromPlaceId(id)
                     }
                 )
             }

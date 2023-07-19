@@ -38,6 +38,7 @@ fun MainScreen(
         BottomBarScreen.Maps.route -> true
         BottomBarScreen.Bookings.route -> true
         BottomBarScreen.Profile.route -> true
+        BottomBarScreen.Route.route -> true
         else -> false
     }
 
@@ -76,9 +77,9 @@ fun BottomBar(
     val screens = listOf(
         BottomBarScreen.Home,
         BottomBarScreen.Maps,
+        BottomBarScreen.Route,
         BottomBarScreen.Bookings,
-        BottomBarScreen.Profile,
-        BottomBarScreen.Route
+        BottomBarScreen.Profile
     )
     val currentDestination = navBackStackEntry?.destination
 

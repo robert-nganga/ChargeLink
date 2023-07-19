@@ -123,7 +123,6 @@ class LocationRepositoryImpl@Inject constructor(
                 place.latLng?.let { latLng.invoke(it) }
                 Log.i("LocationRepositoryImpl", "Place found: ${place.name}")
             }
-
     }
 
     override fun searchPlaces(query: String): Flow<ResultState<List<PlaceSuggestion>>> = callbackFlow {

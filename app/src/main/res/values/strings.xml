@@ -113,4 +113,6 @@
     <string name="system_default">System default</string>
     <string name="cancel">Cancel</string>
     <string name="change_radius">Change radius</string>
+    <string name="your_location">Your location</string>
+    <string name="enter_destination">Enter Destination</string>
 </resources>

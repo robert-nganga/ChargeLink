@@ -76,7 +76,9 @@ fun NavGraphBuilder.bottomNavGraph(
             )
         }
         composable(route = BottomBarScreen.Route.route){
-            RouteScreen()
+            RouteScreen(
+                routeViewModel = it.sharedViewModel(navController)
+            )
         }
         composable(
             route = BottomBarScreen.Details.route + "/{id}",
