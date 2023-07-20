@@ -22,4 +22,8 @@ ChargeLink is a mobile app built using Jetpack Compose and Kotlin, designed to a
 
 ### Booking screens
 ![](screenshots/combine_images_3.jpg)
+![](screenshots/combine_images_4.jpg)
+
+### Settings screens
+![](screenshots/combine_images_5.jpg)
 
