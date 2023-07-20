@@ -117,4 +117,5 @@
     <string name="enter_destination">Enter Destination</string>
     <string name="start">Start</string>
     <string name="end">End</string>
+    <string name="distance">Distance</string>
 </resources>

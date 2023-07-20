@@ -1,6 +1,7 @@
 package com.nganga.robert.chargelink.screens.bottom_nav_screens.route_screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -21,11 +22,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import com.google.maps.android.ui.BubbleIconFactory
 import com.nganga.robert.chargelink.R
 import com.nganga.robert.chargelink.screens.bottom_nav_screens.map_screen.PlaceSuggestionsSection
 import com.nganga.robert.chargelink.ui.components.HorizontalDivider
@@ -51,6 +54,7 @@ fun RouteScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(currentLocation.value?.toLatLng() ?: LatLng(-1.286389,36.817223), 15f)
     }
+
 
 
     LaunchedEffect(key1 = routeScreenState.polyLinePointsState.points){
@@ -90,8 +94,8 @@ fun RouteScreen(
             ),
             cameraPositionState = cameraPositionState,
             contentPadding = PaddingValues(
-                bottom = screenHeight * 0.3f,
-                top = 170.dp,
+                bottom = screenHeight * 0.1f,
+                top = screenHeight * 0.43f,
             )
         ){
             Polyline(
@@ -116,11 +120,24 @@ fun RouteScreen(
                 ),
                 icon = IconUtils.bitmapFromVector(
                     context = LocalContext.current,
-                    vectorResId = R.drawable.ic_destination_flag,
+                    vectorResId = R.drawable.ic_flag_triangle,
                     color = MaterialTheme.colorScheme.surfaceTint.toArgb()
                 ),
                 title = stringResource(id = R.string.end)
             )
+            routeScreenState.chargingStations.forEach { chargingStation ->
+                Marker(
+                    state = MarkerState(
+                        position = LatLng(chargingStation.lat.toDouble(), chargingStation.long.toDouble()),
+                    ),
+                    icon = IconUtils.bitmapFromVector(
+                        context = LocalContext.current,
+                        vectorResId = R.drawable.ic_station,
+                        color = MaterialTheme.colorScheme.surfaceTint.toArgb()
+                    ),
+                    title = stringResource(id = R.string.end)
+                )
+            }
         }
 
 
@@ -157,106 +174,187 @@ fun RouteScreen(
             }
         }
 
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
                     color = if (routeScreenState.isRouteActive) MaterialTheme.colorScheme.background else Color.Transparent,
                 )
                 .padding(top = 40.dp, end = 10.dp),
-            verticalAlignment = Alignment.Top,
+        ){
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.Top,
 
-        ) {
-            if (isStartQueryFocused || isEndQueryFocused || routeScreenState.isRouteActive){
-                IconButton(
-                    onClick = {
-                        focusManager.clearFocus()
-                        isStartQueryFocused = false
-                        isEndQueryFocused = false
-                        routeViewModel.clearRoute()
-                    }
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "back"
+                if (isStartQueryFocused || isEndQueryFocused || routeScreenState.isRouteActive){
+                    IconButton(
+                        onClick = {
+                            focusManager.clearFocus()
+                            isStartQueryFocused = false
+                            isEndQueryFocused = false
+                            routeViewModel.clearRoute()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "back"
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.width(10.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    TextField(
+                        modifier = Modifier
+                            .height(60.dp)
+                            .focusRequester(focusRequester)
+                            .onFocusChanged { focusState ->
+                                if (focusState.isFocused) {
+                                    isStartQueryFocused = true
+                                }
+                            },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.your_location)
+                            )
+                        },
+                        value = routeViewModel.startQuery,
+                        onValueChange = routeViewModel::onStartQueryChange,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.MyLocation,
+                                contentDescription ="my location",
+                                tint = if (isStartQueryFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+                            )
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = if (isStartQueryFocused || isEndQueryFocused) Color(0x0D000000) else MaterialTheme.colorScheme.background,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                        ),
+                        shape = RoundedCornerShape(20.dp)
                     )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    TextField(
+                        modifier = Modifier
+                            .height(60.dp)
+                            .focusRequester(focusRequester)
+                            .onFocusChanged { focusState ->
+                                if (focusState.isFocused) {
+                                    isEndQueryFocused = true
+                                }
+                            },
+                        placeholder = {
+                            Text(
+                                text = stringResource(id = R.string.enter_destination)
+                            )
+                        },
+                        value = routeViewModel.endQuery,
+                        onValueChange = routeViewModel::onEndQueryChange,
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.AddLocation,
+                                contentDescription ="my location",
+                                tint = if (isEndQueryFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
+                            )
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            containerColor = if (isEndQueryFocused || isStartQueryFocused) Color(0x0D000000) else MaterialTheme.colorScheme.background,
+                            focusedIndicatorColor = Color.Transparent,
+                            unfocusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                        ),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
                 }
             }
-            Spacer(modifier = Modifier.width(10.dp))
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-            ) {
-                TextField(
-                    modifier = Modifier
-                        .height(60.dp)
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { focusState ->
-                            if (focusState.isFocused) {
-                                isStartQueryFocused = true
-                            }
-                        },
-                    placeholder = {
-                        Text(
-                            text = stringResource(id = R.string.your_location)
-                        )
-                    },
-                    value = routeViewModel.startQuery,
-                    onValueChange = routeViewModel::onStartQueryChange,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.MyLocation,
-                            contentDescription ="my location",
-                            tint = if (isStartQueryFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-                        )
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = if (isStartQueryFocused || isEndQueryFocused) Color(0x0D000000) else MaterialTheme.colorScheme.background,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                    ),
-                    shape = RoundedCornerShape(20.dp)
+            if (routeScreenState.isRouteActive){
+                RouteDetails(
+                    distance = routeScreenState.distance,
+                    duration = routeScreenState.duration,
+                    chargers = routeScreenState.chargingStations.size
                 )
-                Spacer(modifier = Modifier.height(10.dp))
-                TextField(
-                    modifier = Modifier
-                        .height(60.dp)
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { focusState ->
-                            if (focusState.isFocused) {
-                                isEndQueryFocused = true
-                            }
-                        },
-                    placeholder = {
-                        Text(
-                            text = stringResource(id = R.string.enter_destination)
-                        )
-                    },
-                    value = routeViewModel.endQuery,
-                    onValueChange = routeViewModel::onEndQueryChange,
-                    leadingIcon = {
-                        Icon(
-                            imageVector = Icons.Default.AddLocation,
-                            contentDescription ="my location",
-                            tint = if (isEndQueryFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground
-                        )
-                    },
-                    colors = TextFieldDefaults.textFieldColors(
-                        containerColor = if (isEndQueryFocused || isStartQueryFocused) Color(0x0D000000) else MaterialTheme.colorScheme.background,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                    ),
-                    shape = RoundedCornerShape(20.dp)
-                )
-                Spacer(modifier = Modifier.height(10.dp))
             }
+            Spacer(modifier = Modifier.height(5.dp))
         }
-
-
-
-
     }
 
+}
+
+@Composable
+fun RouteDetails(
+    modifier: Modifier = Modifier,
+    distance: String,
+    duration: String,
+    chargers: Int
+){
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 6.dp, vertical = 5.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(20.dp)
+            )
+    ){
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 6.dp, vertical = 5.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RouteItemColumn(
+                modifier = Modifier,
+                title = stringResource(id = R.string.distance),
+                text = distance
+            )
+            RouteItemColumn(
+                modifier = Modifier,
+                title = stringResource(id = R.string.duration),
+                text = duration
+            )
+            RouteItemColumn(
+                modifier = Modifier,
+                title = stringResource(id = R.string.chargers),
+                text = "$chargers Charger"
+            )
+
+        }
+    }
+
+}
+
+@Composable
+fun RouteItemColumn(
+    modifier: Modifier = Modifier,
+    title: String,
+    text: String
+){
+    Column(
+        modifier = modifier,
+    ) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                color = MaterialTheme.colorScheme.outline
+            ),
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleMedium,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
+    }
 }

@@ -8,18 +8,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.nganga.robert.chargelink.data.repository.ChargingStationRepository
 import com.nganga.robert.chargelink.data.repository.LocationRepository
 import com.nganga.robert.chargelink.models.PlaceSuggestion
 import com.nganga.robert.chargelink.utils.LocationUtils.toLatLng
 import com.nganga.robert.chargelink.utils.ResultState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 @HiltViewModel
 class RouteViewModel@Inject constructor(
-    private val locationRepo: LocationRepository
+    private val locationRepo: LocationRepository,
+    private val chargingStationRepo: ChargingStationRepository
 ): ViewModel() {
 
     val currentLocation = locationRepo.requestLocationUpdates().asLiveData()
@@ -64,7 +69,9 @@ class RouteViewModel@Inject constructor(
             isRouteActive = false,
             startLocation = LatLng(0.0, 0.0),
             endLocation = LatLng(0.0, 0.0),
-            polyLinePointsState = PolyLinePointsState()
+            polyLinePointsState = PolyLinePointsState(),
+            duration = "",
+            distance = ""
         )
         startQuery = ""
         endQuery = ""
@@ -98,6 +105,7 @@ class RouteViewModel@Inject constructor(
             when (result.status) {
                 ResultState.Status.SUCCESS -> {
                     result.data?.let {
+                        getRouteChargingStations(it.points)
                         val polyState = routeScreenState.polyLinePointsState.copy(
                             points = it.points,
                             isLoading = false,
@@ -105,6 +113,8 @@ class RouteViewModel@Inject constructor(
                         )
                         routeScreenState = routeScreenState.copy(
                             polyLinePointsState = polyState,
+                            distance = it.distance,
+                            duration = it.duration
                         )
                         Log.i("RouteViewModel", "getDirections: ${it.points.size}")
                     }
@@ -117,6 +127,8 @@ class RouteViewModel@Inject constructor(
                     )
                     routeScreenState = routeScreenState.copy(
                         polyLinePointsState = polyState,
+                        distance = "",
+                        duration = ""
                     )
                     Log.i("RouteViewModel", "getDirections: ${result.message}")
                 }
@@ -127,6 +139,30 @@ class RouteViewModel@Inject constructor(
                     routeScreenState = routeScreenState.copy(
                         polyLinePointsState = polyState,
                     )
+                }
+            }
+        }
+    }
+
+    private fun getRouteChargingStations(points: List<LatLng>) = viewModelScope.launch {
+        withContext(Dispatchers.IO){
+            for(i in points.size-1 downTo 0 step 50 ){
+                val point = points[i]
+                delay(100)
+                chargingStationRepo.getNearByStations(point, 5.0f).collect { result ->
+                    when (result.status) {
+                        ResultState.Status.SUCCESS -> {
+                            result.data?.let {
+                                routeScreenState = routeScreenState.copy(
+                                    chargingStations = routeScreenState.chargingStations + it
+                                )
+                            }
+                        }
+                        ResultState.Status.ERROR -> {
+                            Log.i("RouteViewModel", "getRouteChargingStations: ${result.message}")
+                        }
+                        ResultState.Status.LOADING -> {}
+                    }
                 }
             }
         }
