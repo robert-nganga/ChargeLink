@@ -9,3 +9,14 @@ ChargeLink is a mobile app built using Jetpack Compose and Kotlin, designed to a
   - **Route Planning**: Create routes using Google Maps and view charging stations along the selected route.
   - **Place Search**: Easily search for any place using Google Places SDK and explore available charging stations in that area.
   - **Dark and Light Modes**: Choose between dark and light themes to suit your preferences and environment.
+
+## Screenshots
+### Authentication screens
+![](screenshots/combine_images.jpg)
+
+### Homepage screens
+![](screenshots/combine_images_1.jpg)
+
+### Details screen
+![](screenshots/combine_images_2.jpg)
+
