@@ -20,7 +20,7 @@ ChargeLink is a mobile app built using Jetpack Compose and Kotlin, designed to a
   - **Dagger Hilt**: Utilize Dagger for dependency injection and streamlined development.
   - **LiveData and Flows**: Observe data changes with LiveData and utilize Flows for reactive programming.
   - **Repository Pattern**: Organize data access and abstract data sources with the repository pattern.
-  - **MVVM Architecture**: Architect the app using the Model-View-ViewModel (MVVM) pattern for separation of concerns.
+  - **MVVM Architecture**: Architect the app using the Model-View-ViewModel (MVVM) pattern for separation of concerns
 
 ## Screenshots
 
